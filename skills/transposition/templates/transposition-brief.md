@@ -1,6 +1,6 @@
 # Transposition — {topic}
 Date: {date}
-Mode: brief
+Mode: transposition-brief
 
 ## TL;DR
 {tl-dr}

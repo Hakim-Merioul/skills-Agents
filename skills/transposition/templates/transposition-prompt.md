@@ -1,6 +1,6 @@
 # Transposition — {topic}
 Date: {date}
-Mode: prompt-brief
+Mode: transposition-prompt
 
 ## TL;DR
 {tl-dr}

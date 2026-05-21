@@ -1,6 +1,6 @@
 # Transposition — {topic}
 Date: {date}
-Mode: code-handoff
+Mode: transposition-code
 
 ## TL;DR
 {tl-dr}

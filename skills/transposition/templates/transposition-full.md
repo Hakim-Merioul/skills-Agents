@@ -1,6 +1,6 @@
 # Transposition — {topic}
 Date: {date}
-Mode: full
+Mode: transposition-full
 
 ## TL;DR
 {tl-dr}

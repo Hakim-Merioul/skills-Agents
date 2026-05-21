@@ -22,12 +22,14 @@ When invoked, execute these steps in order.
 
 Ask the user with `AskUserQuestion` which mode they want:
 
-- `brief` — short checkpoint (~150 words): TL;DR, key decisions, next step.
-- `full` — complete recap (~500 words) suitable for serious resumption.
-- `prompt-brief` — `full` plus a ready-to-paste prompt that briefs the
-  receiving window to immediately resume work.
-- `code-handoff` — `full` plus dev-specific sections: diff summary,
-  commands run, explicit TODOs.
+- `transposition-brief` — short checkpoint (~150 words): TL;DR, key
+  decisions, next step.
+- `transposition-full` — complete recap (~500 words) suitable for
+  serious resumption.
+- `transposition-prompt` — `transposition-full` plus a ready-to-paste
+  prompt that briefs the receiving window to immediately resume work.
+- `transposition-code` — `transposition-full` plus dev-specific
+  sections: diff summary, commands run, explicit TODOs.
 
 ### 2. Derive the topic slug
 
@@ -38,7 +40,8 @@ conversation, ask the user for one.
 ### 3. Render the markdown
 
 Read the matching template at
-`~/.claude/skills/transposition/templates/<mode>.md`.
+`~/.claude/skills/transposition/templates/<mode>.md`
+(e.g., `transposition-full.md` for the `transposition-full` mode).
 Fill in every section by extracting the relevant content from the
 current conversation. Replace each `{placeholder}` with real content.
 Do not leave placeholders in the final output. If a section has no
@@ -75,10 +78,10 @@ Gemini, or another tool. Precede the block with a one-line note:
 
 The four templates live in `templates/`:
 
-- `templates/brief.md`
-- `templates/full.md`
-- `templates/prompt-brief.md`
-- `templates/code-handoff.md`
+- `templates/transposition-brief.md`
+- `templates/transposition-full.md`
+- `templates/transposition-prompt.md`
+- `templates/transposition-code.md`
 
 Read the matching template, then substitute the values from the
 conversation into the placeholders.
