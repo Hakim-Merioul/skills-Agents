@@ -37,6 +37,17 @@ Modes:
 
 [→ skills/transposition](skills/transposition/)
 
+### gaya
+Distill a heavyweight reference model's output (Opus 4.7) into a cheap small model
+by iteratively searching over the prompt and every OpenRouter API parameter,
+scored by an LLM-as-judge. Named after Gaïa, mother of the Titans. Inspired by
+Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) loop pattern.
+
+Outputs a markdown report with the score curve, every configuration tried, and a
+final prompt + params block ready to paste into an application.
+
+[→ skills/gaya](skills/gaya/)
+
 ## License
 
 MIT.
