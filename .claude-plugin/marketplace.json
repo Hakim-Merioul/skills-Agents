@@ -1,0 +1,55 @@
+{
+  "name": "skills-Agents",
+  "owner": {
+    "name": "Hakim Merioul",
+    "url": "https://github.com/Hakim-Merioul"
+  },
+  "metadata": {
+    "description": "Agent skills built for real engineering work — not vibe coding. Each plugin is a self-contained Claude Code skill.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "ppt-design-slider",
+      "source": "./plugins/ppt-design-slider",
+      "description": "Turn raw slide content into a designed PowerPoint deck. 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, exports an editable or image-based .pptx plus PDF. Cross-platform (Claude Code, Codex, Claude Desktop).",
+      "category": "design",
+      "author": {
+        "name": "Hakim Merioul",
+        "url": "https://github.com/Hakim-Merioul"
+      },
+      "homepage": "https://github.com/Hakim-Merioul/skills-Agents/tree/main/plugins/ppt-design-slider",
+      "repository": "https://github.com/Hakim-Merioul/skills-Agents",
+      "license": "MIT",
+      "keywords": ["powerpoint", "pptx", "slides", "presentation", "deck", "templates", "pdf-export"]
+    },
+    {
+      "name": "gaya",
+      "source": "./plugins/gaya",
+      "description": "Distill a heavyweight reference model's output quality (Opus 4.7) into a cheap small model by iteratively searching over the prompt and every OpenRouter API parameter, scored by an LLM-as-judge. Outputs a markdown report with the final prompt ready to paste.",
+      "category": "development",
+      "author": {
+        "name": "Hakim Merioul",
+        "url": "https://github.com/Hakim-Merioul"
+      },
+      "homepage": "https://github.com/Hakim-Merioul/skills-Agents/tree/main/plugins/gaya",
+      "repository": "https://github.com/Hakim-Merioul/skills-Agents",
+      "license": "MIT",
+      "keywords": ["prompt-optimization", "opro", "distillation", "openrouter", "llm-judge", "autoresearch"]
+    },
+    {
+      "name": "transposition",
+      "source": "./plugins/transposition",
+      "description": "Transfer the context of the current conversation to another window — another Claude Code session, ChatGPT, Claude.ai, Gemini, or a human teammate. Four modes: brief, full, prompt, code-handoff.",
+      "category": "productivity",
+      "author": {
+        "name": "Hakim Merioul",
+        "url": "https://github.com/Hakim-Merioul"
+      },
+      "homepage": "https://github.com/Hakim-Merioul/skills-Agents/tree/main/plugins/transposition",
+      "repository": "https://github.com/Hakim-Merioul/skills-Agents",
+      "license": "MIT",
+      "keywords": ["context-transfer", "handoff", "session-export", "conversation-export"]
+    }
+  ]
+}
