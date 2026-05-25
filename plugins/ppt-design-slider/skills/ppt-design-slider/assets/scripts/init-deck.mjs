@@ -233,21 +233,23 @@ node scripts/verify-deck.mjs --html index.html
 Catches overflow, overlapping text blocks, lost line breaks, and undeclared CSS
 variables. Fix any errors in \`index.html\` before exporting.
 
-## 7. Export — THREE outputs, always
+## 7. Export — TWO outputs, always
+
+The deck ships as **\`deck.pdf\`** + **\`deck.pptx\`**. The PPTX is native PowerPoint
+with every text box double-click-editable. No image-based PPTX — it's redundant
+with the PDF and adds export effort without value for the typical use case. (If the
+user later asks specifically for the image PPTX, see "Optional opt-in" below.)
 
 \`\`\`bash
 cd ${deckDir}
 
-# (a) PDF — vectorial, lossless, works for every template (recommended default)
+# (1) PDF — vectorial, lossless, works for every template
 node scripts/export-pdf.mjs --slides index.html --out deck.pdf
 
-# (b) PPTX image — every slide as PNG inside a 16:9 PPTX. Universal, design-faithful.
-node scripts/export-pptx-image.mjs --slides index.html --out deck.pptx
-
-# (c) PPTX editable — native PowerPoint, every word double-click-editable. MANDATORY.
+# (2) PPTX editable — native PowerPoint, every word double-click-editable
 ${template.pptx_editable ? `# This template's HTML satisfies the auto-converter constraints, so the auto
 # path works out of the box:
-node scripts/export-pptx-editable.mjs --slides index.html --out deck-editable.pptx
+node scripts/export-pptx-editable.mjs --slides index.html --out deck.pptx
 ` : `# This template's CSS (gradients / WebGL / decorative SVG) does NOT survive the
 # auto HTML→PPTX converter. Build the native fallback instead:
 #
@@ -257,17 +259,50 @@ node scripts/export-pptx-editable.mjs --slides index.html --out deck-editable.pp
 #   3. Add one slide function per slide in index.html, using pptx.addText /
 #      addShape / addImage / addTable (see references/editable-fallback.md for
 #      the full mapping)
-#   4. Run it:
-node scripts/build-editable-pptx.mjs   # produces deck-editable.pptx
+#   4. Run it (it writes ../deck.pptx by default):
+node scripts/build-editable-pptx.mjs
 #
 # DO NOT skip this step. "Editable PPTX unavailable" is never a valid answer —
 # the native fallback always works. See references/editable-fallback.md.
 `}
 \`\`\`
 
-After export, open each output (\`open deck.pdf\`, \`open deck.pptx\`,
-\`open deck-editable.pptx\`) and confirm all three match the HTML visually
-and that the editable variant lets you double-click any text.
+## 8. Slide-count sanity check (MANDATORY before delivery)
+
+The export scripts have historically dropped slides silently on certain templates
+(e.g. block-frame's \`.slide.active\` toggling). Verify the counts match before you
+hand the files to the user:
+
+\`\`\`bash
+# Source slide count
+grep -c 'class="slide' index.html
+
+# PDF page count (macOS)
+mdls -name kMDItemNumberOfPages deck.pdf
+# Linux: pdfinfo deck.pdf | grep Pages
+
+# PPTX slide count
+unzip -p deck.pptx ppt/presentation.xml | grep -c '<p:sldId '
+\`\`\`
+
+All three numbers MUST match. If they don't, an export script lost content —
+re-pull the export scripts from \`<SKILL_ROOT>/assets/scripts/\` (the v1.3.0 fix
+adds the active-display detection that the older scripts lacked) and rerun.
+
+After verifying the counts, open both outputs (\`open deck.pdf\`, \`open deck.pptx\`)
+and confirm slide 1 through slide N each have content — not just slide 1.
+
+## Optional opt-in — image-based PPTX
+
+If the user explicitly asks for a "design-faithful PPTX that keeps the gradients
+/ WebGL exactly", you can also run:
+
+\`\`\`bash
+node scripts/export-pptx-image.mjs --slides index.html --out deck-image.pptx
+\`\`\`
+
+This embeds every slide as a PNG inside a 16:9 PPTX. Text is NOT editable. Don't
+produce it by default — it's redundant with \`deck.pdf\` for visual fidelity.
 `;
   if (!args.dryRun) await fs.writeFile(nextStepsPath, nextSteps);
   summary.actions.push(`write ${nextStepsPath}`);

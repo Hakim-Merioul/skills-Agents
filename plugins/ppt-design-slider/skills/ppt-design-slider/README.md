@@ -7,7 +7,7 @@ Skill that turns raw slide content into a designed PowerPoint deck.
 1. Asks the user for the deck's occasion and mood.
 2. Shows 3 template candidates from the 36-design catalog with live title-slide previews — OR builds a custom style spec in 5 questions if the user wants bespoke.
 3. Splits the user's raw content into slides matching the chosen design system's layout grammar.
-4. Exports `.pptx` (editable text boxes when possible, image-based as universal fallback) and `.pdf`.
+4. Exports two files: `deck.pdf` (lossless vector) and `deck.pptx` (native PowerPoint, fully editable — uses a pptxgenjs fallback when auto HTML→PPTX can't preserve the design).
 
 ## Compatibility
 
@@ -38,10 +38,12 @@ exporters.
 
 ## Scripts
 
-- `assets/scripts/export-pptx-editable.mjs` — converts HTML deck → editable PPTX (text boxes)
-- `assets/scripts/export-pptx-image.mjs` — converts HTML deck → image-based PPTX (universal)
-- `assets/scripts/export-pdf.mjs` — PDF export, works on every template
-- `assets/scripts/validate-deck.mjs` — lints a finished deck before delivery
+- `assets/scripts/export-pdf.mjs` — PDF export, default output 1. Works on every template.
+- `assets/scripts/export-pptx-editable.mjs` — auto HTML→PPTX, default output 2 (path a, for templates where `pptx_editable: true`).
+- `assets/scripts/build-editable-pptx-skeleton.mjs` — native pptxgenjs fallback, default output 2 (path b, for templates where `pptx_editable: false`). Agent copies into the deck workspace and customizes.
+- `assets/scripts/verify-deck.mjs` — layout sanity check (overflow / overlap / lost line breaks / undeclared CSS vars). Run before exporting.
+- `assets/scripts/export-pptx-image.mjs` — opt-in only. Image-based PPTX (every slide as a PNG). Use when the user explicitly asks for pixel-perfect design fidelity in a PPTX.
+- `assets/scripts/validate-deck.mjs` — Swiss-specific linter (22 locked layouts).
 
 The export scripts must be copied into your project workspace before running (Node ESM resolves dependencies relative to each script file). See `SKILL.md` Step 6 for the full installation flow.
 

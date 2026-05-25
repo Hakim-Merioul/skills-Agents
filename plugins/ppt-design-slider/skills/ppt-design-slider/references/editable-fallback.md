@@ -22,20 +22,23 @@ or creating this native `pptxgenjs` fallback.**
 ```
 template.json says pptx_editable: true
                                 │
-            ┌───────────────────┼───────────────────┐
-            ▼                   ▼                   ▼
-   export-pdf.mjs    export-pptx-image.mjs   export-pptx-editable.mjs
-                                                    (HTML auto-conversion)
+            ┌───────────────────┴───────────────────┐
+            ▼                                       ▼
+   export-pdf.mjs                          export-pptx-editable.mjs
+   → deck.pdf                              → deck.pptx (auto HTML→PPTX)
 
 template.json says pptx_editable: false
                                 │
-            ┌───────────────────┼───────────────────┐
-            ▼                   ▼                   ▼
-   export-pdf.mjs    export-pptx-image.mjs   build-editable-pptx.mjs ←  THIS FILE
-                                                    (native pptxgenjs from scratch)
+            ┌───────────────────┴───────────────────┐
+            ▼                                       ▼
+   export-pdf.mjs                          build-editable-pptx.mjs  ←  THIS FILE
+   → deck.pdf                              → deck.pptx (native pptxgenjs from scratch)
 ```
 
-In BOTH cases, the user receives THREE outputs: PDF, image PPTX, editable PPTX.
+In BOTH cases, the user receives TWO outputs: `deck.pdf` and `deck.pptx`. The
+PPTX is always editable.
+
+(`export-pptx-image.mjs` exists but is opt-in only — see `pptx-export-rules.md`.)
 
 ## How to build the native editable PPTX
 
@@ -99,8 +102,8 @@ section.addText('The story begins where the numbers end', {
 
 // ... repeat per slide
 
-await pptx.writeFile({ fileName: '../deck-editable.pptx' });
-console.log('✓ Wrote deck-editable.pptx');
+await pptx.writeFile({ fileName: '../deck.pptx' });
+console.log('✓ Wrote deck.pptx');
 ```
 
 ### Mapping rules
@@ -115,8 +118,8 @@ console.log('✓ Wrote deck-editable.pptx');
 | Decorative borders | `pptx.ShapeType.line` with stroke |
 
 Don't try to reproduce gradients, WebGL backdrops, or complex SVG ornaments — the
-editable deck is for editing, not for visual fidelity. The image PPTX serves the
-visual-fidelity need.
+editable deck is for editing, not for visual fidelity. The PDF is the
+design-faithful reference.
 
 ### Pull values from design.md
 
@@ -128,7 +131,7 @@ The template's `design.md` is the source of truth. Read it BEFORE writing the sc
 
 ## Verification step (mandatory)
 
-After generating ALL three outputs (PDF + image PPTX + editable PPTX), run:
+After generating both outputs (PDF + editable PPTX), run:
 
 ```bash
 node <SKILL_ROOT>/assets/scripts/verify-deck.mjs --html <project>/deck/index.html
@@ -147,20 +150,23 @@ The verifier checks:
 If verification fails, fix the HTML and re-run before delivery. Do NOT ship a deck
 with verification errors.
 
+After exporting, ALSO verify slide counts match between source HTML, PDF, and PPTX
+(see `pptx-export-rules.md` → "Slide-count sanity check"). This catches the failure
+mode where the export script silently dropped slides.
+
 ## Delivery
 
-When you tell the user the deck is ready, list ALL THREE outputs:
+When you tell the user the deck is ready, list both outputs:
 
 ```
-✓ deck.pdf            — lossless vector
-✓ deck.pptx           — image-based PPTX (universal, design-faithful)
-✓ deck-editable.pptx  — native PowerPoint, fully editable
+✓ deck.pdf   — lossless vector reference
+✓ deck.pptx  — native PowerPoint, fully editable
 ```
 
 Tell the user explicitly:
 
-> The editable PPTX has the same content as the others but every text element is
-> double-click-editable inside PowerPoint. The image-based PPTX preserves the
-> original design exactly but text is fixed pixels. PDF is the lossless default.
+> Open `deck.pptx` in PowerPoint — every text element is double-click-editable.
+> `deck.pdf` is the lossless reference if you want to share the design as-is.
 
-Never deliver only the image-based PPTX without offering the editable one.
+Never deliver only the PDF without offering the editable PPTX. The editable PPTX
+is part of the default deliverable, not an extra.

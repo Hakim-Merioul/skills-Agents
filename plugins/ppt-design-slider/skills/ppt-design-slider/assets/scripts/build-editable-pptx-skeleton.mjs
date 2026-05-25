@@ -18,7 +18,7 @@
  * USAGE (after customization):
  *   cd <project>/deck/scripts
  *   node build-editable-pptx.mjs
- *   # writes ../deck-editable.pptx
+ *   # writes ../deck.pptx
  *
  * See references/editable-fallback.md for the full policy + verification rules.
  */
@@ -189,7 +189,7 @@ const DECK_TITLE = 'Demo Deck — Replace';
 // ---------------------------------------------------------------------------
 // WRITE
 // ---------------------------------------------------------------------------
-await pptx.writeFile({ fileName: '../deck-editable.pptx' });
-console.log('✓ Wrote ../deck-editable.pptx');
+await pptx.writeFile({ fileName: '../deck.pptx' });
+console.log('✓ Wrote ../deck.pptx');
 console.log(`  Slides: ${TOTAL}`);
 console.log('  All text is double-click-editable in PowerPoint.');

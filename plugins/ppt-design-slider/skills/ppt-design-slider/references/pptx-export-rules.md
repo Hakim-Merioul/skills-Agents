@@ -1,24 +1,20 @@
 # PPTX export rules
 
-Every deck delivers **three** outputs: `deck.pdf` (lossless), `deck.pptx` (image-based,
-universal), and `deck-editable.pptx` (native PowerPoint, double-click-editable). No
-exceptions — the editable PPTX is never optional.
+Every deck delivers **two** outputs by default: `deck.pdf` (lossless vector) and
+`deck.pptx` (native PowerPoint, double-click-editable). No exceptions — the
+editable PPTX is never optional.
+
+The image-based PPTX (every slide as a PNG inside a 16:9 PPTX) is a third,
+**opt-in** output. Only produce it if the user explicitly asks for it. It is
+redundant with the PDF for the typical use case and the export pipeline is more
+failure-prone (one missed Playwright timing window and slides ship blank).
 
 ## Output 1 — `deck.pdf` (always works)
 
-Via `export-pdf.mjs`. Vector text, lossless, every template. This is the recommended
-delivery format.
+Via `export-pdf.mjs`. Vector text, lossless, every template. Recommended
+delivery format for everything that doesn't need editing.
 
-## Output 2 — `deck.pptx` (image-based, universal)
-
-Via `export-pptx-image.mjs`. Each slide rendered as PNG, embedded full-bleed in a 16:9
-PPTX. Design-faithful (gradients, WebGL, ornaments all preserved exactly). Text is
-pixels, not editable.
-
-**Use when:** the user needs the deck inside PowerPoint for presenting (slide-numbering,
-speaker notes UI, projector-mode) but doesn't need to edit text.
-
-## Output 3 — `deck-editable.pptx` (native PowerPoint, mandatory)
+## Output 2 — `deck.pptx` (native PowerPoint, mandatory, editable)
 
 Routes by `template.json`:
 
@@ -49,9 +45,9 @@ The script uses pptxgenjs primitives directly:
 - `slide.addTable(rows, options)` for KPI ledgers
 - `slide.addImage({ path })` for hero images, logos, photos
 
-The resulting deck doesn't reproduce gradients/WebGL backdrops exactly — the image
-PPTX serves that purpose. The editable PPTX exists so the user can EDIT the deck
-inside PowerPoint. Every line of text is double-click-editable.
+The resulting deck doesn't reproduce gradients/WebGL backdrops exactly — but the
+text is fully editable, every shape uses native PowerPoint primitives, and the
+PDF is the design-faithful reference if the user wants to see the original.
 
 See `references/editable-fallback.md` for the full skeleton + mapping guide.
 
@@ -62,28 +58,67 @@ template's CSS"* — it does NOT mean *"an editable PPTX is impossible"*. The na
 fallback always works.
 
 **Never tell the user that editable PPTX is unavailable.** If the auto path fails,
-build the native one. If the user only wants the image-based PPTX, they'll say so —
-but the editable variant must be offered and built by default.
+build the native one. The editable PPTX must be offered and built by default for
+every deck.
+
+## Optional opt-in output — `deck-image.pptx`
+
+If the user explicitly requests it (e.g. "give me the design-faithful PPTX
+including the WebGL backdrop", or "I need a PPTX with the gradient preserved
+exactly"), produce an image-based PPTX:
+
+```
+node scripts/export-pptx-image.mjs --slides index.html --out deck-image.pptx
+```
+
+Each slide is rendered as a PNG and embedded full-bleed. Pixel-perfect to the
+HTML; text is NOT editable. **Do not produce this by default** — it's redundant
+with the PDF and the export pipeline is more failure-prone than PDF+PPTX-editable.
 
 ## Routing decision
 
 ```
-For every deck delivery, do all THREE:
+For every deck delivery, do BOTH of these:
 
-deck.pdf            ← export-pdf.mjs
-deck.pptx           ← export-pptx-image.mjs
+deck.pdf   ← export-pdf.mjs
+deck.pptx  ← if template.pptx_editable === true:
+                 export-pptx-editable.mjs (auto HTML→PPTX)
+             else:
+                 customize build-editable-pptx-skeleton.mjs and run it
+                 (native pptxgenjs)
 
-deck-editable.pptx  ← if template.pptx_editable === true:
-                          export-pptx-editable.mjs (auto HTML→PPTX)
-                      else:
-                          customize build-editable-pptx-skeleton.mjs and run it
-                          (native pptxgenjs)
+Optional (only if the user asks):
+deck-image.pptx  ← export-pptx-image.mjs (pixels, not editable)
 ```
+
+## Slide-count sanity check (mandatory before delivery)
+
+Both outputs must contain the same number of slides as the source HTML. Verify
+after export and before handing over the files:
+
+```bash
+# Source slide count
+grep -c 'class="slide' index.html
+
+# PDF page count
+mdls -name kMDItemNumberOfPages deck.pdf     # macOS
+pdfinfo deck.pdf | grep Pages                 # Linux
+
+# PPTX slide count
+unzip -p deck.pptx ppt/presentation.xml | grep -c '<p:sldId '
+```
+
+If the PDF or PPTX has fewer slides than the source HTML, an export script
+silently dropped content. Investigate before delivering. The most common cause
+(fixed in v1.3.0) was the export scripts toggling `el.style.display = ''` on
+templates that use `.slide { display: none } .slide.active { display: flex }` —
+re-pull the scripts from `<SKILL_ROOT>/assets/scripts/` if you see this on an
+older workspace.
 
 ## Curating `pptx_editable: true`
 
 The flag controls only which build path is chosen (auto vs native). Setting it to
-`true` requires confirming the HTML passes all four constraints. As of v1.2.0:
+`true` requires confirming the HTML passes all four constraints. As of v1.3.0:
 - 2 flagship templates: permanent `false` (WebGL backdrops)
 - 34 editorial templates: most `false`, ~3-6 (Monochrome, Cartesian, Blue Professional,
   Long Table) could be flipped to `true` after a one-time audit.

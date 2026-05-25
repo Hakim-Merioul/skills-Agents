@@ -100,12 +100,33 @@ async function main() {
       console.error('No .slide sections found in ' + slidesPath);
       process.exit(1);
     }
-    console.log(`Found ${slideCount} slide sections`);
+    // Detect the "active" display value by reading the currently-visible slide.
+    // Many templates use `.slide { display: none } .slide.active { display: flex }`,
+    // so setting `el.style.display = ''` (the old approach) falls back to `none` for
+    // non-first slides and produces blank pages.
+    const activeDisplay = await page.evaluate(() => {
+      const all = document.querySelectorAll('.slide, section.slide, [data-slide]');
+      for (const el of all) {
+        const d = getComputedStyle(el).display;
+        if (d && d !== 'none') return d;
+      }
+      return 'block';
+    });
+    console.log(`Found ${slideCount} slide sections (active display = ${activeDisplay})`);
     for (let i = 0; i < slideCount; i++) {
-      await page.evaluate((idx) => {
+      await page.evaluate(({ idx, displayValue }) => {
         const all = document.querySelectorAll('.slide, section.slide, [data-slide]');
-        all.forEach((el, n) => { el.style.display = n === idx ? '' : 'none'; });
-      }, i);
+        all.forEach((el, n) => {
+          if (n === idx) {
+            el.classList.add('active');
+            el.style.setProperty('display', displayValue, 'important');
+          } else {
+            el.classList.remove('active');
+            el.style.setProperty('display', 'none', 'important');
+          }
+        });
+        window.scrollTo(0, 0);
+      }, { idx: i, displayValue: activeDisplay });
       await page.waitForTimeout(400);
       const buf = await page.pdf({
         width: `${width}px`,

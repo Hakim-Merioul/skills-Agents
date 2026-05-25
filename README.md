@@ -61,7 +61,10 @@ To manage later: `/plugin list`, `/plugin uninstall <name>`, `/plugin update`.
 ### ppt-design-slider
 Turn raw slide content into a designed PowerPoint deck. The user provides text and
 optional images, picks from a 36-template catalog (or defines a custom style in 5
-questions), and the skill produces `.pptx` (editable or image-based) plus `.pdf`.
+questions), and the skill always produces two files: `deck.pdf` (lossless vector
+reference) and `deck.pptx` (native PowerPoint, double-click-editable). When the
+auto HTML→PPTX converter can't preserve a template's CSS, the skill builds the
+editable PPTX from scratch via pptxgenjs — editable is never optional.
 
 **Template library** — 36 designs in two tiers. Pick a slug from the visual catalog below.
 
@@ -100,18 +103,26 @@ full machine-readable catalog and `index.json` for the JSON schema.
 4. Build the deck against the template's design system (`design.md`). Don't mash
    layouts. Don't substitute fonts. Don't introduce new colors.
 5. QA against `references/checklist.md` — P0 must pass.
-6. Export `.pdf` (default, lossless), image-based `.pptx` (universal), and editable
-   `.pptx` (only for templates flagged `pptx_editable: true`).
+6. Export two files: `deck.pdf` (lossless vector, always) and `deck.pptx` (native
+   PowerPoint, always editable). For templates flagged `pptx_editable: false`, the
+   editable PPTX is built from scratch via pptxgenjs — never delivered as an
+   all-image PPTX.
 
 **Export pipeline** (`assets/scripts/`)
 
 - `export-pdf.mjs` — Playwright + pdf-lib. Handles both multi-file decks and single-file
-  decks with `<section class="slide">` siblings.
-- `export-pptx-image.mjs` — full-bleed PNG screenshots embedded in a 16:9 PPTX. Works
-  with every template.
+  decks with `<section class="slide">` siblings. Detects the active `display` value so
+  templates using `.slide { display: none } .slide.active { display: flex }` don't ship
+  with blank pages.
 - `export-pptx-editable.mjs` — native PowerPoint text boxes via pptxgenjs + html2pptx.js.
-  Requires the deck to satisfy four HTML constraints (no gradients, no border-on-text,
-  no `<div>` raw text, no `background-image` on `<div>`).
+  Auto path; requires the deck to satisfy four HTML constraints (no gradients, no
+  border-on-text, no `<div>` raw text, no `background-image` on `<div>`).
+- `build-editable-pptx-skeleton.mjs` — copy + customize per-deck. Native pptxgenjs
+  fallback for templates where the auto path can't preserve the CSS. Reads
+  colors/fonts from `design.md`, emits `addText` / `addShape` / `addTable` / `addImage`.
+- `export-pptx-image.mjs` — opt-in only. Full-bleed PNG screenshots embedded in a 16:9
+  PPTX. Use only when the user explicitly asks for pixel-perfect design fidelity in a
+  PPTX (the PDF covers this for most cases).
 - `validate-deck.mjs` — lints a Swiss-template deck against the 22 locked layouts.
 - `build-index.mjs` — regenerates `index.json` from the per-template `template.json` files.
 
