@@ -106,28 +106,31 @@ Run through `references/checklist.md`. All P0 must pass; P1 should pass. Then op
 
 The user has three output formats available. Default to all three unless told otherwise.
 
+**First-time setup** — copy the export scripts into your project workspace and install dependencies. The scripts must live alongside their `node_modules/` because Node ESM resolves dependencies relative to each script file.
+
 ```bash
 cd <project>/deck/
-
-# PDF (always works, every template) — recommended default
-node <SKILL_ROOT>/assets/scripts/export-pdf.mjs --slides <deck.html> --out deck.pdf
-
-# PPTX (universal image-based fallback — works for every template)
-node <SKILL_ROOT>/assets/scripts/export-pptx-image.mjs --slides <deck.html> --out deck.pptx
-
-# PPTX (editable text) — ONLY if the chosen template has "pptx_editable": true in template.json
-# AND the deck respects the 4 constraints in references/pptx-export-rules.md
-node <SKILL_ROOT>/assets/scripts/export-pptx-editable.mjs --slides <deck.html> --out deck-editable.pptx
+mkdir -p ./scripts && cp <SKILL_ROOT>/assets/scripts/* ./scripts/
+cd ./scripts && npm install && npx playwright install chromium && cd ..
 ```
 
 Where `<SKILL_ROOT>` is the path to this skill folder on the user's machine.
 
-Dependencies need to be installed once in the project workspace:
+**Then export:**
 
 ```bash
-npm install pptxgenjs playwright sharp
-npx playwright install chromium
+# PDF (always works, every template) — recommended default
+node ./scripts/export-pdf.mjs --slides <deck.html or directory> --out deck.pdf
+
+# PPTX (universal image-based fallback — works for every template)
+node ./scripts/export-pptx-image.mjs --slides <deck.html or directory> --out deck.pptx
+
+# PPTX (editable text) — ONLY if the chosen template has "pptx_editable": true in template.json
+# AND the deck respects the 4 constraints in references/pptx-export-rules.md
+node ./scripts/export-pptx-editable.mjs --slides <deck.html or directory> --out deck-editable.pptx
 ```
+
+`--slides` accepts either a single-file deck (`./index.html` with `<section class="slide">` siblings) or a multi-file directory (`./slides/` with one `.html` per slide).
 
 After export, open each output file (`open deck.pdf`, `open deck.pptx`) and verify it visually matches the HTML deck. Send the user the file paths.
 

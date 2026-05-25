@@ -45,9 +45,11 @@ exporters.
 - `assets/scripts/export-pdf.mjs` — PDF export, works on every template
 - `assets/scripts/validate-deck.mjs` — lints a finished deck before delivery
 
-Dependencies for export scripts:
+The export scripts must be copied into your project workspace before running (Node ESM resolves dependencies relative to each script file). See `SKILL.md` Step 6 for the full installation flow.
+
+Dependencies (installed in your project workspace, not the skill):
 ```bash
-npm install pptxgenjs playwright sharp
+npm install pptxgenjs playwright sharp pdf-lib
 npx playwright install chromium
 ```
 
