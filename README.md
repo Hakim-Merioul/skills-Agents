@@ -19,26 +19,38 @@ In Claude Code, add this marketplace once, then install plugins by name:
 That's it — Claude Code fetches and registers the plugins automatically. To list,
 remove, or update later: `/plugin list`, `/plugin uninstall <name>`, `/plugin update`.
 
-## Install (Codex CLI, manual copy)
+## Install (Codex CLI)
 
-Codex doesn't have a plugin/marketplace system yet. Copy the skill folder directly
-into your Codex skills directory using `degit` (npx, no install required):
+Codex CLI reads skills from `~/.agents/skills/` (user-global) or
+`<repo>/.agents/skills/` (project-local) — see the
+[official Codex skills docs](https://developers.openai.com/codex/skills).
+Each plugin in this repo is already a spec-compliant skill (`SKILL.md` +
+`assets/` + `references/`), so a direct subdirectory copy with `degit`
+works:
 
 ```bash
-# ppt-design-slider
+# User-global install (available in every Codex session)
 npx degit Hakim-Merioul/skills-Agents/plugins/ppt-design-slider/skills/ppt-design-slider \
-  ~/.codex/skills/ppt-design-slider
+  ~/.agents/skills/ppt-design-slider
 
-# gaya
 npx degit Hakim-Merioul/skills-Agents/plugins/gaya/skills/gaya \
-  ~/.codex/skills/gaya
+  ~/.agents/skills/gaya
 
-# transposition
 npx degit Hakim-Merioul/skills-Agents/plugins/transposition/skills/transposition \
-  ~/.codex/skills/transposition
+  ~/.agents/skills/transposition
 ```
 
-Replace `~/.codex/skills/` with whatever path your Codex CLI version expects.
+Or for **project-local** install (only available inside one repo):
+
+```bash
+mkdir -p .agents/skills
+npx degit Hakim-Merioul/skills-Agents/plugins/ppt-design-slider/skills/ppt-design-slider \
+  .agents/skills/ppt-design-slider
+```
+
+Inside Codex, invoke skills with `/skills` (explicit) or by typing `$` to
+mention a skill by name. Codex also auto-triggers a skill when your task
+matches its `description` field — same behavior as Claude Code.
 
 ## Install (Claude Desktop or manual)
 

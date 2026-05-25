@@ -169,9 +169,10 @@ After export, open each output (`open deck.pdf`) and verify it visually matches 
 ## Cross-platform notes
 
 The shell commands above (`node`, `cp`, `open`) work on macOS, Linux, and WSL.
-Pure Windows: replace `open` with `start`. The skill body uses no Claude-Code-
-specific tool calls — the same workflow runs on Claude Code, Codex CLI,
-Claude Desktop, and any agent that can run Node.
+Pure Windows: replace `open` with `start`. The skill body uses no agent-
+specific tool calls — the same workflow runs on Claude Code, Codex CLI
+(skills live at `~/.agents/skills/` or `<repo>/.agents/skills/`), and any
+agent that can run Node.
 
 ## Why a harness, not just prose
 
