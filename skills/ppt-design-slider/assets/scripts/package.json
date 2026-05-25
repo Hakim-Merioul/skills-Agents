@@ -1,0 +1,12 @@
+{
+  "name": "ppt-design-slider-scripts",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Export scripts for the ppt-design-slider skill. Install in your project workspace, not in the skill itself.",
+  "dependencies": {
+    "pptxgenjs": "^3.12.0",
+    "playwright": "^1.40.0",
+    "sharp": "^0.33.0"
+  }
+}
