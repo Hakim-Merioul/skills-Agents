@@ -120,6 +120,50 @@ detect the model from project context, and orchestrate everything for you:
 
 [→ skills/gaya](skills/gaya/)
 
+### ppt-design-slider
+Turn raw slide content into a designed PowerPoint deck. The user provides text and
+optional images, picks from a 36-template catalog (or defines a custom style in 5
+questions), and the skill produces `.pptx` (editable or image-based) plus `.pdf`.
+
+**Template library** — 36 designs in two tiers:
+- **Flagship** (2): `magazine` (editorial WebGL spread, 10 layouts, 5 ink palettes) and
+  `swiss` (International Typographic, 22 locked layouts S01–S22, single accent).
+- **Editorial** (34): single-aesthetic decks tuned per tone — `monochrome`, `cobalt-grid`,
+  `pink-script`, `studio`, `peoples-platform`, `retro-zine`, `daisy-days`, etc. See
+  `skills/ppt-design-slider/references/catalog.md` for the full list.
+
+**Six-step workflow**
+1. Brief the deck (occasion + mood — always asked, even if the topic seems obvious).
+2. Show three template candidates with live cover previews — OR switch to a 5-question
+   custom style spec (`_design-spec.md`) if no template fits.
+3. Plan the slide list as a table (Layout / Headline / Body / Image slot) and wait for
+   sign-off before writing HTML.
+4. Build the deck against the template's design system (`design.md`). Don't mash
+   layouts. Don't substitute fonts. Don't introduce new colors.
+5. QA against `references/checklist.md` — P0 must pass.
+6. Export `.pdf` (default, lossless), image-based `.pptx` (universal), and editable
+   `.pptx` (only for templates flagged `pptx_editable: true`).
+
+**Export pipeline** (`assets/scripts/`)
+
+- `export-pdf.mjs` — Playwright + pdf-lib. Handles both multi-file decks and single-file
+  decks with `<section class="slide">` siblings.
+- `export-pptx-image.mjs` — full-bleed PNG screenshots embedded in a 16:9 PPTX. Works
+  with every template.
+- `export-pptx-editable.mjs` — native PowerPoint text boxes via pptxgenjs + html2pptx.js.
+  Requires the deck to satisfy four HTML constraints (no gradients, no border-on-text,
+  no `<div>` raw text, no `background-image` on `<div>`).
+- `validate-deck.mjs` — lints a Swiss-template deck against the 22 locked layouts.
+- `build-index.mjs` — regenerates `index.json` from the per-template `template.json` files.
+
+Scripts must be copied into the project workspace before running (Node ESM resolves
+dependencies relative to each script file). See SKILL.md Step 6 for the install flow.
+
+**Cross-platform** — the SKILL.md body uses platform-neutral phrasing (no Claude-Code-
+specific tool calls). Same workflow runs on Claude Code, Codex, and Claude Desktop.
+
+[→ skills/ppt-design-slider](skills/ppt-design-slider/)
+
 ## License
 
 MIT.
