@@ -1,0 +1,21 @@
+{
+  "name": "transposition",
+  "version": "1.0.0",
+  "description": "Transfer the context of the current conversation to another window — another Claude Code session, ChatGPT, Claude.ai, Gemini, or a human teammate. Inspired by Ino Yamanaka's Shintenshin no Jutsu. Four modes: brief, full, prompt, code-handoff.",
+  "author": {
+    "name": "Hakim Merioul",
+    "url": "https://github.com/Hakim-Merioul"
+  },
+  "homepage": "https://github.com/Hakim-Merioul/skills-Agents",
+  "repository": "https://github.com/Hakim-Merioul/skills-Agents",
+  "license": "MIT",
+  "keywords": [
+    "context-transfer",
+    "handoff",
+    "session-export",
+    "context-dump",
+    "conversation-export",
+    "cross-tool",
+    "session-recap"
+  ]
+}
