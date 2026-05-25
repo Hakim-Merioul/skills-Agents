@@ -73,13 +73,33 @@ Turn raw slide content into a designed PowerPoint deck. The user provides text a
 optional images, picks from a 36-template catalog (or defines a custom style in 5
 questions), and the skill produces `.pptx` (editable or image-based) plus `.pdf`.
 
-**Template library** — 36 designs in two tiers:
-- **Flagship** (2): `magazine` (editorial WebGL spread, 10 layouts, 5 ink palettes) and
-  `swiss` (International Typographic, 22 locked layouts S01–S22, single accent).
-- **Editorial** (34): single-aesthetic decks tuned per tone — `monochrome`, `cobalt-grid`,
-  `pink-script`, `studio`, `peoples-platform`, `retro-zine`, `daisy-days`, etc. See
-  `plugins/ppt-design-slider/skills/ppt-design-slider/references/catalog.md` for the
-  full list.
+**Template library** — 36 designs in two tiers. Pick a slug from the visual catalog below.
+
+#### Flagship (2)
+
+|  |  |
+|:---:|:---:|
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/magazine.png" width="260"><br>**Magazine**<br>`magazine` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/swiss.png" width="260"><br>**Swiss**<br>`swiss` |
+
+#### Editorial tier (34)
+
+|  |  |  |
+|:---:|:---:|:---:|
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/8-bit-orbit.png" width="260"><br>**8-Bit Orbit**<br>`8-bit-orbit` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/biennale-yellow.png" width="260"><br>**Biennale Yellow**<br>`biennale-yellow` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/block-frame.png" width="260"><br>**BlockFrame**<br>`block-frame` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/blue-professional.png" width="260"><br>**Blue Professional**<br>`blue-professional` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/bold-poster.png" width="260"><br>**Bold Poster**<br>`bold-poster` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/broadside.png" width="260"><br>**Broadside**<br>`broadside` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/capsule.png" width="260"><br>**Capsule**<br>`capsule` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/cartesian.png" width="260"><br>**Cartesian**<br>`cartesian` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/cobalt-grid.png" width="260"><br>**Cobalt Grid**<br>`cobalt-grid` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/coral.png" width="260"><br>**Coral**<br>`coral` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/creative-mode.png" width="260"><br>**Creative Mode**<br>`creative-mode` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/daisy-days.png" width="260"><br>**Daisy Days**<br>`daisy-days` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/editorial-forest.png" width="260"><br>**Editorial Forest**<br>`editorial-forest` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/editorial-tri-tone.png" width="260"><br>**Editorial Tri-Tone**<br>`editorial-tri-tone` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/emerald-editorial.png" width="260"><br>**Emerald Editorial**<br>`emerald-editorial` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/grove.png" width="260"><br>**Grove**<br>`grove` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/long-table.png" width="260"><br>**Long Table**<br>`long-table` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/mat.png" width="260"><br>**Mat**<br>`mat` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/monochrome.png" width="260"><br>**Monochrome**<br>`monochrome` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/neo-grid-bold.png" width="260"><br>**Neo-Grid Bold**<br>`neo-grid-bold` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/peoples-platform.png" width="260"><br>**People's Platform**<br>`peoples-platform` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/pin-and-paper.png" width="260"><br>**Pin & Paper**<br>`pin-and-paper` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/pink-script.png" width="260"><br>**Pink Script — After Hours**<br>`pink-script` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/playful.png" width="260"><br>**Playful**<br>`playful` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/raw-grid.png" width="260"><br>**Raw Grid**<br>`raw-grid` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/retro-windows.png" width="260"><br>**Retro Windows**<br>`retro-windows` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/retro-zine.png" width="260"><br>**Retro Zine**<br>`retro-zine` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/sakura-chroma.png" width="260"><br>**Sakura Chroma**<br>`sakura-chroma` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/scatterbrain.png" width="260"><br>**Scatterbrain**<br>`scatterbrain` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/signal.png" width="260"><br>**Signal**<br>`signal` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/soft-editorial.png" width="260"><br>**Soft Editorial**<br>`soft-editorial` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/stencil-tablet.png" width="260"><br>**Stencil & Tablet**<br>`stencil-tablet` | <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/studio.png" width="260"><br>**Studio**<br>`studio` |
+| <img src="plugins/ppt-design-slider/skills/ppt-design-slider/assets/previews/vellum.png" width="260"><br>**Vellum**<br>`vellum` |  |  |
+
+See `plugins/ppt-design-slider/skills/ppt-design-slider/references/catalog.md` for the
+full machine-readable catalog and `index.json` for the JSON schema.
 
 **Six-step workflow**
 1. Brief the deck (occasion + mood — always asked, even if the topic seems obvious).
