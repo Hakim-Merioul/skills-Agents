@@ -423,7 +423,7 @@ The template does not declare a `@media print` rule. Browser-driven PDF export w
 
 ### Mixed-Content Strategy
 
-Strategy A — same `font-family` stack, Latin-first fallback. Each typographic token already lists `"Jost, Noto Sans SC, system-ui, sans-serif"` (or the Lora equivalent). Latin glyphs render in Jost / Lora; CJK glyphs automatically fall through to Noto Sans SC / Noto Serif SC. No per-language class needed. Mixed sentences like `使用 Claude 思考` render in one logical run with the correct face per script.
+Strategy A — same `font-family` stack, Latin-first fallback. Each typographic token already lists `"Jost, Noto Sans SC, system-ui, sans-serif"` (or the Lora equivalent). Latin glyphs render in Jost / Lora; CJK glyphs automatically fall through to Noto Sans SC / Noto Serif SC. No per-language class needed. Mixed sentences like `使用 Apple 思考` render in one logical run with the correct face per script.
 
 ### Loading
 
@@ -440,7 +440,7 @@ Strategy A — same `font-family` stack, Latin-first fallback. Each typographic 
 - Text-transform: no uppercase on CJK
 - Full-width punctuation （，。：；！？「」（））
 - No period on display headlines (Chinese typography convention)
-- Pangu spacing 盘古之白 (space between CJK and Latin: `使用 Claude` not `使用Claude`)
+- Pangu spacing 盘古之白 (space between CJK and Latin: `使用 Apple` not `使用Apple`)
 - One font per sentence
 
 ### Aesthetic Notes for This System

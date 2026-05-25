@@ -13,7 +13,7 @@
 
 4. For each candidate, clone its first slide (the cover) into a temp folder, swap placeholder text for the user's actual deck title / subtitle / author / date. Save as `_previews/0N-<slug>.html` in the project workspace.
 
-5. Open all three previews (in Codex/Desktop: tell the user the file paths and ask them to open; in Claude Code: use `open` via the shell) and ask: "Three options to compare. Which feels right?"
+5. Open all three previews — if the runtime allows it (e.g. via a shell `open`/`xdg-open`/`start` command), open them directly; otherwise tell the user the file paths and ask them to open. Then ask: "Three options to compare. Which feels right?"
 
 6. Wait. Do not start the full deck until the user picks one.
 

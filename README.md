@@ -1,32 +1,21 @@
 # skills-Agents
 
-> A Claude Code marketplace of agent skills built for real engineering — not vibe coding.
+> Agent Skills built for real engineering — not vibe coding.
 
-Each plugin in this marketplace is a self-contained Claude Code skill. Install one,
-all, or any subset. Hackable, cloneable, no vendor lock-in.
+A growing collection of [Agent Skills](https://agentskills.io) following the open
+specification. Each plugin is a self-contained skill — install one, all, or any
+subset. Hackable, cloneable, no vendor lock-in.
 
-## Install (Claude Code)
+## Install — one-command, per agent runtime
 
-In Claude Code, add this marketplace once, then install plugins by name:
+This repo is published as both an Agent Skills marketplace (for `/plugin install`)
+and a set of spec-compliant `SKILL.md` directories (for `degit` / manual copy).
 
-```bash
-/plugin marketplace add Hakim-Merioul/skills-Agents
-/plugin install ppt-design-slider@skills-Agents
-/plugin install gaya@skills-Agents
-/plugin install transposition@skills-Agents
-```
-
-That's it — Claude Code fetches and registers the plugins automatically. To list,
-remove, or update later: `/plugin list`, `/plugin uninstall <name>`, `/plugin update`.
-
-## Install (Codex CLI)
+### Codex CLI
 
 Codex CLI reads skills from `~/.agents/skills/` (user-global) or
 `<repo>/.agents/skills/` (project-local) — see the
 [official Codex skills docs](https://developers.openai.com/codex/skills).
-Each plugin in this repo is already a spec-compliant skill (`SKILL.md` +
-`assets/` + `references/`), so a direct subdirectory copy with `degit`
-works:
 
 ```bash
 # User-global install (available in every Codex session)
@@ -40,7 +29,7 @@ npx degit Hakim-Merioul/skills-Agents/plugins/transposition/skills/transposition
   ~/.agents/skills/transposition
 ```
 
-Or for **project-local** install (only available inside one repo):
+For **project-local** install (only inside one repo):
 
 ```bash
 mkdir -p .agents/skills
@@ -50,15 +39,29 @@ npx degit Hakim-Merioul/skills-Agents/plugins/ppt-design-slider/skills/ppt-desig
 
 Inside Codex, invoke skills with `/skills` (explicit) or by typing `$` to
 mention a skill by name. Codex also auto-triggers a skill when your task
-matches its `description` field — same behavior as Claude Code.
+matches its `description` field.
 
-## Install (Claude Desktop or manual)
+### Plugin marketplace (Anthropic agent runtime)
 
-Clone the repo and copy any single skill into your `~/.claude/skills/`:
+Add the marketplace once, then install plugins by name:
+
+```bash
+/plugin marketplace add Hakim-Merioul/skills-Agents
+/plugin install ppt-design-slider@skills-Agents
+/plugin install gaya@skills-Agents
+/plugin install transposition@skills-Agents
+```
+
+To manage later: `/plugin list`, `/plugin uninstall <name>`, `/plugin update`.
+
+### Manual copy (any agent runtime, desktop apps)
+
+Clone the repo and copy any single skill into your runtime's skills directory
+(e.g. `~/.claude/skills/`, `~/.agents/skills/`, or wherever your agent looks):
 
 ```bash
 git clone https://github.com/Hakim-Merioul/skills-Agents.git
-cp -r skills-Agents/plugins/transposition/skills/transposition ~/.claude/skills/
+cp -r skills-Agents/plugins/transposition/skills/transposition ~/.agents/skills/
 ```
 
 Or copy a single `SKILL.md` file manually if you prefer.
@@ -105,8 +108,8 @@ questions), and the skill produces `.pptx` (editable or image-based) plus `.pdf`
 Scripts must be copied into the project workspace before running (Node ESM resolves
 dependencies relative to each script file). See SKILL.md Step 6 for the install flow.
 
-**Cross-platform** — the SKILL.md body uses platform-neutral phrasing (no Claude-Code-
-specific tool calls). Same workflow runs on Claude Code, Codex, and Claude Desktop.
+**Runtime-neutral** — the SKILL.md body uses agent-neutral phrasing (no platform-
+specific tool calls). The same workflow runs on any Agent Skills runtime.
 
 [→ plugins/ppt-design-slider](plugins/ppt-design-slider/)
 
@@ -153,7 +156,7 @@ python3 .gaya/<slug>/gaya.py \
     --max-usd 5.0
 ```
 
-Or just invoke the skill in Claude Code and let it scaffold the working directory,
+Or invoke the skill in your agent runtime and let it scaffold the working directory,
 detect the model from project context, and orchestrate everything:
 `/gaya`, "optimize this prompt", "distill opus into a cheap model", etc.
 
@@ -161,7 +164,7 @@ detect the model from project context, and orchestrate everything:
 
 ### transposition
 Transfer the context of the current conversation into another window —
-another Claude Code session, ChatGPT, Claude.ai, Gemini, or a human
+another agent session, ChatGPT, Claude.ai, Gemini, or a human
 teammate. Inspired by Ino Yamanaka's *Shintenshin no Jutsu*: transposing
 a mind from one body into another.
 
@@ -182,8 +185,8 @@ Modes:
 ```
 skills-Agents/
 ├── .claude-plugin/
-│   └── marketplace.json          ← Claude Code marketplace manifest
-├── plugins/                       ← Each subdir is a Claude Code plugin
+│   └── marketplace.json          ← Marketplace manifest (Agent Skills spec)
+├── plugins/                       ← Each subdir is a plugin
 │   ├── ppt-design-slider/
 │   │   ├── .claude-plugin/plugin.json
 │   │   └── skills/ppt-design-slider/   ← Skill content (SKILL.md, etc.)
@@ -193,7 +196,6 @@ skills-Agents/
 │   └── transposition/
 │       ├── .claude-plugin/plugin.json
 │       └── skills/transposition/
-├── .dev/                          ← Repo dev tooling (not user-facing)
 └── README.md
 ```
 

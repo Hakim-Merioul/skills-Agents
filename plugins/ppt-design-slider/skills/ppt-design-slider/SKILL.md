@@ -1,6 +1,6 @@
 ---
 name: ppt-design-slider
-description: Use when the user wants to turn raw slide content into a designed PowerPoint deck. Picks from 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, exports an editable or image-based .pptx plus PDF. Cross-platform (Claude Code, Codex, Claude Desktop). Triggers on "/ppt-design-slider", "make slides", "design a deck", "build a presentation", "PowerPoint from this", "slides from outline", "pitch deck", "présenter", "diapositives", "transformer en PPT".
+description: Use when the user wants to turn raw slide content into a designed PowerPoint deck. Picks from 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, exports an editable or image-based .pptx plus PDF. Runtime-neutral — works with any Agent Skills runtime. Triggers on "/ppt-design-slider", "make slides", "design a deck", "build a presentation", "PowerPoint from this", "slides from outline", "pitch deck", "présenter", "diapositives", "transformer en PPT".
 license: MIT
 ---
 
@@ -169,10 +169,10 @@ After export, open each output (`open deck.pdf`) and verify it visually matches 
 ## Cross-platform notes
 
 The shell commands above (`node`, `cp`, `open`) work on macOS, Linux, and WSL.
-Pure Windows: replace `open` with `start`. The skill body uses no agent-
-specific tool calls — the same workflow runs on Claude Code, Codex CLI
-(skills live at `~/.agents/skills/` or `<repo>/.agents/skills/`), and any
-agent that can run Node.
+Pure Windows: replace `open` with `start`. The skill body uses no runtime-
+specific tool calls — the same workflow runs on any Agent Skills runtime
+(skills typically live at `~/.agents/skills/` or `<repo>/.agents/skills/`)
+that can execute Node.
 
 ## Why a harness, not just prose
 

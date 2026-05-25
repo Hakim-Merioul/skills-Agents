@@ -5,14 +5,14 @@
     "url": "https://github.com/Hakim-Merioul"
   },
   "metadata": {
-    "description": "Agent skills built for real engineering work — not vibe coding. Each plugin is a self-contained Claude Code skill.",
+    "description": "Agent Skills built for real engineering work — not vibe coding. Each plugin is a self-contained spec-compliant skill (agentskills.io).",
     "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "ppt-design-slider",
       "source": "./plugins/ppt-design-slider",
-      "description": "Turn raw slide content into a designed PowerPoint deck. 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, exports an editable or image-based .pptx plus PDF. Cross-platform (Claude Code, Codex, Claude Desktop).",
+      "description": "Turn raw slide content into a designed PowerPoint deck. 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, exports an editable or image-based .pptx plus PDF. Runtime-neutral — works with any Agent Skills runtime.",
       "category": "design",
       "author": {
         "name": "Hakim Merioul",
@@ -40,7 +40,7 @@
     {
       "name": "transposition",
       "source": "./plugins/transposition",
-      "description": "Transfer the context of the current conversation to another window — another Claude Code session, ChatGPT, Claude.ai, Gemini, or a human teammate. Four modes: brief, full, prompt, code-handoff.",
+      "description": "Transfer the context of the current conversation to another window — another agent session, ChatGPT, Claude.ai, Gemini, or a human teammate. Four modes: brief, full, prompt, code-handoff.",
       "category": "productivity",
       "author": {
         "name": "Hakim Merioul",

@@ -621,7 +621,7 @@ Strategy A — extend each token's `fontFamily` to include the Chinese face afte
 - Text-transform: no uppercase on CJK
 - Full-width punctuation （，。：；！？「」（））
 - No period on display headlines (Chinese typography convention)
-- Pangu spacing 盘古之白 (space between CJK and Latin: `使用 Claude` not `使用Claude`)
+- Pangu spacing 盘古之白 (space between CJK and Latin: `使用 Apple` not `使用Apple`)
 - One font per sentence
 
 ### Aesthetic Notes for This System

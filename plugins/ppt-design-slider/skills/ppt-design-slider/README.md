@@ -11,12 +11,10 @@ Skill that turns raw slide content into a designed PowerPoint deck.
 
 ## Compatibility
 
-- Claude Code (via `/skill` or auto-trigger)
-- Codex (skill folder picked up at session start)
-- Claude Desktop (skills directory)
-
-The skill body uses platform-neutral phrasing ("ask the user", "open the file") with no
-Claude-Code-specific tool calls, so the same workflow runs everywhere.
+Any [Agent Skills](https://agentskills.io) runtime (Codex CLI, plugin-based agents,
+desktop apps). The skill body uses runtime-neutral phrasing ("ask the user",
+"open the file") with no platform-specific tool calls, so the same workflow runs
+everywhere.
 
 ## Template library
 

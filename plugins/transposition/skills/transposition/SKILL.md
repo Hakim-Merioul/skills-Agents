@@ -1,6 +1,6 @@
 ---
 name: transposition
-description: Use when the user wants to transfer the current conversation's context to another window — another Claude Code session, ChatGPT, Claude.ai, Gemini, or a human teammate. Triggers on /transposition, "transfer this context", "hand this off", "context dump", "save this session for later", "brief the next window", "I need to switch windows".
+description: Use when the user wants to transfer the current conversation's context to another window — another agent session, ChatGPT, Claude.ai, Gemini, or a human teammate. Triggers on /transposition, "transfer this context", "hand this off", "context dump", "save this session for later", "brief the next window", "I need to switch windows".
 ---
 
 # Transposition
