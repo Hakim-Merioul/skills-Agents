@@ -1,12 +1,12 @@
 ---
 name: ppt-design-slider
-description: Use when the user wants to turn raw slide content into a designed PowerPoint deck. Picks from 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, exports an editable or image-based .pptx plus PDF. Runtime-neutral — works with any Agent Skills runtime. Triggers on "/ppt-design-slider", "make slides", "design a deck", "build a presentation", "PowerPoint from this", "slides from outline", "pitch deck", "présenter", "diapositives", "transformer en PPT".
+description: Use when the user wants to turn raw slide content into a designed PowerPoint deck. Picks from 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, always delivers PDF + image-based PPTX + editable PPTX (native pptxgenjs fallback when auto conversion can't). Runtime-neutral — works with any Agent Skills runtime. Triggers on "/ppt-design-slider", "make slides", "design a deck", "build a presentation", "PowerPoint from this", "slides from outline", "pitch deck", "présenter", "diapositives", "transformer en PPT".
 license: MIT
 ---
 
 # PPT Design Slider
 
-Turn raw slide content into a designed PowerPoint deck. The user provides text and optional images, picks a template from the 36-design catalog (or defines a custom style in 5 questions), and you produce `.pptx` (editable or image-based) plus `.pdf`.
+Turn raw slide content into a designed PowerPoint deck. The user provides text and optional images, picks a template from the 36-design catalog (or defines a custom style in 5 questions), and you always produce three files: `deck.pdf`, `deck.pptx` (image-based), and `deck-editable.pptx` (native PowerPoint, double-click-editable text).
 
 ## Architecture (read this first)
 

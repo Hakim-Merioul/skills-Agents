@@ -223,26 +223,51 @@ substitutions, no new colors, no layout mash-ups.
 
 ${template.slug === 'swiss' ? `\n**Swiss-specific:** every body slide MUST declare \`data-layout="Sxx"\` (S01–S22).\nRun \`node scripts/validate-deck.mjs index.html\` periodically to catch violations.\n` : ''}
 
-## 6. Export
+## 6. Verify the layout (before exporting)
+
+\`\`\`bash
+cd ${deckDir}
+node scripts/verify-deck.mjs --html index.html
+\`\`\`
+
+Catches overflow, overlapping text blocks, lost line breaks, and undeclared CSS
+variables. Fix any errors in \`index.html\` before exporting.
+
+## 7. Export — THREE outputs, always
 
 \`\`\`bash
 cd ${deckDir}
 
-# PDF (always works, every template) — recommended default
+# (a) PDF — vectorial, lossless, works for every template (recommended default)
 node scripts/export-pdf.mjs --slides index.html --out deck.pdf
 
-# PPTX (universal image-based fallback — works for every template)
+# (b) PPTX image — every slide as PNG inside a 16:9 PPTX. Universal, design-faithful.
 node scripts/export-pptx-image.mjs --slides index.html --out deck.pptx
 
-${template.pptx_editable ? `# PPTX (editable text) — this template supports editable export
+# (c) PPTX editable — native PowerPoint, every word double-click-editable. MANDATORY.
+${template.pptx_editable ? `# This template's HTML satisfies the auto-converter constraints, so the auto
+# path works out of the box:
 node scripts/export-pptx-editable.mjs --slides index.html --out deck-editable.pptx
-` : `# PPTX (editable text) is NOT available for this template — it relies on
-# gradients/WebGL/decorative SVG that don't survive editable export.
+` : `# This template's CSS (gradients / WebGL / decorative SVG) does NOT survive the
+# auto HTML→PPTX converter. Build the native fallback instead:
+#
+#   1. cp scripts/build-editable-pptx-skeleton.mjs scripts/build-editable-pptx.mjs
+#   2. Customize the DESIGN token block in build-editable-pptx.mjs by copying
+#      colors, fonts, and sizes from design.md
+#   3. Add one slide function per slide in index.html, using pptx.addText /
+#      addShape / addImage / addTable (see references/editable-fallback.md for
+#      the full mapping)
+#   4. Run it:
+node scripts/build-editable-pptx.mjs   # produces deck-editable.pptx
+#
+# DO NOT skip this step. "Editable PPTX unavailable" is never a valid answer —
+# the native fallback always works. See references/editable-fallback.md.
 `}
 \`\`\`
 
-After export, open each output (\`open deck.pdf\`, \`open deck.pptx\`) and verify
-it matches the HTML visually.
+After export, open each output (\`open deck.pdf\`, \`open deck.pptx\`,
+\`open deck-editable.pptx\`) and confirm all three match the HTML visually
+and that the editable variant lets you double-click any text.
 `;
   if (!args.dryRun) await fs.writeFile(nextStepsPath, nextSteps);
   summary.actions.push(`write ${nextStepsPath}`);
@@ -256,7 +281,7 @@ it matches the HTML visually.
 
   console.log(`\n✓ Deck workspace ready: ${deckDir}`);
   console.log(`  Template: ${template.name} (${args.slug}, ${template.tier})`);
-  console.log(`  PPTX editable: ${template.pptx_editable ? 'yes' : 'no (image-based only)'}`);
+  console.log(`  Editable PPTX path: ${template.pptx_editable ? 'auto (export-pptx-editable.mjs)' : 'native fallback (build-editable-pptx-skeleton.mjs)'}`);
   console.log(`  Files: ${summary.actions.length} actions completed`);
   console.log(`\nRead ${nextStepsPath} for the exact commands to run next.`);
 }

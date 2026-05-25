@@ -1,7 +1,7 @@
 {
   "name": "ppt-design-slider",
-  "version": "1.2.0",
-  "description": "Turn raw slide content into a designed PowerPoint deck. Picks from 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, exports an editable or image-based .pptx plus PDF. Runtime-neutral — works with any Agent Skills runtime.",
+  "version": "1.2.1",
+  "description": "Turn raw slide content into a designed PowerPoint deck. Picks from 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, always delivers PDF + image-based PPTX + editable PPTX (native pptxgenjs fallback when auto conversion can't). Runtime-neutral — works with any Agent Skills runtime.",
   "author": {
     "name": "Hakim Merioul",
     "url": "https://github.com/Hakim-Merioul"

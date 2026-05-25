@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "Agent Skills built for real engineering work — not vibe coding. Each plugin is a self-contained spec-compliant skill (agentskills.io).",
-    "version": "1.2.0"
+    "version": "1.2.1"
   },
   "plugins": [
     {
       "name": "ppt-design-slider",
       "source": "./plugins/ppt-design-slider",
-      "description": "Turn raw slide content into a designed PowerPoint deck. 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, exports an editable or image-based .pptx plus PDF. Runtime-neutral — works with any Agent Skills runtime.",
+      "description": "Turn raw slide content into a designed PowerPoint deck. 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, always delivers PDF + image-based PPTX + editable PPTX (native pptxgenjs fallback when auto conversion can't). Runtime-neutral — works with any Agent Skills runtime.",
       "category": "design",
       "author": {
         "name": "Hakim Merioul",
