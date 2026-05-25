@@ -523,54 +523,6 @@ The system has no `@media print` rule. Slides are absolute-positioned and only o
 ### Interactive States
 - Buttons and nav-buttons translate -2/-2 on hover and shadow grows to 6px (`{shadows.hover}`); on active, translate 2/2 and shadow shrinks to 2px. The hover-press behavior is unusual for a presentation system; it reflects BlockFrame's hybrid identity as both deck and interactive product mockup.
 
-## CJK & International Content
-
-When using this template for Chinese (or other CJK) content, swap the Latin typeface stack for an equivalent Chinese pairing and apply universal CJK adjustments. All recommended Chinese fonts load via CDN — no install required.
-
-### Recommended Chinese Pairing
-
-| Role | Latin (default) | Chinese counterpart |
-|---|---|---|
-| Display / hero / quote / close title / stat numerals | Inter 800–900 (uppercase, negative tracking) | 思源黑体 Noto Sans SC 900 (sentence case, 0 tracking) |
-| Card title | Inter 700 (uppercase) | 思源黑体 Noto Sans SC 700 (no transform) |
-| Body / list body | Inter 500 | 思源黑体 Noto Sans SC 400 |
-| Label / mono tag / counter / legend | Space Grotesk 600–700 (uppercase, 0.05–0.1em tracking) | 思源黑体 Noto Sans SC 600 (no transform, no tracking) |
-
-### Mixed-Content Strategy
-
-**Strategy A** — single CJK family with built-in Latin glyph coverage. Set every text element to `font-family: 'Noto Sans SC', sans-serif`. 思源黑体 ships Latin glyphs that pair cleanly with its Chinese characters, so mixed sentences render in one consistent face. The Inter / Space Grotesk distinction in the Latin original is preserved through weight contrast: weight 900 carries the brutalist display role, weight 600 carries the label role, weight 400–500 carries body. Visual hierarchy survives even though the face contrast is gone.
-
-### Loading
-
-Add to the template's `<head>`:
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-```
-
-### Universal CJK Adjustments
-
-- **Line-height**: increase by ~15–25% from the Latin spec. Body 1.75–1.85 (up from 1.6), display 1.15–1.25 (up from 0.95–1). The Latin display compresses to 0.95 line-height; CJK at that compression collides vertically.
-- **Letter-spacing**: set to 0 on every CJK run. The template's negative display tracking (−0.02 to −0.03em on Inter) overlaps CJK strokes and reads as broken; the positive 0.05–0.1em tracking on Space Grotesk labels reads as gappy on square glyphs.
-- **Text transform**: don't apply `uppercase` to Chinese text — CJK has no case. Every Inter display heading (heading-xl, heading-lg, quote-text, close-title, card-title) uses `text-transform: uppercase` in the Latin original; remove it for CJK runs. Every label-pill, counter, and chrome element also uses uppercase; remove that too.
-- **Punctuation**: use full-width Chinese punctuation （，。：；！？「」（））.
-- **No period on display headlines**: Chinese typography convention omits trailing 。 on display-scale headlines.
-- **Space between CJK and Latin (盘古之白)**: insert an ASCII space between every Chinese character and adjacent Latin character or digit. Write `BlockFrame 设计系统` not `BlockFrame设计系统`.
-- **One font per sentence**: 思源黑体 covers both CJK and Latin glyphs in a unified style — let it handle mixed sentences. Don't let the browser font-switch to Inter or Space Grotesk mid-word.
-
-### Aesthetic Notes for This System
-
-The Latin original's typographic identity rests entirely on the **heavy uppercase + negative tracking** combination on Inter display. CJK has no case, so this signal disappears. The system survives because its identity is **80% structural, 20% typographic**: the 4px black borders, 8px hard offset shadows, five-pastel palette, tilted decorations, label-pills, star bursts, stripe blocks, and dot grids do the brutalist work. Set 思源黑体 900 in sentence case at the same large sizes; the chunky black-on-pastel + hard-shadow framing reads as brutalist regardless of whether the type is in caps.
-
-The label-pill (Space Grotesk 600 uppercase, 0.08em tracking, 3px border + 4px shadow, pastel fill) loses the uppercase + tracked-mono character. Render Chinese label-pills with 思源黑体 weight 600 at 0 tracking and a slightly tighter fontSize (11–12px instead of 13px) — the bordered pill shape and shadow do the chrome-recognition work. Keep the pastel fill rotation (pink / blue / green / yellow / cream) intact; it's the system's most recognizable signal after the borders themselves.
-
-### Known CJK Gap
-
-- **No CDN Chinese monospace face for the "system readout" voice.** Space Grotesk's quasi-mono role (label-pills, counters, mono-tags, slide counter NN / NN) depends on its slightly geometric character plus the wide-tracked uppercase treatment. Neither survives the CJK translation. The slide counter and chart legend can keep Latin digits + Latin labels intact; for purely Chinese chrome, lean on the pill border + shadow + pastel fill to signal "label" rather than the typographic treatment.
-- **The "uppercase brutalist" identity weakens.** The system's most distinctive typographic decision is "heavy uppercase Inter with negative tracking" — and that signal is irreplaceable in CJK. Compensate by leaning harder on the structural elements: more decorative disruption (extra tilted rectangles, star bursts, stripe blocks), more saturated pastel-ground rotation across slides, and slightly tighter shadow offsets to compensate for the calmer typographic baseline.
-
 ## Iteration Guide
 
 1. Any new card uses a 4px or 3px solid black border + the matched-weight offset shadow (8px or 4px). Never use a card without both.

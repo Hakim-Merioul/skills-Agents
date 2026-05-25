@@ -494,68 +494,6 @@ The system uses **`clamp()` units throughout** — every size, padding, gap, and
 ### Print / Export
 There is no `@media print` rule in the system. Print export will render only the active slide; multi-slide print requires per-slide rendering or a dedicated print stylesheet.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Chinese Face | Weight | Why |
-|---|---|---|---|
-| Display / cover / headline (Bricolage roles, 96–180px) | 思源宋体 Noto Serif SC | 700 | Mincho heavy weight carries the printed-program mass that Bricolage 800 provides in Latin |
-| Card title / course-name / info-value (28–44px) | 思源宋体 Noto Serif SC | 700 | Same Mincho voice at smaller sizes for consistency |
-| Hero edition numeral (480px italic Fraunces) | 思源宋体 Noto Serif SC | 400 | Use a Chinese ordinal character (一二三 / 春夏秋) for the hero anchor instead of a Western digit |
-| Body / lede / tagline (Fraunces italic roles) | 思源宋体 Noto Serif SC | 400 | Mincho body voice — warmth without italic, since Chinese has no italic |
-| Pill text / meta-tag / pagenum | 思源宋体 Noto Serif SC | 400 | Keep all chrome in Mincho 400; the system's single-ink discipline carries through |
-| Info-key / edition-label-tracked (uppercase tracked roles) | 思源宋体 Noto Serif SC | 400 with 0.16em letter-spacing | Maintains the tracked-chrome feel |
-
-### Mixed-Content Strategy
-
-Use **Strategy A** — switch the entire face stack to Noto Serif SC across all roles, replacing both Bricolage Grotesque (display) and Fraunces (body). Long Table is a minimal single-ink data / program system where the typographic personality is carried more by the **single-ink rust terracotta**, the **outlined-shape vocabulary**, and the **paper-texture overlay** than by the specific Latin faces. Going all-Mincho in Chinese preserves the printed-program register cleanly without the per-glyph baseline wobble that Strategy C would introduce on a system this typographically dense. Stack:
-
-```css
-/* Bricolage roles (display, headline, card-title, course-name, info-value) */
-font-family: 'Bricolage Grotesque', 'Noto Serif SC', sans-serif;
-/* Fraunces roles (body, lede, tagline, pill, pagenum, edition-label) */
-font-family: 'Fraunces', 'Noto Serif SC', Georgia, serif;
-```
-
-When the deck content is pure Chinese, override both font stacks to lead with Noto Serif SC. Bricolage roles get weight 700 (matches 800 mass in Mincho), Fraunces roles get weight 400.
-
-### Loading
-
-Add to the existing Google Fonts `<link>`:
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
-```
-
-### Universal CJK Adjustments
-
-These adjustments apply to **every CJK block** in this system, regardless of size or role:
-
-- **Loosen line-height by 0.05–0.08.** CJK glyphs are full-width squares with more visual weight than Latin letterforms; line-heights tuned for Latin (0.86–0.95 on display, 1.45–1.5 on body) read as cramped in Chinese. Bump display to 1.0–1.1 and body to 1.55–1.65.
-- **Remove negative letter-spacing on CJK headlines.** Bricolage display uses -0.005em to -0.012em tracking, which collides Chinese glyphs into each other. For CJK runs, set `letter-spacing: 0` — or a tiny positive `0.02em` if the headline feels visually packed.
-- **Never `text-transform: uppercase` on CJK text.** Chinese has no case; the CSS property does nothing on Han glyphs but will silently break any mixed-script line where the Bricolage portion was meant to be capitalized. (This matters here — every Bricolage display element in the source is `text-transform: uppercase`.)
-- **Use Chinese full-width punctuation** (`，。：；！？「」『』（）`) inside Chinese sentences, not the Latin equivalents (`,.:;!?""''()`). Mixing punctuation systems within one sentence reads as a typesetting error.
-- **No period (。) at the end of CJK headlines.** Chinese headlines follow the same rule as Latin — title-style lines drop terminal punctuation. Body paragraphs keep their 。
-- **Apply Pangu spacing (盘古之白) at the boundary between CJK and Latin runs.** A space (or 0.25em margin) belongs between a Chinese character and an adjacent Latin word or digit, e.g. `2026 年 5 月` not `2026年5月`. Either type the spaces manually or use a `pangu.js`-style auto-spacer.
-- **One font per sentence.** Don't switch between Noto Serif SC weight 400 and 700 inside the same sentence — pick the weight that matches the role (headline = 700, body = 400) and commit to it for the whole run.
-
-### Aesthetic Notes for This System
-
-Long Table's whole voice is "supper-club poster / Risograph zine / small-press dinner program" — single-ink rust terracotta on cream, outlined shapes, paper-texture overlay. In Chinese, the system's identity does not depend on the specific Latin faces (Bricolage and Fraunces); it depends on the **single-ink commitment**, the **1.5px outlined-shape vocabulary**, the **4px radial-dot paper texture**, and the **rich-but-curated density**. Going all-Noto-Serif-SC preserves every one of those identity markers cleanly.
-
-The default-italic body rule does not translate to Chinese (Chinese has no italic concept; slanted Han glyphs read as broken, not as a body voice). In Chinese, every Fraunces-italic role simply becomes **Noto Serif SC weight 400 upright** — the warmth comes from the Mincho character itself, not from the slant. This is the right trade-off for this system.
-
-The hero italic Fraunces jumbo numeral (up to 480px) is the system's signature anchor in Latin — a single italic digit acting as a typographic centerpiece. In Chinese, **use a Chinese ordinal or season character instead of a Western digit**: 「三」、「五」、「春」、「秋」, rendered in Noto Serif SC at weight 400. The Han glyph's denser visual weight at 480px balances the cover slide better than a Western digit would; the cream paper background and warm rust ink carry the printed-program feel through unchanged.
-
-The system's outlined-shape vocabulary (pills, edition badges, rect-tags, outlined cards) works identically in Chinese — no adjustments needed. The "EDITION N." label paired with the circular badge becomes 「第三期」or 「第 03 期」inside the circle, with the meta-label below in Noto Serif SC 400. The 32%-opacity solid / dashed internal divider rhythm is purely structural and unaffected by language.
-
-### Known CJK Gap
-
-The Fraunces italic-default body voice is one of Long Table's most distinctive typographic moves in Latin — italic Mincho-style serif body that gives the system its lyrical, hand-written warmth. Chinese has no equivalent: there is no commonly-available "italic Mincho" face on the Google Fonts CDN, and slanted Han glyphs read as broken regardless. The Chinese rendering loses the italic-default character — every body line becomes upright Noto Serif SC weight 400. This is a real loss of personality, partially compensated by Noto Serif SC's own warmth at body sizes, but Chinese-content Long Table decks read measurably more "neutral magazine" than "supper-club poster." For decks where this matters, lean harder on the **single-ink color** and the **paper-texture overlay** to carry the warmth that the italic body would have carried in Latin.
-
 ## Iteration Guide
 
 1. Any new mark on a slide is in `{colors.ink}` — full opacity for primary, 78% for de-emphasized metadata, 32% for internal dividers. No second color.

@@ -441,53 +441,6 @@ Charts are rendered with Chart.js (loaded via CDN). The two chart types in the s
 ### Print / Export
 Not explicitly handled. Each slide is a 100vw × 100vh block; export workflows should snapshot each slide at 1920×1080.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin font | Recommended Chinese pairing | Source |
-|---|---|---|---|
-| Display / Headline (Playfair Display 400) | Playfair Display | 思源宋体 Noto Serif SC 700 | Google Fonts |
-| Body / Label (Inter 400–500) | Inter | 思源宋体 Noto Serif SC 400 | Google Fonts |
-
-### Mixed-Content Strategy
-
-Use **Strategy A — single-font-stack with fallback**: declare Noto Serif SC *after* the Latin font in the same `font-family` stack so Latin glyphs render in Playfair / Inter and CJK glyphs fall through to Noto Serif SC automatically. One CSS rule per role, no manual class switching.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..600&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-```
-
-```css
-:root {
-  --font-display: "Playfair Display", "Noto Serif SC", serif;
-  --font-body: "Inter", "Noto Serif SC", sans-serif;
-}
-/* Headlines use Noto Serif SC 700; body uses Noto Serif SC 400. */
-```
-
-### Universal CJK Adjustments
-
-- **Line-height**: bump CJK body line-height to ~1.75 (from 1.6) — Hanzi need more vertical breathing than Latin lowercase, and Cartesian already favors generous leading.
-- **Letter-spacing**: zero out `letter-spacing` on Hanzi runs. Keep the 2–3px tracking only on uppercase Latin labels.
-- **Text-transform**: drop `text-transform: uppercase` on any label/attribution/micro when content is Hanzi — Chinese has no case; forcing uppercase does nothing for Hanzi but breaks the rendering of any mixed Latin acronyms inside.
-- **Punctuation**: use Chinese full-width punctuation (，。：；「」) for Chinese sentences, half-width (`,.:;""`) for Latin. Never mix half-width punctuation into a Chinese sentence.
-- **No period on headlines**: Chinese headline convention omits the terminal 。 — strip it from display strings.
-- **Pangu spacing**: insert a thin space (or a regular space) between adjacent Hanzi and Latin/digit runs (e.g. `2026 年`, `AI 产品`). Improves readability of mixed runs.
-- **One font per sentence**: don't switch CJK families mid-sentence. Pick a single weight of Noto Serif SC for a given text run, never two inside one phrase.
-
-### Aesthetic Notes
-
-Noto Serif SC (思源宋体) is the only mainstream Hanzi serif with the same restrained editorial register Cartesian needs — its modulated horizontal-thin / vertical-thick strokes echo Playfair's didone aesthetic, and its uniformly even cadence matches Cartesian's "museum-catalog" voice. Using NSC at weight 700 for headlines preserves the visual mass of the Latin display while NSC 400 carries body with the same quiet warmth Inter provides. The five-stone palette absorbs Hanzi cleanly because every glyph stays in ink or taupe — no candy fills to negotiate. The decorative compass-arc geometry layer is content-agnostic and works identically in any language. Avoid bolding Hanzi (the Chinese-typography equivalent of Cartesian's "no bold Playfair" rule); rely on size and the 1px line dividers for hierarchy.
-
-### Known CJK Gap
-
-Noto Serif SC is the only Hanzi serif loaded — there is no italic axis (Chinese type historically has no italic), so the rare italic Playfair `<em>` moment loses its emphasis when the body falls through to NSC. Substitute a single-character span colored in `{colors.accent}` (taupe), or wrap the emphasized phrase in faint brackets 「」, to recover emphasis. NSC's 700 weight is the heaviest available — the system's restraint-through-400-weight rule naturally extends to Chinese, so this is rarely a gap in practice.
-
 ## Iteration Guide
 
 1. Every new structural separator uses a 1px solid `{colors.line}` border. No exceptions.

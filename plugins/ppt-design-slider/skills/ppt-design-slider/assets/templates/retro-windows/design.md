@@ -491,57 +491,6 @@ No `@media print` rule is defined. Printing will render the active slide only.
 ### Chart Rendering
 Charts use Chart.js loaded from a CDN. Chart colors map directly to system tokens (`{colors.blue-navy}`, `{colors.blue-bright}`, `{colors.blue-light}`, `{colors.green-retro}`, `{colors.cyan-retro}`, `{colors.yellow-retro}`). Axis labels use MS Sans Serif at 11–12px in `{colors.text-dark}`. Gridlines are 1px `{colors.bg-gray}`. Charts are rendered lazily when their slide becomes active.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin | Chinese | Weight mapping |
-|---|---|---|---|
-| Title-bar / Headlines / Metric / Section heading | MS Sans Serif → Segoe UI (700) | **思源黑体 Noto Sans SC** | 700 |
-| Body / Caption / List / Table cell | MS Sans Serif → Segoe UI (400) | **思源黑体 Noto Sans SC** | 400 |
-| Pixel display (Press Start 2P) — Latin only | Press Start 2P | *(no CJK substitute)* | n/a |
-| Terminal / Nav hint (VT323) — Latin only | VT323 | *(no CJK substitute)* | n/a |
-
-### Mixed-Content Strategy
-
-**Strategy A — single CJK family for all Latin-system roles.** Retro Windows is a system-font deck (MS Sans Serif / Segoe UI / Tahoma). Pairing every Latin role with a single CJK family — Noto Sans SC — preserves the "this is software UI" register: a Win9x application would have rendered its Simplified Chinese localization in a single system CJK face (MS YaHei / SimSun), not in a multi-family display + body pairing. The two nostalgic accent fonts (Press Start 2P, VT323) are Latin-only by design; never attempt a pixel-font CJK substitute — there is no acceptable equivalent that maintains the era.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-```
-
-Then append `'Noto Sans SC'` to the body font stack:
-```css
-font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, Geneva, Verdana, 'Noto Sans SC', sans-serif;
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation
-- No period on display headlines
-- Pangu spacing (盘古之白): `使用 Apple` not `使用Apple`
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-- **Window title bars become a translation puzzle.** The `FILENAME.EXT` convention is Latin-only — `METRICS.LOG` has no idiomatic Chinese equivalent. Options: (1) keep filenames in Latin (`METRICS.LOG`, `AGENDA.TXT`) for the system-UI nostalgia, and let the slide body carry Chinese content; (2) use a Chinese descriptor + Latin extension (`季度指标.LOG`, `议程.TXT`) which reads as a localized application. Option (1) is more authentic to the Win9x era; option (2) is more readable for Chinese audiences.
-- **The 0.5px letter-spacing on `title-bar` typography must drop to 0** when the title bar contains CJK characters.
-- **Status badges (READY, LIVE, OK, WARNING)** translate cleanly to short CJK words (就绪, 在线, 通过, 警告) at weight 700 in the assigned status color — the semantic green/red/yellow/cyan signal carries through.
-- **Group-box notched titles work identically in Chinese** — `客户数据`, `销售指标`. The notch masking depends on background painting, not on glyph metrics.
-- **The CRT scanline overlay is glyph-agnostic** and adds the same nostalgic texture to Chinese type as to Latin.
-- **Charts axis labels and chip text** should drop to Noto Sans SC 400 at 11–12px; the fixed-pixel sizing convention applies equally to CJK.
-
-### Known CJK Gap
-
-The two nostalgic accent fonts (Press Start 2P, VT323) are fundamentally Latin-only — they exist as 8-bit pixel and CRT terminal callbacks to an era when CJK rendering required specialized bitmap fonts that have no modern web equivalent. If a deck needs a pixel display moment in Chinese, the only honest option is to use Noto Sans SC at large size and let go of the pixel-font character; do not substitute another "pixel-style" Chinese font (which will read as wrong-era and broken). Reserve Press Start 2P / VT323 for Latin-only moments (a splash screen with `LOADING...`, a footer with `ARROW KEYS to navigate`), and let CJK slides use Noto Sans SC throughout.
-
 ## Iteration Guide
 
 1. Any new slide is wrapped in a `{components.win-window}` with a navy title bar containing a `{components.win-icon}` (single-letter glyph), an uppercase filename-style title (with extension like `.EXE`, `.DOC`, `.LOG`, `.TXT`, `.CSV`, `.INI`, `.PRJ`, `.BMP`), and the three-button cluster (`_`, `[]`, `X`).

@@ -410,53 +410,6 @@ The system is viewport-fluid by design. All sizes use `vw`/`vh` so the same comp
 ### Print Behavior
 The template does not declare a `@media print` rule. Browser-driven PDF export will capture only the active slide; multi-slide export requires manual navigation per slide.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin face | Chinese face | Weight |
-|---|---|---|---|
-| Display / headline (Jost 200) | Jost | Noto Sans SC (思源黑体) | 700 (heaviest available; CJK at 200 reads as broken — see Aesthetic Notes) |
-| Body / lead (Jost 300) | Jost | Noto Sans SC (思源黑体) | 400 |
-| Pull quote / insight title (Lora italic / roman) | Lora | Noto Serif SC (思源宋体) | 400 |
-| Label / mono chrome (JetBrains Mono) | JetBrains Mono | Noto Sans SC | 400 (do not force monospace on CJK; see Aesthetic Notes) |
-
-### Mixed-Content Strategy
-
-Strategy A — same `font-family` stack, Latin-first fallback. Each typographic token already lists `"Jost, Noto Sans SC, system-ui, sans-serif"` (or the Lora equivalent). Latin glyphs render in Jost / Lora; CJK glyphs automatically fall through to Noto Sans SC / Noto Serif SC. No per-language class needed. Mixed sentences like `使用 Apple 思考` render in one logical run with the correct face per script.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation （，。：；！？「」（））
-- No period on display headlines (Chinese typography convention)
-- Pangu spacing 盘古之白 (space between CJK and Latin: `使用 Apple` not `使用Apple`)
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-Ivory Ledger's defining trait is Jost at weight 200 — paper-thin geometric strokes against cream. **Noto Sans SC does not have a usable weight 200.** Its lightest weight (300) still reads heavier than Jost 200 because Chinese glyphs carry far more strokes per character. Set Chinese display in **Noto Sans SC 700** to match the *visual presence* of Jost 200 on the cream paper (counterintuitive, but Chinese readers perceive lighter weights as anemic at large sizes). For body, Noto Sans SC 400 against Jost 300 is the correct match — the cream-paper-and-graphite ink moment carries across scripts.
-
-Lora italic is the system's "human voice" in pull-quote bodies. **Noto Serif SC has no italic.** Drop italic entirely for Chinese pull quotes; the serif face itself carries the editorial warmth. Don't try to fake italic with `font-style: italic` — Noto Serif SC will render an auto-slanted glyph that looks broken.
-
-JetBrains Mono's uppercase tracked labels (0.12–0.18em) do not transfer to CJK. **Set Chinese labels in Noto Sans SC 400, mixed case, with letter-spacing reset to 0.** The "catalog-card" voice in Chinese is achieved through the small size and the cream-paper-light color, not through monospace + tracking. If a label is pure Latin (a version number, a date), keep it in JetBrains Mono uppercase as originally designed.
-
-The em-dash bullet marker (`—`) works perfectly in Chinese — the Chinese em-dash is also `—` and renders the same width. Keep the marker as-is.
-
-### Known CJK Gap
-
-The 8vw horizontal padding (the most generous in the library) was tuned for Latin's narrower glyph widths. Chinese characters are roughly square and consume more horizontal space at the same point size. Long Chinese headlines that would fit on one line in English may wrap to two. Reduce display headline sizes by ~15% (Jost 8.5vw → Noto Sans SC 7.2vw) when the headline is pure Chinese, or accept the wrap as part of the editorial rhythm.
-
 ## Iteration Guide
 
 1. Any new slide background is `{colors.cream-paper}` (or `{colors.cream-warm}` for the insight/timeline sub-aesthetic). Never introduce a dark or chromatic background.

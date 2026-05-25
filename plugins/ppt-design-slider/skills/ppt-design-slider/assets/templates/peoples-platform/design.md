@@ -616,59 +616,6 @@ Slides advance via keyboard or presentation clicker through `deck-stage.js`. No 
 
 For print and PDF export: at 96dpi, the 1920×1080 canvas maps to a 20×11.25 inch frame. The grain overlay uses `mix-blend-mode: multiply` — in PDF export, blend modes may flatten; test print output and consider disabling the grain for printed formats.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin face | Chinese face | Weight |
-|---|---|---|---|
-| Display / title / quote (Alfa Slab One UPPERCASE) | Alfa Slab One | Noto Serif SC (思源宋体) | 900 |
-| Script interrupt (Caveat Brush lowercase rotated) | Caveat Brush | — (no good equivalent; see Aesthetic Notes) | — |
-| Body (Archivo Narrow 500) | Archivo Narrow | Noto Sans SC (思源黑体) | 500 |
-| Label / mono (DM Mono UPPERCASE tracked) | DM Mono | Noto Sans SC | 400 (do not force monospace on CJK) |
-
-### Mixed-Content Strategy
-
-Strategy A — extend each token's `fontFamily` to include the Chinese face after the Latin face. Alfa Slab tokens become `"Alfa Slab One, Noto Serif SC, serif"`; Archivo Narrow tokens become `"Archivo Narrow, Noto Sans SC, sans-serif"`; DM Mono tokens become `"DM Mono, Noto Sans SC, monospace"`. Latin glyphs render in their original face; CJK falls through to the SC fallback automatically.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat+Brush&family=Archivo+Narrow:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation （，。：；！？「」（））
-- No period on display headlines (Chinese typography convention)
-- Pangu spacing 盘古之白 (space between CJK and Latin: `使用 Apple` not `使用Apple`)
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-People's Platform is a WPA-poster system built on three load-bearing typefaces, and **none of the three has a clean Chinese transfer**.
-
-**Alfa Slab One** is a compressed slab serif at extreme sizes (up to 540px) in uppercase. There is no Chinese slab serif of equivalent weight and authority available on CDN. **Noto Serif SC at weight 900** is the closest match — it carries the slab-like heaviness and the structural authority — but it reads as more "literary monument" than "protest placard." Accept this register shift: Chinese versions of this system feel closer to a heritage-era public-notice board (think 大字报 or museum signage) than to a 1930s WPA poster. The stacked red text-shadow still applies and still carries the system's letterpress depth signature.
-
-**Caveat Brush** is the "human interrupt" voice — lowercase, rotated, emotionally warm. **This does not transfer to Chinese.** Chinese brush calligraphy (Ma Shan Zheng / 马善政) carries cultural and traditional weight — it reads as ceremonial, formal, even bureaucratic, NOT the casual personal voice of Latin Caveat. **Recommended approach: leave the brush moment out entirely on pure-CJK slides.** A second option: use a short Latin word in Caveat Brush as the interrupt even within Chinese content (e.g., a script `yes!` annotation beside a Chinese headline) — this preserves the casual interrupt energy and signals "voice break" without invoking Chinese calligraphic tradition.
-
-**DM Mono** uppercase tracked labels do not transfer to CJK. Set Chinese metadata in **Noto Sans SC 400** with letter-spacing reset to 0 and no uppercase. Pure-Latin tags (URLs, dates, edition numbers) keep DM Mono.
-
-**Archivo Narrow** is condensed at weight 500. **Noto Sans SC has no condensed variant.** Use Noto Sans SC 500 at the original Archivo size and accept that Chinese body type sits slightly wider than Latin body type. The single-color paper canvas and the grain overlay absorb the width difference.
-
-The stacked text-shadow (orange → red → red-deep) is the system's most recognizable trait. **It transfers perfectly to Chinese.** Apply it to every Chinese display headline in orange and the letterpress depth survives the script switch. The blue-and-orange-and-red palette is also fully script-agnostic.
-
-The diamond bullet marker, the rotated rubber stamp, the inset cream frame, the 6px ink borders — all work unchanged in Chinese.
-
-### Known CJK Gap
-
-**Caveat Brush has no acceptable Chinese equivalent.** The "human interrupt" voice is structurally absent in a pure-CJK People's Platform deck. The two workarounds (drop the interrupt entirely; use Latin-in-Chinese for the script moments) are both visible aesthetic compromises — the populist-poster system loses one of its three voices when forced into pure Chinese. Mixed-content decks (English-led with Chinese accents, or vice versa) are the strongest fit for this template.
-
 ## Iteration Guide
 
 1. The stacked shadow is a hard invariant — any new display element in orange or cream must carry it. Determine the offset by dividing the font size by approximately 20 to get the first shadow distance, double it for the second.

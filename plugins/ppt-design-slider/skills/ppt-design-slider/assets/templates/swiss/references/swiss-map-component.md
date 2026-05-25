@@ -1,34 +1,34 @@
 # Swiss Map Component
 
-用于地理、历史、城市、人文路线、门店/校区/事件点位等内容。它不是新的 Swiss 正文版式,而是 **S08 Duo Compare 的右侧插槽扩展**:左侧仍是解释卡片,右侧替换为地图组件。
+For geographic, historical, urban, cultural route, store/campus/event location, and similar content. This is not a new Swiss body layout — it is an **extension of the right-side slot of S08 Duo Compare**: the left side remains explanation cards; the right side is replaced with the map component.
 
-## 何时使用
+## When to Use
 
-- 文档里出现地点、街区、路线、人物住所、机构分布、城市漫游。
-- 用户明确希望有地图、点位、关系线或地理组件。
-- 内容需要解释“空间关系”,而不只是罗列人物或地点。
+- The document contains locations, neighborhoods, routes, character residences, institutional distributions, or urban walks.
+- The user explicitly wants a map, pins, relationship lines, or a geographic component.
+- The content needs to explain “spatial relationships,” not just list people or places.
 
-## 硬规则
+## Hard Rules
 
-- `<section>` 仍写 `data-layout="S08"`;不要新增 `P23/P24` 或自定义正文页。
-- 页面结构必须是:顶部标题 + 左侧说明卡片 + 右侧地图卡片。
-- 地图标记由 HTML 组件组成:点 `.pin-dot` + 连线 `.pin-line` + 卡片 `.pin-card`。
-- SVG 只画 fallback 关系线,不要在 SVG 里写文字。
-- MapLibre 地图默认关闭滚轮缩放和拖动,避免触发 PPT 翻页。
-- 右上角必须有 `+` / `-` / `DRAG` 控制。用户点击 `DRAG` 后才允许拖动地图。
-- 必须有静态 fallback:CDN 或地图瓦片失败时,仍能看到点位、关系线和卡片。
+- `<section>` still writes `data-layout=”S08”`; do not add `P23/P24` or custom body slides.
+- Page structure must be: top heading + left explanation cards + right map card.
+- Map markers are built from HTML components: pin `.pin-dot` + connecting line `.pin-line` + card `.pin-card`.
+- SVG draws only fallback relationship lines; do not write text in SVG.
+- The MapLibre map disables scroll zoom and drag pan by default to avoid triggering PPT page turns.
+- The top-right must have `+` / `-` / `DRAG` controls. The user clicks `DRAG` to enable map panning.
+- A static fallback must be preserved: if the CDN or map tiles fail, pins, relationship lines, and cards must still be visible.
 
-## 数据契约
+## Data Contract
 
-写页面前先定义点位和关系。`x/y` 用于静态 fallback 百分比坐标,`coord` 用于 MapLibre 经纬度。
+Define pins and relationships before writing the page. `x/y` are static fallback percentage coordinates; `coord` is MapLibre longitude/latitude.
 
 ```js
 const MAP_POINTS = [
-  { id: 'gu', name: '顾维钧', meta: '外交', coord: [117.2048, 39.1060], x: 62, y: 68, accent: true },
-  { id: 'cao', name: '曹锟', meta: '北洋', coord: [117.1988, 39.1080], x: 34, y: 48 },
-  { id: 'sun', name: '孙殿英', meta: '军阀', coord: [117.2028, 39.1090], x: 52, y: 54 },
-  { id: 'zhang', name: '张自忠', meta: '抗战', coord: [117.1966, 39.1120], x: 58, y: 28, accent: true },
-  { id: 'jin', name: '金氏宅邸', meta: '交通站', coord: [117.2012, 39.1114], x: 66, y: 35, side: 'left' },
+  { id: 'gu', name: 'Gu Weijun', meta: 'Diplomacy', coord: [117.2048, 39.1060], x: 62, y: 68, accent: true },
+  { id: 'cao', name: 'Cao Kun', meta: 'Beiyang', coord: [117.1988, 39.1080], x: 34, y: 48 },
+  { id: 'sun', name: 'Sun Dianying', meta: 'Warlord', coord: [117.2028, 39.1090], x: 52, y: 54 },
+  { id: 'zhang', name: 'Zhang Zizhong', meta: 'War of Resistance', coord: [117.1966, 39.1120], x: 58, y: 28, accent: true },
+  { id: 'jin', name: 'Jin Residence', meta: 'Safe House', coord: [117.2012, 39.1114], x: 66, y: 35, side: 'left' },
 ];
 
 const MAP_RELATIONS = [
@@ -38,9 +38,9 @@ const MAP_RELATIONS = [
 ];
 ```
 
-## 必要 CSS
+## Required CSS
 
-放到生成页 `<head>` 的额外 `<style>` 中,不要改 `template-swiss.html` 的全局基座类。
+Place in an extra `<style>` in the generated page `<head>`; do not modify the global base classes in `template-swiss.html`.
 
 ```html
 <link href="https://unpkg.com/maplibre-gl@5.14.0/dist/maplibre-gl.css" rel="stylesheet">
@@ -84,35 +84,35 @@ const MAP_RELATIONS = [
 </style>
 ```
 
-## 页面骨架
+## Page Skeleton
 
 ```html
 <section class="slide" data-layout="S08" data-animate="duo-mirror">
   <div class="canvas-card">
     <header class="chrome-min"><div class="l">06 / NN · MAP COMPONENT</div><div class="r">MAPLIBRE / STATIC FALLBACK</div></header>
-    <h2 class="h-xl-zh">把人物住所放回街区里</h2>
+    <h2 class="h-xl-zh">Placing character residences back in the neighborhood</h2>
     <div class="history-map-grid">
       <aside class="history-side">
         <div class="history-side-head">
-          <div class="big">住所不是点位，<br/>而是关系入口。</div>
-          <div class="small">这页用地图承载空间关系，用左侧卡片解释人物之间的牵连。</div>
+          <div class="big">A residence is not just a pin —<br/>it is a gateway to relationships.</div>
+          <div class="small">This slide uses a map to carry spatial relationships; the left-side cards explain the connections between figures.</div>
         </div>
-        <div class="relation-card"><div class="nb">01</div><div><div class="ttl">顾维钧 ↔ 曹锟</div><div class="desc">说明两者为什么有关系，至少写成完整一句。</div></div></div>
-        <div class="relation-card"><div class="nb">02</div><div><div class="ttl">曹锟 ↔ 孙殿英</div><div class="desc">不要只写标签，写清历史关系或空间关系。</div></div></div>
-        <div class="relation-card"><div class="nb">03</div><div><div class="ttl">张自忠 ↔ 金氏宅邸</div><div class="desc">每张卡控制在 2-3 行，形成信息密度。</div></div></div>
-        <div class="relation-card"><div class="nb">04</div><div><div class="ttl">张自忠 ↔ 利德尔</div><div class="desc">可以用跨身份对照补充人文厚度。</div></div></div>
+        <div class="relation-card"><div class="nb">01</div><div><div class="ttl">Gu Weijun ↔ Cao Kun</div><div class="desc">Explain why the two are connected — write at least one complete sentence.</div></div></div>
+        <div class="relation-card"><div class="nb">02</div><div><div class="ttl">Cao Kun ↔ Sun Dianying</div><div class="desc">Do not just write a label; clarify the historical or spatial relationship.</div></div></div>
+        <div class="relation-card"><div class="nb">03</div><div><div class="ttl">Zhang Zizhong ↔ Jin Residence</div><div class="desc">Keep each card to 2-3 lines to maintain information density.</div></div></div>
+        <div class="relation-card"><div class="nb">04</div><div><div class="ttl">Zhang Zizhong ↔ Liddell</div><div class="desc">Cross-identity contrast can add humanistic depth.</div></div></div>
       </aside>
       <div class="map-panel">
-        <div class="map-title"><div class="k">RELATION MAP</div><div class="t">地点 / 人物 / 事件</div></div>
-        <div class="map-controls" aria-label="地图控制">
-          <button class="map-ctrl" type="button" data-map-ctrl="zoom-in" aria-label="放大地图">+</button>
-          <button class="map-ctrl" type="button" data-map-ctrl="zoom-out" aria-label="缩小地图">-</button>
-          <button class="map-ctrl drag" type="button" data-map-ctrl="drag" aria-label="拖动地图" aria-pressed="false">DRAG</button>
+        <div class="map-title"><div class="k">RELATION MAP</div><div class="t">Locations / Figures / Events</div></div>
+        <div class="map-controls" aria-label="Map controls">
+          <button class="map-ctrl" type="button" data-map-ctrl="zoom-in" aria-label="Zoom in">+</button>
+          <button class="map-ctrl" type="button" data-map-ctrl="zoom-out" aria-label="Zoom out">-</button>
+          <button class="map-ctrl drag" type="button" data-map-ctrl="drag" aria-label="Toggle drag" aria-pressed="false">DRAG</button>
         </div>
-        <div id="swiss-map" class="swiss-map" data-points='[填入 JSON]' data-relations='[填入 JSON]'>
+        <div id="swiss-map" class="swiss-map" data-points='[fill in JSON]' data-relations='[fill in JSON]'>
           <div class="map-static" aria-hidden="true">
-            <svg class="static-relations" viewBox="0 0 100 100" preserveAspectRatio="none">[静态连线]</svg>
-            [静态 marker 卡片]
+            <svg class="static-relations" viewBox="0 0 100 100" preserveAspectRatio="none">[static connecting lines]</svg>
+            [static marker cards]
           </div>
         </div>
       </div>
@@ -121,9 +121,9 @@ const MAP_RELATIONS = [
 </section>
 ```
 
-## 必要 JS
+## Required JS
 
-放到 `</body>` 前。生成多张地图页时,把 id 从 `swiss-map` 改成唯一 id,并让初始化函数接收 selector。
+Place before `</body>`. When generating multiple map slides, change the id from `swiss-map` to a unique id and have the init function accept a selector.
 
 ```html
 <script>
@@ -206,10 +206,10 @@ const MAP_RELATIONS = [
 </script>
 ```
 
-## 视觉检查
+## Visual Check
 
-- 左侧卡片总高度要和右侧地图卡片对齐,不要上浮一半。
-- 地图标题和控制按钮不能互相遮挡;点位卡片不能压到右上角控制区。
-- marker 卡片至少显示地点名,`meta` 只作为短标签。
-- 左侧关系卡不要惜字如金,每张卡应有完整一句解释。
-- 若地图无法加载,静态 fallback 仍必须可读。
+- The total height of the left cards must align with the right map card; they must not float to half the height.
+- The map title and control buttons must not overlap; pin cards must not cover the top-right control area.
+- Marker cards must at minimum show the location name; `meta` is a short label only.
+- Left-side relation cards should not be terse — each card should contain one complete explanatory sentence.
+- If the map fails to load, the static fallback must still be readable.

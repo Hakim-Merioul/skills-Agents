@@ -287,7 +287,7 @@ Use `deck-stage.js` or an equivalent inline stage scaler for final output: rende
 
 Sakura Chroma is a **cassette-package editorial system** that treats every slide as a printed product page from a small Japanese audio-products catalogue. The visual metaphor is total: petal-cluster blob marks, diagonal multi-color ribbon bands, 12-point starburst seals, red rectangular stamps, mono-font spec rows, color-coded chips, and equalizer-style bar charts. Everything reads as if pulled from the back-page spread of a 1970s consumer-audio brochure — warm, hand-curated, industrially typeset.
 
-The typeface stack pairs four faces with distinct functional roles. **Big Shoulders Display** is the display voice — a condensed industrial sans at weight 900 with tight negative letter-spacing (-0.012em to -0.025em). It carries every display moment: hero numerals, statements, brand lockups, card names, section titles. Its compressed verticality and heavy weight give the system its loud, catalogue-front voice. **Albert Sans** is the body voice — a clean modern humanist sans at weight 400–700 for body paragraphs, micro-labels, and spec captions. **JetBrains Mono** is the tabular voice — used for spec rows, page numbers, dates, chips, equalizer ticks, and any moment that needs to read as "data" rather than as "editorial." **Noto Sans JP** is the cultural accent — used for occasional Japanese characters (限定版 "limited edition") that signal the Matsumoto-workshop voice. Together the four faces compose as "industrial display + clean body + monospaced data + Japanese spice."
+The typeface stack pairs four faces with distinct functional roles. **Big Shoulders Display** is the display voice — a condensed industrial sans at weight 900 with tight negative letter-spacing (-0.012em to -0.025em). It carries every display moment: hero numerals, statements, brand lockups, card names, section titles. Its compressed verticality and heavy weight give the system its loud, catalogue-front voice. **Albert Sans** is the body voice — a clean modern humanist sans at weight 400–700 for body paragraphs, micro-labels, and spec captions. **JetBrains Mono** is the tabular voice — used for spec rows, page numbers, dates, chips, equalizer ticks, and any moment that needs to read as "data" rather than as "editorial." **Noto Sans JP** is the cultural accent — used for occasional Japanese characters ("limited edition") that signal the Matsumoto-workshop voice. Together the four faces compose as "industrial display + clean body + monospaced data + Japanese spice."
 
 The color philosophy is **warm-cream paper + ink-brown structure + six-color primary accent set**. The paper (`{colors.paper}` — #F1E6CB) is a warm cream, slightly darker than typical bone-white, with a darker tonal sibling (`{colors.paper-dk}` — #E5D6B0) for layered surfaces. The ink (`{colors.ink}` — #3A2516) is a deep warm brown rather than pure black, giving every type and border a print-on-paper warmth. Six primary colors (`red`, `pink`, `orange`, `yellow`, `green`, `blue`) appear as petal-cluster fills, ribbon bands, card topstrips, equalizer-bar fills, chip backgrounds, and red rectangular stamps. The reds and pinks dominate as emphasis colors; the orange / yellow / green / blue ladder serves as the categorical accent set.
 
@@ -344,7 +344,7 @@ The system has four Google Fonts each with a distinct functional role:
 - **Big Shoulders Display** (display): Condensed industrial sans-serif at weight 700 and 900. Used for every display moment — headlines, statements, hero numerals, brand lockups, card names, seal text, stamp text, ledger row titles. Always with negative letter-spacing (-0.012em to -0.025em). Its tall narrow condensed forms are the entire system's visual identity.
 - **Albert Sans** (body): Clean modern humanist sans at weights 400, 500, 600, 700. Used for body paragraphs (weight 400), descriptions (weight 400), tracked-caps micro-labels (weight 700), and emphasis body (weight 600–700). The neutral counterpoint to Big Shoulders' expressiveness.
 - **JetBrains Mono** (data): Monospace at weights 400, 500. Used for spec rows in product cards, date tags in ledgers, page numbers, equalizer-tick labels, chip text, navigation hints, meta tags. Any moment that reads as "data" rather than "editorial."
-- **Noto Sans JP** (cultural accent): Japanese sans at weight 500, 700. Used sparingly for Japanese characters (限定版, 漢字, 平仮名) embedded in cover footers and brand marks. Provides the Matsumoto-workshop cultural register.
+- **Noto Sans JP** (cultural accent): Japanese sans at weight 500, 700. Used sparingly for Japanese characters (occasional Japanese characters) embedded in cover footers and brand marks. Provides the Matsumoto-workshop cultural register.
 
 Italic does not exist. Underline does not exist. Emphasis is achieved by inline `<em>` (color shift to red or blue without italic style), by weight (Albert Sans 400 → 700), or by switching face (Albert Sans body → Big Shoulders display).
 
@@ -546,67 +546,6 @@ The system targets `100vw × 100vh` and uses `clamp()` throughout with `min(Xvw,
 ### Print Behavior
 No `@media print` rule is defined.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin | Chinese | Weight mapping |
-|---|---|---|---|
-| Display / Headline / Statement / Hero numeral / Card name / Seal / Stamp / Lockup | Big Shoulders Display (900) | **站酷小薇体 ZCOOL XiaoWei** | regular (single weight) |
-| Body / Body-md / Body-emphasis / Micro labels | Albert Sans (400 / 600 / 700) | **霞鹜文楷 LXGW WenKai** | regular |
-| Tabular / Spec rows / Chips / Page numbers / Mono labels | JetBrains Mono (400 / 500) | **霞鹜文楷 LXGW WenKai** (or keep mono Latin-only for spec rows) | regular |
-| Japanese accents | Noto Sans JP | *(unchanged)* | 500 / 700 |
-
-### Mixed-Content Strategy
-
-**Strategy A — display CJK + body CJK, each with its own character.** The cassette-package aesthetic is feminine-floral with industrial discipline, and the Chinese pairing should honor both halves. **ZCOOL XiaoWei (站酷小薇体)** is a graceful condensed display face with elegant high-contrast strokes — it echoes Big Shoulders Display's condensed verticality while carrying a softer, distinctly feminine voice that matches the petal-cluster decorative system. **LXGW WenKai (霞鹜文楷)** is a warm KaiTi-style body face based on Fontworks Klee — it has the friendly hand-curated quality that matches Albert Sans's role as the body voice, and reads beautifully at small sizes against the warm cream paper. Together the two CJK faces preserve the "industrial display + warm body" rhythm of the Latin system while landing the Chinese deck in a distinctly hand-curated, slightly-feminine register that suits Sakura Chroma's name and its floral motifs.
-
-### Loading
-
-Both fonts are on Google Fonts — load via the standard Google Fonts URL alongside the template's existing Latin faces:
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
-```
-
-**Do not load via cn-fontsource, chinese-fonts-cdn, or other CDNs** — those packages either don't exist (`cn-fontsource-zcool-xiaowei` returns 404) or are unreliable behind corporate proxies. ZCOOL XiaoWei and LXGW WenKai are both Google-hosted; that is the only reliable CDN for them.
-
-Then append the CJK families to the appropriate font stacks:
-```css
-/* Display roles */
-font-family: 'Big Shoulders Display', 'ZCOOL XiaoWei', sans-serif;
-/* Body / micro roles */
-font-family: 'Albert Sans', 'LXGW WenKai', sans-serif;
-/* Mono roles (if used for CJK content) */
-font-family: 'JetBrains Mono', 'LXGW WenKai', ui-monospace, monospace;
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation
-- No period on display headlines
-- Pangu spacing (盘古之白): `使用 Apple` not `使用Apple`
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-- **The negative tracking on Big Shoulders display (-0.012em to -0.025em) must drop to 0** on CJK. ZCOOL XiaoWei is already a condensed face; negative tracking will collide glyphs.
-- **The tracked-caps micro-labels (0.16em, 0.2em, 0.32em) have no CJK equivalent.** Drop tracking to 0 for CJK micro-labels and let the warm-brown ink color + bold weight carry the categorical-label signal. A "限定版 LIMITED EDITION" eyebrow can mix CJK + Latin in the same label — keep tracking 0 on the CJK characters and 0.16em+ on the Latin.
-- **Inline `<em>` color shifts (to red or blue) work identically in CJK** — color emphasis is glyph-agnostic and lands beautifully on ZCOOL XiaoWei display headlines.
-- **Petal clusters, ribbon bands, starburst seals, and red rectangular stamps are all glyph-agnostic** — they carry the system's industrial-catalogue voice equally well behind Chinese content.
-- **The 32-point starburst seal carrying a 2–4 character glyph** works exceptionally well with a single Chinese character (限, 新, 季) at ZCOOL XiaoWei in `{colors.paper}` cream. The bold display weight makes the central glyph read as a maker's mark.
-- **Spec rows in JetBrains Mono** present the trickiest decision: pure-Latin spec rows (`44.1 KHZ`, `LP / 33⅓`) preserve the catalogue conceit; localized spec rows in LXGW WenKai (`立体声`, `限定版`) read as a Chinese-market catalogue but lose the technical-spec voice. The right move is **mixed-language spec rows where Latin values stay mono and Chinese descriptors switch to LXGW WenKai inline.**
-- **Noto Sans JP accents (限定版) remain unchanged** — Japanese characters share glyphs with Simplified Chinese in many cases but the Noto Sans JP rendering is intentional (Japanese-edition affect). On a Chinese-primary deck, swap to LXGW WenKai for these characters so they read as Chinese rather than as a Japanese loan.
-
-### Known CJK Gap
-
-ZCOOL XiaoWei is a single-weight face — there is no 900-equivalent. The Big Shoulders 900-weight loudness that defines the Latin display voice cannot be exactly matched. Compensate by reserving CJK display for moments where the soft elegance is welcome (cover spreads, quote slides) rather than where pure brutalist weight is needed (hero stats). For hero numerals, keep the figures in Latin numerals at Big Shoulders 900 — Chinese numerals (一二三四) don't carry the catalogue-cover statistical voice anyway.
-
 ## Iteration Guide
 
 1. Every new content slide carries the paper-grain halftone-dot texture, a frame-inset region (36–72px from edges, 72–110px from bottom), and a page number at bottom-right.
@@ -628,5 +567,5 @@ ZCOOL XiaoWei is a single-weight face — there is no 900-equivalent. The Big Sh
 - The diagonal ribbon bands use `transform: rotate(-22deg)` and oversize widths (160%) to bleed off the slide edges. On very tall viewports the ribbon coverage may look thinner than on standard 16:9 viewports.
 - The equalizer bar chart uses `display: flex; flex-direction: column-reverse;` to stack on-segments from the bottom up. This is a subtle layout pattern that can be fragile under aggressive overrides — modifying the eq segments requires preserving the column-reverse behavior.
 - Hero statistics use inline `<sub>` and inline-style `font-size` overrides for sub-units (`26K`, `61%`), which sidesteps the typography token system. New stats should follow the same pattern: oversized numeral + smaller inline unit at ~34% the numeral's size in ink color.
-- Noto Sans JP is loaded but used only once (限定版 "limited edition" in the cover footer). If a deck contains no Japanese content, the font load is unused weight; consider removing the import for non-Japanese decks.
+- Noto Sans JP is loaded but used only once ("limited edition" in the cover footer). If a deck contains no Japanese content, the font load is unused weight; consider removing the import for non-Japanese decks.
 - The nav hint at bottom-left has very low opacity (0.36) and may be difficult to see at default presenter brightness. It is intended as ambient chrome, not as a prominent affordance.

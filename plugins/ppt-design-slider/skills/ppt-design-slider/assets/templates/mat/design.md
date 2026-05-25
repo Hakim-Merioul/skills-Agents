@@ -377,69 +377,6 @@ Mat targets a fluid `100vw × 100vh` viewport and uses `vw`/`vh` units for every
 ### Print Behavior
 The template does not declare a `@media print` rule. To produce a PDF, use the browser's screenshot or printing tool; multi-slide PDF export requires manually triggering each slide.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Chinese Face | Weight | Why |
-|---|---|---|---|
-| Display / h1 / h2 / h3 / stat-value (Bricolage roles, 2.4–12vw) | 思源宋体 Noto Serif SC | 700 | Mincho heavy weight provides the structural mass that Bricolage 700–800 provides in Latin, while preserving the warm material register |
-| Quote text / quote mark (3.4vw / 8vw) | 思源宋体 Noto Serif SC | 600–700 | Same Mincho voice for editorial moments |
-| Lead / body / caption (DM Sans roles, 0.82–1.5vw) | 思源宋体 Noto Serif SC | 400 | Mincho body voice — calm and material; pairs with the wood-glow warmth |
-| Info-card body / heading | 思源宋体 Noto Serif SC | 400 / 600 | Maintains the warm-paper-on-green contrast in Chinese |
-| Label / kicker / chrome / footer (DM Mono roles, 0.7vw) | 思源宋体 Noto Serif SC | 500 with 0.05em letter-spacing | Replaces DM Mono — Chinese has no monospace tradition that reads as editorial chrome |
-
-### Mixed-Content Strategy
-
-Use **Strategy A** — switch the entire face stack to Noto Serif SC across all roles, replacing Bricolage Grotesque (display), DM Sans (body), and DM Mono (labels). Mat's identity does not depend on the specific Latin faces; it depends on the **dark forest green canvas with wood-brown atmospheric glow**, the **single warm orange accent**, the **cream info-card inset**, and the **1px hairline divider language**. Going all-Mincho in Chinese preserves every one of those identity markers cleanly without the baseline wobble that Strategy C would introduce on a viewport-fluid system. Stack:
-
-```css
-/* Bricolage roles (display, h1, h2, h3, stat-value, quote) */
-font-family: 'Bricolage Grotesque', 'Noto Serif SC', sans-serif;
-/* DM Sans roles (lead, body, caption) */
-font-family: 'DM Sans', 'Noto Serif SC', sans-serif;
-/* DM Mono roles (label, kicker, chrome, footer) */
-font-family: 'DM Mono', 'Noto Serif SC', monospace;
-```
-
-The system's source currently lists `'Noto Sans SC'` as the CJK fallback — for Mat's material-tactile register, **swap to `'Noto Serif SC'`**. The Mincho face's warm letterforms match the wood-glow / forest-green atmosphere better than the geometric Noto Sans SC, which reads as too modern-clinical for this system.
-
-### Loading
-
-Replace the existing Noto Sans SC link with Noto Serif SC:
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-```
-
-### Universal CJK Adjustments
-
-These adjustments apply to **every CJK block** in this system, regardless of size or role:
-
-- **Loosen line-height by 0.05–0.08.** CJK glyphs are full-width squares with more visual weight than Latin letterforms; line-heights tuned for Latin (0.88–1.1 on display, 1.5–1.65 on body) read as cramped in Chinese. Bump display to 1.0–1.2 and body to 1.7–1.85.
-- **Remove negative letter-spacing on CJK headlines.** Bricolage display uses -0.025em to -0.03em tracking, which collides Chinese glyphs into each other. For CJK runs, set `letter-spacing: 0` — or a tiny positive `0.02em` if the headline feels visually packed.
-- **Never `text-transform: uppercase` on CJK text.** Chinese has no case; the CSS property does nothing on Han glyphs but will silently break any mixed-script line where the DM Mono label portion was meant to be capitalized. (This matters here — every DM Mono label, kicker, chrome-band, and footer is `text-transform: uppercase`.)
-- **Use Chinese full-width punctuation** (`，。：；！？「」『』（）`) inside Chinese sentences, not the Latin equivalents (`,.:;!?""''()`). Mixing punctuation systems within one sentence reads as a typesetting error.
-- **No period (。) at the end of CJK headlines.** Chinese headlines follow the same rule as Latin — title-style lines drop terminal punctuation. Body paragraphs keep their 。
-- **Apply Pangu spacing (盘古之白) at the boundary between CJK and Latin runs.** A space (or 0.25em margin) belongs between a Chinese character and an adjacent Latin word or digit, e.g. `2026 年 5 月` not `2026年5月`. Either type the spaces manually or use a `pangu.js`-style auto-spacer.
-- **One font per sentence.** Don't switch between Noto Serif SC weight 400, 500, and 700 inside the same sentence — pick the weight that matches the role (headline = 700, body = 400, label = 500) and commit to it for the whole run.
-
-### Aesthetic Notes for This System
-
-Mat's whole voice is "industrial-design portfolio meets boutique product launch" — dark forest green with a wood-brown glow, cream type floating on the field, warm orange as the single accent. In Chinese, the system's identity does not depend on the Bricolage / DM Sans / DM Mono trio; it depends on the **environmental atmosphere** (the radial wood-glow on every dark slide), the **single-accent discipline** (orange only as kicker, em-dash bullet, inline emphasis), and the **cream info-card** as the signature material-contrast move. All of these translate without modification.
-
-The bullet em-dash in orange works in Chinese identically — the em-dash character (—) is the same glyph in any script, and the orange Noto Serif SC at weight 500 prepended to a Chinese list item reads as a deliberate mark exactly as it does in Latin. Keep the bullet column in Noto Serif SC at weight 500 (replacing DM Mono); the warmth of the Mincho face matches the system's material-tactile register better than a sans-serif chrome face would.
-
-The Bricolage rule "always mixed case, never uppercase" is interesting in Chinese — since Chinese has no case, the rule is automatically satisfied. But the system's uppercase rule for labels (DM Mono at 0.12em tracking) doesn't translate; in Chinese, labels should be **Noto Serif SC weight 500 with 0.05em positive tracking**, no `text-transform`. The positive tracking carries the chrome quality through weight and spacing alone.
-
-The `<em>` inline-orange rule (for unit suffixes inside stat numerals) works in Chinese — a Chinese unit character like 「万」or 「亿」 inside `<em>` renders in warm orange and stays upright, exactly mirroring the Latin pattern. Use it the same way: `4.7<em>万</em>` for `4.7 万 (47k)`.
-
-### Known CJK Gap
-
-The Bricolage Grotesque "heavy, rounded grotesque with mechanical character" is one of Mat's most distinctive typographic moves in Latin — it's what gives the system its industrial-product-page voice. Chinese has no exact equivalent: Noto Serif SC at weight 700 provides structural mass but reads as more traditional / literary than Bricolage's rounded modernity. The Chinese rendering loses some of the industrial-design quality, partially compensated by the wood-glow atmosphere and the warm orange accent doing more of the personality work. For decks where the industrial register is critical (e.g., a product launch deck specifically about hardware or material design), consider supplementing Noto Serif SC with **思源黑体 Noto Sans SC at weight 800** for the largest display moments only (cover, hero) — the geometric heaviness of Noto Sans SC at 800 reads closer to Bricolage Grotesque 800 than Noto Serif SC does. Use sparingly to preserve the literary-material register elsewhere.
-
 ## Iteration Guide
 
 1. Any new component sits on the dark surface as cream text; no card, panel, or frame wraps it unless it's the info-card move (cream-on-green tonal contrast).

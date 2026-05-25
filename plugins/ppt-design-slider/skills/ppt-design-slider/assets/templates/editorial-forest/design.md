@@ -418,61 +418,6 @@ Navigation is delegated to whatever wrapper `deck-stage.js` provides — there i
 ### Print / Export
 Because every measurement is fixed-pixel inside a 1920×1080 canvas, the system exports cleanly to PDF at the same aspect ratio (16:9). Source Serif 4 with the optical-size axis renders well at print resolution because the small-sized variants pick up the print-appropriate letterform detail automatically.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Chinese Face | Weight | Why |
-|---|---|---|---|
-| Display headline (220 / 140 / 96 / 84px) | 霞鹜文楷 LXGW WenKai (Noto Serif SC fallback) | 400 | Literary, handwritten-ish brushwork; matches the Penguin-classic register of Source Serif 4 |
-| Body paragraph (26 / 30 / 32px) | 思源宋体 Noto Serif SC | 400 | Reads as the printed body voice of a literary quarterly |
-| Stat figure (220px) | 思源宋体 Noto Serif SC | 700 | Mincho weight 700 gives the numeric mass that Source Serif 4 weight 500 provides in Latin |
-| Mono label / caption / footline (24–26px) | 思源等宽 Noto Sans Mono CJK SC | 500 | JetBrains Mono has no CJK glyphs; Noto Sans Mono CJK SC preserves the typewriter-chrome quality |
-
-### Mixed-Content Strategy
-
-Use **Strategy C** — keep Source Serif 4 as the Latin face and fall back to LXGW WenKai (for headlines / display) or Noto Serif SC (for body / stats) for CJK glyphs. This is the right call for Editorial Forest because the Source Serif 4 optical-size axis is a signature of the system; replacing it wholesale with a Mincho would flatten the Penguin-classic register that defines the deck. The font-family stack puts the Latin face first, then the CJK fallback, then the generic serif:
-
-```css
-font-family: 'Source Serif 4', 'Source Serif Pro', 'LXGW WenKai TC', 'Noto Serif SC', Georgia, serif;
-```
-
-Browsers per-glyph fall back: Latin characters render in Source Serif 4 at weight 500 with opsz engaged, Chinese characters render in LXGW WenKai (display) or Noto Serif SC (body). The baseline mismatch at display sizes (96–220px) is the main thing to watch — LXGW WenKai sits slightly higher than Source Serif 4 in optical baseline, so a mixed-script line like "Designed in 北京" may show a 1–2px vertical wobble. Acceptable for slide content; for printed export, prefer all-CJK or all-Latin lines.
-
-### Loading
-
-Add to the existing Google Fonts `<link>` (or as a second link tag):
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
-```
-
-LXGW WenKai TC is the version served on Google Fonts (the Simplified-Chinese build `LXGW+WenKai+SC` is not yet on the Google CDN — TC ships both traditional and simplified glyphs and works for both).
-
-### Universal CJK Adjustments
-
-These adjustments apply to **every CJK block** in this system, regardless of size or role:
-
-- **Loosen line-height by 0.05–0.08.** CJK glyphs are full-width squares with more visual weight than Latin letterforms; line-heights tuned for Latin (0.92–1.0 on display, 1.32–1.38 on body) read as cramped in Chinese. Bump display to 1.0–1.1 and body to 1.5–1.6.
-- **Remove negative letter-spacing on CJK headlines.** Source Serif 4 display uses -0.01em to -0.03em tracking, which collides Chinese glyphs into each other. For CJK runs, set `letter-spacing: 0` — or a tiny positive `0.02em` if the headline feels visually packed.
-- **Never `text-transform: uppercase` on CJK text.** Chinese has no case; the CSS property does nothing on Han glyphs but will silently break any mixed-script line where the Latin portion was meant to be capitalized.
-- **Use Chinese full-width punctuation** (`，。：；！？「」『』（）`) inside Chinese sentences, not the Latin equivalents (`,.:;!?""''()`). Mixing punctuation systems within one sentence reads as a typesetting error.
-- **No period (。) at the end of CJK headlines.** Chinese headlines follow the same rule as Latin — title-style lines drop terminal punctuation. Body paragraphs keep their 。
-- **Apply Pangu spacing (盘古之白) at the boundary between CJK and Latin runs.** A space (or 0.25em margin) belongs between a Chinese character and an adjacent Latin word or digit, e.g. `2026 年 5 月` not `2026年5月`. Either type the spaces manually or use a `pangu.js`-style auto-spacer.
-- **One font per sentence.** Don't switch between LXGW WenKai and Noto Serif SC inside the same sentence — pick the face that matches the size tier (display = LXGW WenKai, body = Noto Serif SC) and commit to it for the whole run.
-
-### Aesthetic Notes for This System
-
-Editorial Forest's whole voice is "Penguin classic / quiet annual report" — a serif at weight 500 with the optical-size axis doing the size-aware letterform work. The Chinese equivalent of that register is **LXGW WenKai for display moments** (it has the same hand-set, slightly informal warmth as Source Serif 4 at 500) and **Noto Serif SC at 400 for body** (the calm Mincho voice that reads like a literary journal). Avoid Noto Sans SC for body — the sans face flips the system into "tech report" rather than "monograph spread."
-
-The system's mono / serif role split (JetBrains Mono for chrome, Source Serif 4 for everything else) maps cleanly onto Chinese. Use Noto Sans Mono CJK SC for the topbar label, footline strings, tile ordinals, and axis ticks — keep them uppercase-equivalent (i.e., 0.14em–0.18em letter-spacing on Latin labels, and for Chinese, the Mono CJK face at 500 weight provides the same chrome quality). Do not run Chinese labels in LXGW WenKai or Noto Serif SC; the editorial chrome would lose its typewriter feel.
-
-### Known CJK Gap
-
-LXGW WenKai's brushwork warmth is its strength at large display sizes, but at body scale (26–32px) the same brushwork reads slightly noisy. The system bumps body to Noto Serif SC (a cleaner Mincho) to avoid this, but the visual handoff between a 96px LXGW WenKai headline and a 30px Noto Serif SC paragraph below it is the system's biggest CJK seam — the two faces have different stroke contrast profiles. If the seam reads loud, use Noto Serif SC for both display and body (sacrifices warmth for consistency), or use LXGW WenKai for both (sacrifices body legibility for consistency). The default split is the right trade-off for most decks, but worth a manual check on cover and statement slides.
-
 ## Iteration Guide
 
 1. Any new headline is Source Serif 4 weight 500 with negative letter-spacing. Pick the size from the display ladder (220 / 140 / 96 / 84 / 80 / 68 / 56) — do not invent a new size.

@@ -552,58 +552,6 @@ The system targets a **fixed 1920×1080 canvas** rendered inside a `<deck-stage>
 ### Print Behavior
 Print export depends on the deck-stage component's print handling. The fractal-noise grain overlay may not render in all PDF exports — test before assuming texture transfers.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin face | Chinese face | Weight |
-|---|---|---|---|
-| Display / headline (Space Grotesk 700) | Space Grotesk | 龙藏体 Long Cang | 400 (only weight available) |
-| Body (Space Grotesk 400) | Space Grotesk | 霞鹜文楷 LXGW WenKai | 400 |
-| Handwritten / scribble (Caveat) | Caveat | 龙藏体 Long Cang | 400 |
-| Label / mono (DM Mono UPPERCASE tracked) | DM Mono | 霞鹜文楷 LXGW WenKai | 400 (do not force monospace on CJK) |
-
-### Mixed-Content Strategy
-
-Strategy A — extend each token's `fontFamily` to include the Chinese face after the Latin face. Space Grotesk display tokens become `"Space Grotesk, Long Cang, Helvetica Neue, Arial, sans-serif"`; Space Grotesk body tokens become `"Space Grotesk, LXGW WenKai, Helvetica Neue, Arial, sans-serif"`; Caveat tokens become `"Caveat, Long Cang, cursive"`. Latin glyphs render in the original face; CJK falls through automatically.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@500;600;700&family=DM+Mono:wght@400;500&family=Long+Cang&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-lxgw-wen-kai-regular/font.css" rel="stylesheet">
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation （，。：；！？「」（））
-- No period on display headlines (Chinese typography convention)
-- Pangu spacing 盘古之白 (space between CJK and Latin: `使用 Apple` not `使用Apple`)
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-Pin & Paper is the strongest fit for Chinese in this entire library. The yellow legal-pad surface, the cobalt ink, the safety-pin illustrations, and the field-notebook register all translate naturally into Chinese — the system reads as a 笔记本 / 手账 page in either script.
-
-**龙藏体 Long Cang** is a hard-pen handwritten Chinese face — the brushless, ballpoint-on-paper equivalent of Chinese handwriting. It is the perfect Chinese substitute for the Space Grotesk + Caveat dual-role headline-and-scribble voices in this system. Long Cang at large sizes (96–168px) reads as a confident handwritten field-note headline — exactly what Pin & Paper is trying to evoke. Use it for both display headlines and the Caveat-equivalent scribble layer. Layering two visually-distinct hand-script faces in pure Chinese is unnecessary; Long Cang carries both roles.
-
-**霞鹜文楷 LXGW WenKai** is a kaishu-derived body face designed for screen reading — it carries the warmth and slight irregularity of handwritten 楷书 but stays legible at body sizes (18–22px). It is the strongest counterweight to Long Cang's handwritten display and matches the system's "field-notebook personal voice" register exactly. Set every Chinese body paragraph in LXGW WenKai 400.
-
-The pin illustrations, the rotated red stamp, the cream cards with hard ink offset shadows — all transfer unchanged. The Caveat pill component (handwritten letters inside a rounded pill) translates to Long Cang inside the same pill shape and reads as charmingly hand-counted in Chinese.
-
-The system's most recognizable rhythm (printed headline + printed body + handwritten margin note) becomes (Long Cang headline + LXGW WenKai body + Long Cang margin note in a slightly different size). The voice distinction in pure Chinese comes from size, rotation, and color rather than from face swap — Long Cang at 38px rotated -3° in the margin reads clearly as "marginal annotation" against Long Cang at 96px upright in the headline.
-
-DM Mono uppercase tracked labels do not transfer to CJK. Chinese metadata in the top chrome should use LXGW WenKai 400 mixed case with letter-spacing 0. Pure Latin metadata (date strings, source URLs) stays in DM Mono.
-
-### Known CJK Gap
-
-Long Cang and LXGW WenKai are visually adjacent — both carry handwritten kaishu DNA. The three-voice editorial pairing (print / handwritten / archival) collapses into a two-voice pairing in pure Chinese (handwritten-display / handwritten-body / archival-Latin-only). This is not a bug — pure-Chinese decks in Pin & Paper read as more uniformly hand-touched than their Latin counterparts, which is actually closer to the field-notebook aesthetic the system aims for.
-
 ## Iteration Guide
 
 1. Every new slide background is the paper-surface (`{components.paper-surface}`) with the grain overlay on `::before`. Don't skip the texture.

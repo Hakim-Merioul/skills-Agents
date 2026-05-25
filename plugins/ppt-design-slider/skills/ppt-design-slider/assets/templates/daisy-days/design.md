@@ -428,53 +428,6 @@ The system targets a viewport-fluid layout (everything sized in `clamp()` or `vw
 ### Print / Export
 There is no `@media print` rule defined. Print export will inherit the scroll-container layout, which may not paginate cleanly. Treat this as a screen-first system; a separate print stylesheet would be needed for PDF export.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin font | Recommended Chinese pairing | Source |
-|---|---|---|---|
-| Display / Headline (Fredoka One 400) | Fredoka One | 站酷小薇体 ZCOOL XiaoWei | Google Fonts |
-| Body (Quicksand 500–600) | Quicksand | 悠哉字体 Yozai | cn-fontsource CDN |
-
-### Mixed-Content Strategy
-
-Use **Strategy A — single-font-stack with fallback**: declare ZCOOL XiaoWei *after* Fredoka One and Yozai *after* Quicksand in the same `font-family` stack so Latin glyphs render in the Latin face and CJK glyphs fall through to the Chinese face automatically. One CSS rule per role, no manual class switching.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400..700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-yozai-regular/font.css" rel="stylesheet">
-```
-
-```css
-:root {
-  --font-display: "Fredoka One", "ZCOOL XiaoWei", cursive;
-  --font-body: "Quicksand", "Yozai", sans-serif;
-}
-```
-
-### Universal CJK Adjustments
-
-- **Line-height**: bump CJK body line-height to ~1.75 (from 1.6) — Hanzi need more vertical breathing than Latin lowercase.
-- **Letter-spacing**: zero out `letter-spacing` on Hanzi runs (the 0.02em Fredoka tracking jams Hanzi strokes together). Keep Latin tracking only on Latin spans.
-- **Text-transform**: drop `text-transform: uppercase` on any badge/label when content is Hanzi — Chinese has no case; forcing uppercase does nothing for Hanzi but breaks the rendering of any mixed Latin acronyms inside.
-- **Punctuation**: use Chinese full-width punctuation (，。：；「」) for Chinese sentences, half-width (`,.:;""`) for Latin. Never mix half-width punctuation into a Chinese sentence.
-- **No period on headlines**: Chinese headline convention omits the terminal 。 — strip it from display strings.
-- **Pangu spacing**: insert a thin space (or a regular space) between adjacent Hanzi and Latin/digit runs (e.g. `2026 年`, `AI 产品`). Improves readability of mixed runs.
-- **One font per sentence**: don't switch CJK families mid-sentence. Pick ZCOOL XiaoWei *or* Yozai for a given text run based on its role, never both inside one phrase.
-
-### Aesthetic Notes
-
-ZCOOL XiaoWei's rounded soft display register is the closest Hanzi analogue to Fredoka One's chubby storybook voice — it carries the same "friendly children's-book" mood at headline scale without becoming saccharine. Yozai's open counters and modest stroke contrast match Quicksand's humanist warmth, so body paragraphs and meta lines feel continuous with the pastel-garden aesthetic. The 3px charcoal text-shadow on headlines that sit on saturated pastel surfaces works identically on ZCOOL XiaoWei — apply `{shadows.text-headline}` to Chinese headlines on turquoise / butter / peach surfaces, and `{shadows.text-headline-soft}` on soft-pink / mint, exactly as the Latin rule prescribes. The colored bullet-dots, hand-drawn SVG decorations (daisies, stars, suns, clouds, rainbows), framed-header cap-and-body pattern, and pastel marker rotation are all content-agnostic. The single-weight constraint of Fredoka One maps cleanly to ZCOOL XiaoWei's single-weight constraint — neither face supports italic, underline, or weight axis variation, which preserves the system's "one weight, one face per role" discipline.
-
-### Known CJK Gap
-
-ZCOOL XiaoWei is a single-weight display face with limited glyph coverage compared to Noto family — exotic or technical Hanzi (rare surnames, classical characters, simplified-only variants outside GB2312) may fall back to system font. For Traditional Chinese decks, swap Yozai for `LXGW WenKai TC` (Google Fonts) which has fuller TC coverage and a similar friendly humanist register. ZCOOL XiaoWei reads slightly more literary-formal than Fredoka One's chubby chunky personality — Chinese decks built with Daisy Days will feel ~20% more "calm pastel" and ~20% less "sticker-sheet kawaii" than the Latin original. The hand-drawn SVG ornaments (daisy, star, sun, cloud, rainbow) carry the storybook mood that the typography slightly loses, so on Chinese decks consider clustering 5–7 ornaments per slide (the upper end of the 3–7 range) to recover the playful weight.
-
 ## Iteration Guide
 
 1. Any new container is rounded (20px / 28px / pill / circle), bordered in 3px charcoal, and shadowed with `{shadows.default}` or `{shadows.small}`. Never ship a flat rectangle with square corners.

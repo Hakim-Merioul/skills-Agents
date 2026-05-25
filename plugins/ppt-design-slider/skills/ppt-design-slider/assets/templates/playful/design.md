@@ -408,54 +408,6 @@ The system targets `100vw × 100vh` and uses `clamp()` throughout, so type and p
 ### Print Behavior
 No `@media print` rule is defined. The deck is web/viewport-first; printing will not render correctly without custom print styles.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin face | Chinese face | Weight |
-|---|---|---|---|
-| Display / headline / numeral (Syne 700–800) | Syne | 站酷快乐体 ZCOOL KuaiLe | 400 (only weight available) |
-| Body / label (Space Grotesk 400–600) | Space Grotesk | 悠哉字体 Yozai | 400 |
-
-### Mixed-Content Strategy
-
-Strategy A — extend each token's `fontFamily` to include the Chinese face after the Latin face. Syne tokens become `"Syne, ZCOOL KuaiLe, sans-serif"`; Space Grotesk tokens become `"Space Grotesk, Yozai, sans-serif"`. Latin glyphs render in the original face; CJK characters fall through automatically.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-yozai-regular/font.css" rel="stylesheet">
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation （，。：；！？「」（））
-- No period on display headlines (Chinese typography convention)
-- Pangu spacing 盘古之白 (space between CJK and Latin: `使用 Apple` not `使用Apple`)
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-Playful is a hand-crafted editorial system built on Syne (quirky humanist display) plus Space Grotesk (warm geometric body) on a peach-clay canvas. The Chinese transfer is exceptionally strong because both Chinese faces selected here carry the same "warm, hand-touched, independent studio" register as the Latin pairing.
-
-**站酷快乐体 ZCOOL KuaiLe** is a rounded, friendly Chinese display face with quirky humanist proportions — the closest CDN-available equivalent to Syne's expressive studio voice. At display weights (4–9rem), KuaiLe reads as a contemporary independent Chinese studio voice, not a corporate or formal one. It pairs naturally with the peach canvas and charcoal ink. **Drop the negative letter-spacing (-0.01em to -0.03em) for Chinese display** — KuaiLe is designed on a square em-box and tightening causes glyph collision. The face's intrinsic warmth replaces what negative tracking does for Syne.
-
-**悠哉字体 Yozai** is a Chinese sans-serif designed for relaxed body reading — slightly rounded terminals, friendly humanist proportions, designed to match the warmth that Space Grotesk brings to Latin. Set every Chinese body paragraph and label in Yozai 400. The eyebrow label treatment (0.15em letter-spacing + uppercase in Latin) does not transfer to CJK; for Chinese eyebrows, use Yozai at the same 0.85rem size with letter-spacing 0 and no uppercase — small size alone reads as label.
-
-The double-stroke offset border, the small ±3deg rotations, the organic blob shapes, the SVG scribbles, the ghost-blob wallpaper — all script-agnostic. The single-color discipline (peach + charcoal) and the hand-crafted aesthetic survive the script switch fully.
-
-The system's typographic rhythm (Syne-vs-Space-Grotesk contrast) becomes (KuaiLe-vs-Yozai contrast) in pure Chinese — both pairs carry the same "expressive editorial built on a reliable grid" rhythm. Statistics and numerals are pure digits and transfer unchanged in Syne 800; only when a stat carries a Chinese unit suffix (`亿`, `万`) does the suffix glyph fall through to KuaiLe.
-
-### Known CJK Gap
-
-ZCOOL KuaiLe and Yozai are both single-weight faces (400). The system's reliance on weight contrast (Syne 700 vs 800 for sub-display hierarchy; Space Grotesk 400 vs 500 vs 600 for label hierarchy) collapses to size-only hierarchy in pure Chinese. This is not a meaningful loss — Playful's hierarchy is primarily size-driven anyway, and the missing weight steps don't change the visual rhythm enough to matter. The rotation, scribble, and double-border treatments carry the system's character regardless of weight availability.
-
 ## Iteration Guide
 
 1. Any new card uses the rough-box pattern: 3px charcoal border, peach background (or charcoal if inverted), padding from `{spacing.pad-card-*}`, and a `::before` ghost-border offset 6–8px down-and-right at 2–3px weight.

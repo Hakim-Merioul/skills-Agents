@@ -587,67 +587,6 @@ The system targets a **fixed 1920×1080 canvas** rendered inside a `<deck-stage>
 ### Print Behavior
 Print export depends on the deck-stage component's print handling. The pink halo text-shadow and the film-grain overlay may render inconsistently in PDF export — test before assuming visual parity.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin face | Chinese face (recommended) | Weight | Notes |
-|---|---|---|---|---|
-| Script / display (DM Serif Display) | DM Serif Display | **思源宋体 Noto Serif SC** | **900** | Heavy serif that holds visual mass on dark backgrounds. The default choice. |
-| Display alternate (delicate moments) | DM Serif Display | 站酷小薇体 ZCOOL XiaoWei | 400 | Couture-thin display face — use only at very large sizes (400px+) where delicacy reads as intentional. Too thin on dark backgrounds at typical headline sizes (40–200px). |
-| Body (Inter 300) | Inter | Noto Serif SC (思源宋体) | 400 | Serif body keeps the editorial register cohesive with the heavy display. |
-| Label / runner (JetBrains Mono UPPERCASE tracked) | JetBrains Mono | Noto Sans SC | 400 (do not force monospace on CJK) | |
-
-### Mixed-Content Strategy
-
-Strategy A — extend each token's `fontFamily` to include the Chinese face after the Latin face. DM Serif Display tokens become `"DM Serif Display, 'Noto Serif SC', serif"` with `font-weight: 900` on the Chinese run; Inter body tokens become `"Inter, 'Noto Serif SC', system-ui, sans-serif"`; JetBrains Mono tokens become `"JetBrains Mono, 'Noto Sans SC', monospace"`. Latin glyphs render in their original face; CJK falls through automatically.
-
-**Critical**: when Chinese text uses the display role, set `font-weight: 900` explicitly. DM Serif Display's "single weight" is already visually heavy because it's a high-contrast display serif — the equivalent CJK heaviness lives at weight 900 in Noto Serif SC, not weight 400.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-```
-
-**Critical — do not split fonts across CDNs**: All four Chinese fonts (Noto Serif SC, Noto Sans SC, ZCOOL XiaoWei) are on Google Fonts. Keep them in the single Google Fonts URL above. **Do not move ZCOOL XiaoWei into a `cn-fontsource-zcool-xiaowei` package** — that npm package does not exist, the CDN returns 404, and the browser silently falls through to system serif (PingFang on macOS), which renders the title in a generic thin serif rather than XiaoWei. This was a confirmed real failure in a previous generation.
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation （，。：；！？「」（））
-- No period on display headlines (Chinese typography convention)
-- Pangu spacing 盘古之白 (space between CJK and Latin: `使用 Apple` not `使用Apple`)
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-Pink Script (After Hours) is a nocturnal couture system whose entire editorial identity rests on DM Serif Display in hot fuchsia pink at sizes up to 600px against dim warm-black paper. The visual weight of DM Serif Display at any size is substantial — high-contrast strokes, serif terminals, and a typographic mass that holds against the dark background.
-
-The recommended Chinese equivalent is **思源宋体 Noto Serif SC at weight 900**. This carries the same visual mass as DM Serif Display: bold serif terminals, sufficient stroke density to read clearly against the dark surface, and the editorial register that defines the system. Weight 900 is non-negotiable for display moments — anything lighter (400, 500, even 700) will visually disappear against the pink-glow + dark-paper combination and break the entire couture register.
-
-**站酷小薇体 ZCOOL XiaoWei** is a viable secondary option for moments where extreme delicacy reads as intentional — a single 400-px+ pull-quote, a hairline section divider title, a brand wordmark at the very top of a cover slide. Its single-weight 400 with extreme stroke contrast carries a different feeling: dressier, more whisper-thin, more vintage-Vogue than modern-fashion-editorial. For most display work, choose Noto Serif SC 900; reach for XiaoWei only when the moment is genuinely a delicate accent at extreme size.
-
-The pink halo text-shadow (`{components.pink-glow}` at 80–120px blur) transfers perfectly to Chinese characters regardless of which display face you choose. **Apply the same glow to every Chinese display moment in pink** — the neon bleed effect is script-agnostic and the late-night magazine atmosphere survives the script switch fully.
-
-The pink color (`{colors.pink}` — #ED3D8C) as the only chromatic accent works unchanged. The inline `<em>` color switch (paper-blush headline with one word in pink) is a clean transfer to Chinese — wrap one CJK character or one phrase in `<em>` and the pink ink switch reads exactly the same.
-
-**Inter at weight 300 for body** does not transfer directly. Noto Serif SC at weight 400 is the recommended body face — its high-contrast serif stroke matches the couture register of the system's overall feel. Body color stays paper-blush (`{colors.paper-blush}`); the ultra-light register is achieved through size, paper-blush color, and the muted 55%-opacity lead, not through font weight.
-
-JetBrains Mono uppercase tracked labels (runner brand, page numbers, footer chrome) do not transfer to CJK. Pure Latin chrome strings (the brand name itself, edition numbers like `01 / 09`) keep JetBrains Mono. For Chinese chrome text (a section / chapter tag in the upper-right), use Noto Sans SC 400 at the same 24px size with letter-spacing reset to 0 and no uppercase.
-
-The radial-gradient surface, the film-grain overlay, the 1px paper-blush interior frame — all script-agnostic. The pink halo, the kicker, the callout rail, the stat-row pattern, the matrix-cell — all transfer unchanged.
-
-### Known CJK Gap
-
-DM Serif Display's "single weight" is misleading: it's a high-contrast display serif that reads as visually heavy at any size. The Chinese equivalent heaviness lives at Noto Serif SC **weight 900**, not weight 400 — using weight 400 for display will make Chinese headlines look limp and disconnected from the bold pink callouts. The system's reliance on size for hierarchy still works in Chinese, but you must lock display weight at 900 to preserve the visual mass.
-
-ZCOOL XiaoWei is the only CDN-loadable Chinese face that captures the "high-contrast couture serif" character in its proportions, but its single-weight 400 is too thin for most display sizes on this template's dark surface. Treat XiaoWei as a niche option, not the default.
-
 ## Iteration Guide
 
 1. Every new slide background is the lit radial gradient (`{components.slide-surface}`) with film grain and the interior hairline frame. Don't skip any of the three layers.

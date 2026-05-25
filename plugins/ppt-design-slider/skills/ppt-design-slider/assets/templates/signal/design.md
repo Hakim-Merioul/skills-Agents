@@ -434,65 +434,6 @@ The deck is JS-driven. Slides advance via the navigation strip (translateX on th
 
 There is no dedicated print stylesheet. Static export should render each slide as a sequential page; the deck container's horizontal layout would need to be unwound for print fidelity.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin | Chinese | Weight mapping |
-|---|---|---|---|
-| Display / Headlines (h1, h2, h3) / Stat-value / Quote-text / Editorial-headline / Dense-headline | Source Serif 4 (500–700) | **思源黑体 Noto Sans SC** | 700 |
-| Lead / Body / Caption | DM Sans (400) | **思源黑体 Noto Sans SC** | 400 |
-| Label / Kicker / Chrome / Slide counter | IBM Plex Mono (500) | **思源黑体 Noto Sans SC** | 500 (uppercase + tracking removed) |
-
-### Mixed-Content Strategy
-
-**Strategy A — single CJK family (思源黑体 Noto Sans SC) across all roles.** Signal's Latin system already wires Noto Serif SC and Noto Sans SC into every font-family stack as fallbacks — the system was designed with CJK in mind. The recommended consolidation is to use **Noto Sans SC for every role** rather than mixing Noto Serif SC (display) + Noto Sans SC (body) — and the reason is the system's most distinctive treatment: the gold italic `<em>` emphasis inside headlines. Noto Serif SC does not ship an italic axis, which means the Signal moment (roman-to-italic mid-sentence color shift) cannot be reproduced in Chinese. Collapsing to Noto Sans SC across the system and reserving the color-only emphasis (gold without italic) for CJK `<em>` lands cleaner than fighting an italic-less serif. The serif vs sans contrast that defines the Latin ladder is lost in CJK, but the editorial restraint of the system — hairlines, mono kickers, antique gold accents, dual surfaces — carries through unaffected.
-
-### Loading
-
-The system already loads Noto Sans SC via the existing font-family stacks. If using a CDN preconnect pattern:
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-```
-
-The existing CSS variables already include Noto Sans SC and Noto Serif SC in every font stack. For a CJK-primary deck, swap the serif stacks to use Noto Sans SC as the active CJK face (rather than Noto Serif SC) so the entire system collapses to one Chinese family:
-```css
-/* Display / headline roles (CJK-primary) */
-font-family: 'Source Serif 4', 'Noto Sans SC', Georgia, serif;
-/* Body roles */
-font-family: 'DM Sans', 'Noto Sans SC', system-ui, sans-serif;
-/* Mono roles */
-font-family: 'IBM Plex Mono', 'Noto Sans SC', monospace;
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation
-- No period on display headlines
-- Pangu spacing (盘古之白): `使用 Apple` not `使用Apple`
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-- **The Signal moment (italic gold `<em>` mid-sentence) becomes color-only on CJK.** Noto Sans SC has no italic variant; even Noto Serif SC ships without italic. For Chinese headlines, render `<em>` as a color shift to `{colors.gold}` *without* italic — the emphasis still lands because gold is the system's most-loaded color. Treat this as a deliberate translation of the Signal moment to its color-only essence in CJK.
-- **Negative letter-spacing on display (-0.02em on display, -0.01em on h1/h2) must drop to 0 on CJK.** The system's tight tracking is a Latin-display convention that breaks CJK rendering.
-- **Mono kickers in IBM Plex Mono uppercase with 0.14–0.22em tracking are Latin-only.** For CJK kickers, drop tracking to 0 and rely on the gold color + small size to signal "this is a kicker." A mixed CJK + Latin kicker (`第一章 / CHAPTER ONE`) can keep the Latin half tracked and the CJK half at 0 tracking — the asymmetric mono voice reads as editorial bilingualism.
-- **Statistical numerals at Source Serif 4 600 in gold** remain Latin numerals (the Western-numeral convention for stats is universal in modern editorial design). Don't substitute Chinese numerals (一二三四) — they lose the catalogue-statistical voice.
-- **The em-dash bullet (`—` in mono gold) translates perfectly** — em-dash bullets are equally idiomatic in Chinese typography.
-- **The 80px grid texture, hairline borders, dual surface (navy + cream), gold rules, chapter slides, fullbleed image scrim, chromeless statement layouts** are all glyph-agnostic. The editorial restraint and intelligence-briefing register carry through unaffected.
-- **Line-height on CJK body should open from 1.58–1.72 to 1.75–1.85** — Chinese characters fill their em-box and need additional vertical breathing for readability at the system's body sizes (1.05vw, 1.4vw).
-- **Quote-mark glyph (the 8vw decorative opening quotation)** should switch to a Chinese opening guillemet (「) or curly quote (") — Latin opening-quote glyphs read as alien on Chinese pull-quotes.
-
-### Known CJK Gap
-
-The system's most distinctive typographic treatment (roman + italic-gold mid-sentence inside Source Serif 4 headlines) is fundamentally a Latin-typographic move that does not translate. Neither Noto Serif SC nor Noto Sans SC ships an italic axis, and inventing one via CSS `font-style: italic` produces an oblique/slanted glyph that reads as broken rather than as emphasis. Collapsing CJK `<em>` to a color-only shift (gold without italic) is the cleanest workaround; mixed-language headlines where the emphasized phrase is Latin (and therefore can take italic gold) and the surrounding sentence is Chinese will land as the strongest CJK execution of the Signal moment.
-
 ## Iteration Guide
 
 1. Any new headline uses Source Serif 4 and is eligible for an `<em>` mid-sentence in italic gold. If the headline has no emphasized phrase, consider whether it should — the Signal voice depends on the gold italic moment appearing.

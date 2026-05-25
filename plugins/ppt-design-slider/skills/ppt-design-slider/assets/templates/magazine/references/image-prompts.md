@@ -1,178 +1,179 @@
-# GPT-M 2.0 配图提示词
+# GPT-M 2.0 Image Prompts
 
-用于 Codex 环境下为本 skill 生成 PPT 配图。提示词只负责定基调,不要写成长篇说明。先判断图片落位和比例,再选择类型。
+Used in the Codex environment to generate PPT images for this skill. Prompts only set the tone — do not write them as long explanations. First determine image placement and ratio, then choose the type.
 
-## 通用规则
+## General Rules
 
-- 先判断当前 deck 风格:风格 A = 电子杂志 × 电子墨水;风格 B = 瑞士国际主义 / Swiss Style
-- 风格 A 基调:电子杂志 × 电子墨水,克制、真实、留白充足,适合横向网页 PPT
-- 风格 B 基调:Swiss International Typographic Style,12/16 列网格、Helvetica/Inter 气质、单一高饱和 accent、直角纯色、发丝线、极大留白
-- 信息图、图表、截图再设计中的文字语言必须跟随用户语言:中文 deck 用中文,英文 deck 用英文
-- 不生成卡通、3D、霓虹科技感、SaaS 模板感、过度装饰或假 logo
-- 图片要给标题或正文留出可叠加空间,不要满屏堆细节
-- 同一页或同一组图片必须使用同一比例、同一视觉缩放、同一边距密度
-- 配图是嵌入 PPT 的素材,不是一张独立 slide:不要生成页眉、页脚、页码、标题栏、角标、署名、装饰边框或 slide chrome
-- 生成后保存到 `images/`,命名为 `{页号}-{语义}.{ext}`
+- First determine the current deck style: Style A = digital magazine × e-ink; Style B = Swiss International Style / Swiss Style
+- Style A baseline: digital magazine × e-ink — restrained, authentic, generous whitespace, suited for landscape web PPT
+- Style B baseline: Swiss International Typographic Style — 12/16 column grids, Helvetica/Inter sensibility, single high-saturation accent, square pure color, hairlines, extreme whitespace
+- Text language in infographics, charts, and redesigned screenshots must follow the user's language: Chinese decks use Chinese, English decks use English
+- Do not generate cartoons, 3D, neon-tech, SaaS template aesthetics, over-decorated imagery, or fake logos
+- Images must leave headroom for titles or body text overlays — do not fill every pixel with detail
+- Images on the same page or in the same group must use the same ratio, the same visual scale, and the same margin density
+- Images are embedded assets in the PPT — they are not standalone slides: do not generate headers, footers, page numbers, title bars, corner labels, attributions, decorative borders, or slide chrome
+- After generation, save to `images/` with the naming convention `{page-number}-{semantic-name}.{ext}`
 
-## 比例选择
+## Ratio Selection
 
-| 用途 | 推荐比例 | HTML 落位 |
+| Use Case | Recommended Ratio | HTML Placement |
 |------|---------|-----------|
-| 章节封面 / 全屏主视觉 | 16:9 | `.frame-img.r-16x9` 或 hero 背景参考 |
-| 瑞士风顶部横幅 / Image Hero | 16:9 或 21:9 | P22 顶图 cover / `.frame-img.r-21x9` |
-| 左文右图主图 | 16:10 或 4:3 | `.frame-img.r-16x10` / `.frame-img.r-4x3` |
-| 信息图 / 系统关系图 | 16:9 或 16:10 | 原始截图用 `.fit-contain`;按槽位重生成则用 `.frame-img.r-16x9` / `.frame-img.r-16x10` 铺满 |
-| 截图再设计 / UI 情景图 | 16:10 或 21:9 | 原始截图用 `.fit-contain`;重生成到 S15/S16 时用 `.frame-img.r-21x9` 铺满 |
-| 图文混排小图 | 3:2 或 3:4 | `.frame-img.r-3x2` / `.frame-img.r-3x4` |
-| 图片网格 | 统一横图 | `.frame-img.h-22` / `.frame-img.h-26` |
-| 小型面板组 | 统一横图 | `.frame-img.h-16` / `.frame-img.h-18` |
+| Act cover / full-screen hero visual | 16:9 | `.frame-img.r-16x9` or hero background reference |
+| Swiss banner / Image Hero | 16:9 or 21:9 | P22 top cover / `.frame-img.r-21x9` |
+| Left-text right-image main image | 16:10 or 4:3 | `.frame-img.r-16x10` / `.frame-img.r-4x3` |
+| Infographic / system diagram | 16:9 or 16:10 | Original screenshots use `.fit-contain`; regenerated to slot use `.frame-img.r-16x9` / `.frame-img.r-16x10` filled to container |
+| Redesigned screenshot / UI scene image | 16:10 or 21:9 | Original screenshots use `.fit-contain`; regenerated to S15/S16 use `.frame-img.r-21x9` filled to container |
+| Mixed-layout small insert | 3:2 or 3:4 | `.frame-img.r-3x2` / `.frame-img.r-3x4` |
+| Image grid | Uniform landscape | `.frame-img.h-22` / `.frame-img.h-26` |
+| Small panel group | Uniform landscape | `.frame-img.h-16` / `.frame-img.h-18` |
 
-信息图和截图再设计如果来自不可控原始素材,优先用 `fit-contain`,避免文字被裁切;如果是 GPT-M 2.0 按槽位重新生成,必须生成同槽位比例并铺满容器,不要让小图漂在白框里。纪实照片优先用默认 `cover`,保持画面张力。
+For infographics and redesigned screenshots from uncontrolled original assets, prefer `fit-contain` to prevent text from being clipped. If GPT-M 2.0 is regenerating to a specific slot, generate at that slot's exact ratio and fill the container — never let a small image float inside a white frame.
+For documentary photos, default to `cover` to preserve the compositional tension.
 
-## 图片标准化策略
+## Image Standardization Strategy
 
-### A. 先选目标槽位
+### A. Choose the Target Slot First
 
-不要先生成图片再硬塞进页面。先决定图片落位:
+Do not generate an image and then try to fit it in the page. Decide the image placement first:
 
-1. 主视觉:16:9
-2. 左文右图:16:10 或 4:3
-3. 信息图/截图再设计:16:9 或 16:10,并使用 `fit-contain`
-4. 多图网格/面板组:统一高度类,同一组内禁止混用高度
+1. Hero visual: 16:9
+2. Left-text right-image: 16:10 or 4:3
+3. Infographic / redesigned screenshot: 16:9 or 16:10, using `fit-contain`
+4. Multi-image grid / panel group: uniform height class — mixing heights within a group is forbidden
 
-### B. 用户原始图片/截图的处理
+### B. Handling User's Original Images / Screenshots
 
-原始截图比例通常不可控,不要直接作为最终视觉标准。按下面顺序处理:
+Original screenshot ratios are typically uncontrollable — do not treat them directly as a final visual standard. Process them in this order:
 
-1. 如果原图内容需要保真,先读 `screenshot-framing.md`,用 CleanShot X 式程序化适配:目标比例画布 + 风格化背景 + 截图等比缩放 + 语义化 padding/alignment
-2. 如果原图比例接近目标槽位,直接放入统一 `.frame-img` 中,用 `cover` 或 `fit-contain`
-3. 如果一张 UI 图被拉成巨长条,拆成 2-3 张同尺寸局部面板;每个面板使用同一高度类
-4. 如果原图过高、过窄、过长且无法通过适配解决,再用"截图再设计 / UI 情景图"重新生成到目标比例
-5. 如果必须保留原图,用 `fit-contain` 放进统一 frame,接受留白,不要裁掉关键文字
+1. If the original content needs to be faithfully reproduced, first read `screenshot-framing.md` and use a CleanShot X-style programmatic adaptation: target-ratio canvas + styled background + proportionally scaled screenshot + semantic padding/alignment
+2. If the original ratio is close to the target slot, place it directly in a uniform `.frame-img` using `cover` or `fit-contain`
+3. If a UI image becomes a very long strip when stretched to full width, break it into 2–3 same-size panels; each panel uses the same height class
+4. If the original is too tall, too narrow, too long, and cannot be resolved through adaptation, then regenerate it as a "redesigned screenshot / UI scene image" to the target ratio
+5. If the original must be kept, use `fit-contain` inside a uniform frame — accept the whitespace, and do not crop critical text
 
-### C. 生成提示词后缀
+### C. Generation Prompt Suffix
 
-每个配图提示词最后都补一句规格约束:
+Append a specification constraint at the end of every image prompt:
 
 ```text
-输出必须是[16:9/16:10/4:3/3:2]横向构图,主体居中但保留边距,画面密度中等,与同组图片保持相同视觉缩放和边距。只保留核心图形/画面本身,不要生成页眉、页脚、标题、页码、角标、署名、装饰边框、超长条、竖图或不规则比例。
+Output must be a [16:9/16:10/4:3/3:2] landscape composition, subject centered but with generous margins, medium visual density, matching the same visual scale and margin density as other images in this group. Keep only the core image content itself — do not generate headers, footers, titles, page numbers, corner labels, attributions, decorative borders, ultra-wide strips, portrait format, or non-standard ratios.
 ```
 
-同一页需要多张图时,补一句:
+When multiple images are needed on the same page, add:
 
 ```text
-这是一组图片中的一张,请保持与同组图片相同的画面比例、元素大小、边距、线条粗细和标注密度。
+This is one image in a group. Please maintain the same canvas ratio, element scale, margins, line weight, and annotation density as the other images in this group.
 ```
 
-## 类型 1: 人文纪实照片
+## Type 1: Documentary Photography
 
-用于增加现场感、情绪和真实世界锚点。
+Used to add immediacy, emotion, and real-world anchoring.
 
 ```text
-生成一张横向纪实摄影配图,主题是:[页面概念]。风格像 Fujifilm / Leica editorial documentary,自然光、低饱和、轻微胶片颗粒、真实工作或生活现场,克制有人文温度。适合电子杂志 × 电子墨水 PPT,留出标题空间。不要商业摆拍、科幻界面、AI 机器人、logo 或水印。输出必须是[16:9/16:10/4:3]横向构图,主体居中但保留边距,画面密度中等。只保留核心照片本身,不要生成页眉、页脚、标题、页码、角标、署名、装饰边框、超长条、竖图或不规则比例。
+Generate a landscape documentary photograph, subject: [page concept]. Style like Fujifilm / Leica editorial documentary — natural light, low saturation, subtle film grain, authentic work or life setting, restrained with a human warmth. Suited for digital magazine × e-ink PPT with headroom for title overlay. No commercial posing, sci-fi interfaces, AI robots, logos, or watermarks. Output must be a [16:9/16:10/4:3] landscape composition, subject centered but with generous margins, medium visual density. Keep only the core photograph itself — do not generate headers, footers, titles, page numbers, corner labels, attributions, decorative borders, ultra-wide strips, portrait format, or non-standard ratios.
 ```
 
-## 类型 2: 杂志风信息图
+## Type 2: Magazine-Style Infographic
 
-用于解释概念、流程、对比、系统关系。
+Used to explain concepts, processes, comparisons, and system relationships.
 
 ```text
-生成一张横向杂志风信息图,解释:[概念/流程/关系]。电子墨水风格,黑白灰为主,少量低饱和强调色,细线条、网格、编号、短标签、留白充足。图中文字使用[中文/英文],保持简短可读。不要卡通、3D、霓虹科技感或模板感。输出必须是[16:9/16:10]横向构图,主体居中但保留边距,画面密度中等。只保留核心信息图本身,不要生成页眉、页脚、标题、页码、角标、署名、装饰边框、超长条、竖图或不规则比例。
+Generate a landscape magazine-style infographic explaining: [concept/process/relationship]. E-ink style — predominantly black, white, and grey with a small amount of low-saturation accent color, fine lines, grids, numbering, short labels, generous whitespace. Text in the image must be in [Chinese/English] and remain brief and readable. No cartoons, 3D, neon-tech, or template aesthetics. Output must be a [16:9/16:10] landscape composition, subject centered but with generous margins, medium visual density. Keep only the core infographic itself — do not generate headers, footers, titles, page numbers, corner labels, attributions, decorative borders, ultra-wide strips, portrait format, or non-standard ratios.
 ```
 
-## 类型 3: 流程 / Pipeline 图
+## Type 3: Process / Pipeline Diagram
 
-用于讲清从 A 到 B 到 C 的过程。
+Used to clearly show a journey from A to B to C.
 
 ```text
-生成一张横向流程信息图,展示:[步骤 1] → [步骤 2] → [步骤 3] → [结果]。风格为电子杂志 × 电子墨水,细箭头、分段编号、短注释、克制留白。图中文字使用[中文/英文]。只保留核心流程图本身,不要页眉、页脚、标题、页码、角标、署名或装饰边框。比例:16:9。
+Generate a landscape process infographic illustrating: [Step 1] → [Step 2] → [Step 3] → [Result]. Style is digital magazine × e-ink — thin arrows, segmented numbering, short annotations, restrained whitespace. Text in the image must be in [Chinese/English]. Keep only the core process diagram itself — no headers, footers, titles, page numbers, corner labels, attributions, or decorative borders. Ratio: 16:9.
 ```
 
-## 类型 4: 对比图
+## Type 4: Comparison Diagram
 
-用于 before / after、新旧模式、两种协作方式对照。
+Used for before/after, old vs new mode, or two-approach contrasts.
 
 ```text
-生成一张横向对比信息图,左侧是[旧模式],右侧是[新模式]。风格像高端独立杂志里的分析图,黑白灰和一个低饱和强调色,细线分栏、短标签、清晰层级。图中文字使用[中文/英文]。只保留核心对比图本身,不要页眉、页脚、标题、页码、角标、署名或装饰边框。比例:16:9。
+Generate a landscape comparison infographic — left side shows [old model], right side shows [new model]. Style like analytical diagrams in a premium independent magazine — black, white, grey, and one low-saturation accent color, thin dividing lines, short labels, clear hierarchy. Text in the image must be in [Chinese/English]. Keep only the core comparison diagram itself — no headers, footers, titles, page numbers, corner labels, attributions, or decorative borders. Ratio: 16:9.
 ```
 
-## 类型 5: 系统关系图
+## Type 5: System Relationship Diagram
 
-用于多角色、多工具、多模块之间的关系。
+Used for relationships between multiple roles, tools, or modules.
 
 ```text
-生成一张横向系统关系图,展示:[角色/工具/模块]之间如何连接。电子墨水杂志风,节点、细线、箭头、编号和少量短注释,结构清晰,留白充足。图中文字使用[中文/英文]。只保留核心关系图本身,不要页眉、页脚、标题、页码、角标、署名或装饰边框。比例:16:9。
+Generate a landscape system relationship diagram showing how [roles/tools/modules] connect. E-ink magazine style — nodes, thin lines, arrows, numbering, and brief annotations, clear structure, generous whitespace. Text in the image must be in [Chinese/English]. Keep only the core relationship diagram itself — no headers, footers, titles, page numbers, corner labels, attributions, or decorative borders. Ratio: 16:9.
 ```
 
-## 类型 6: 截图再设计 / UI 情景图
+## Type 6: Redesigned Screenshot / UI Scene Image
 
-用于把真实截图、代码、设计稿、工作区处理成统一视觉素材。
+Used to process real screenshots, code, design files, or workspaces into unified visual assets.
 
 ```text
-生成一张横向 UI 情景图,把[截图/界面/工作区内容]再设计成适合杂志风 PPT 的视觉。保留真实产品工作流的感觉,使用纸张底色、细线框、网格、少量标注和克制阴影。图中文字使用[中文/英文],短而清晰。不要真实品牌 logo、花哨 dashboard、霓虹渐变或过度拟物。输出必须是16:10横向构图,主体居中但保留边距,画面密度中等。只保留核心 UI 画面本身,不要生成页眉、页脚、标题、页码、角标、署名、装饰边框、超长条、竖图或不规则比例。
+Generate a landscape UI scene image, redesigning [screenshot/interface/workspace content] into a visual suitable for a magazine-style PPT. Preserve the feel of a real product workflow — use paper-colored background, thin frames, grids, sparse annotations, and restrained shadows. Text in the image must be in [Chinese/English], short and clear. No real brand logos, flashy dashboards, neon gradients, or hyper-skeuomorphic elements. Output must be a 16:10 landscape composition, subject centered but with generous margins, medium visual density. Keep only the core UI canvas itself — do not generate headers, footers, titles, page numbers, corner labels, attributions, decorative borders, ultra-wide strips, portrait format, or non-standard ratios.
 ```
 
-## 类型 7: 数据大字报图
+## Type 7: Data Billboard
 
-用于突出一个关键数字或少量指标。
+Used to highlight one key number or a small number of metrics.
 
 ```text
-生成一张横向数据大字报视觉,核心数字是:[数字],含义是:[含义]。风格为电子墨水杂志版式,超大衬线数字、少量短注释、细线、留白和纸张质感。图中文字使用[中文/英文]。只保留核心数据视觉本身,不要页眉、页脚、标题、页码、角标、署名或装饰边框。比例:16:9。
+Generate a landscape data billboard visual, core number: [number], meaning: [meaning]. Style is e-ink magazine layout — oversized serif number, sparse short annotations, thin lines, whitespace, and paper texture. Text in the image must be in [Chinese/English]. Keep only the core data visual itself — no headers, footers, titles, page numbers, corner labels, attributions, or decorative borders. Ratio: 16:9.
 ```
 
 ---
 
-## 风格 B:瑞士国际主义配图规则
+## Style B: Swiss International Style Image Rules
 
-当 deck 选择 `assets/template-swiss.html` / `layouts-swiss.md` 时,优先使用下面这组提示词。它们和 GPT-M 2.0 配套,目标是生成能直接放进原始登记版式的图片槽位,尤其是 S22 顶部横幅、S15/S16 多图网格。
+When the deck uses `assets/template-swiss.html` / `layouts-swiss.md`, prioritize the following set of prompts. They are paired with GPT-M 2.0 and aim to generate images that can be placed directly into the registered layout slots — especially the S22 top banner, and S15/S16 multi-image grids.
 
-### Swiss 配图硬规则
+### Swiss Image Hard Rules
 
-- 视觉锚点:International Typographic Style / Swiss modernism / Helvetica / Josef Müller-Brockmann / Massimo Vignelli
-- 构图:严格 12/16 列网格、非对称留白、左对齐、发丝线、直角模块
-- 色彩:只使用黑、白、灰和**一个**主题 accent(默认 IKB 蓝;如果用户选柠檬黄/绿/安全橙,就替换为对应 accent)
-- 禁止:渐变、阴影、圆角、玻璃拟态、霓虹、3D、卡通、SaaS 模板感、伪 logo、装饰边框
-- 图片内部不要生成 PPT 外壳:不要页眉、页脚、页码、标题栏、角标、署名、外框
-- UI / 信息图文字必须短,保持中文/英文语言一致;真实照片尽量不要带文字
-- 先确定版式槽位再生成图片:单张大图用 `s22-hero-21x9`;多图格用 `s15-grid-21x9` 或 `s16-brief-21x9`
-- 21:9 图片必须让核心主体落在中央 70% 安全区,四周留白;不要把人脸、关键节点或 UI 文字贴边
+- Visual anchors: International Typographic Style / Swiss modernism / Helvetica / Josef Müller-Brockmann / Massimo Vignelli
+- Composition: strict 12/16 column grid, asymmetric whitespace, left-aligned, hairlines, square modules
+- Color: only black, white, grey, and **one** theme accent (default IKB blue; replace with the corresponding accent if the user chose lemon yellow/green/safety orange)
+- Forbidden: gradients, shadows, rounded corners, glassmorphism, neon, 3D, cartoons, SaaS template aesthetics, fake logos, decorative borders
+- Images must not contain PPT shell elements: no headers, footers, page numbers, title bars, corner labels, attributions, or outer frames
+- UI / infographic text must be short and language-consistent (Chinese or English); real photos should avoid text where possible
+- Determine the layout slot before generating: single large image use `s22-hero-21x9`; multi-image grid use `s15-grid-21x9` or `s16-brief-21x9`
+- 21:9 images must place the core subject within the central 70% safe zone, with generous margins on all sides — never push a face, key node, or UI text to the edge
 
-### Swiss 类型 1:纪实照片 / 案例主图
+### Swiss Type 1: Documentary Photo / Case Hero Image
 
-用于 S22 Image Hero,增加真实场景锚点。
+Used for S22 Image Hero to add a real-world scene anchor.
 
 ```text
-生成一张 21:9 超宽横向纪实摄影配图,主题是:[页面概念]。风格是 Swiss editorial documentary:高对比、低饱和、冷静克制、真实办公/城市/产品使用场景,构图有大量负空间,主体位于中央 70% 安全区,适合放入瑞士国际主义 PPT 的顶部横幅。不要 AI 机器人、科幻界面、商业摆拍、logo、水印或文字。只保留核心照片本身,不要页眉、页脚、标题、页码、角标、署名、装饰边框或 PPT 外壳。
+Generate a 21:9 ultra-wide landscape documentary photograph, subject: [page concept]. Style is Swiss editorial documentary — high contrast, low saturation, calm and restrained, authentic office/urban/product-in-use setting, generous negative space, subject positioned within the central 70% safe zone, suited for placement in the top banner of a Swiss International Style PPT. No AI robots, sci-fi interfaces, commercial posing, logos, watermarks, or text. Keep only the core photograph itself — no headers, footers, titles, page numbers, corner labels, attributions, decorative borders, or PPT shell elements.
 ```
 
-### Swiss 类型 2:信息图 / 系统关系图
+### Swiss Type 2: Infographic / System Diagram
 
-用于解释概念、架构、流程、数据与表现分离等抽象内容。
+Used to explain concepts, architecture, processes, data-presentation separation, and other abstract content.
 
 ```text
-生成一张横向 Swiss Style 信息图,解释:[概念/流程/系统关系]。使用 Helvetica/Inter 气质的无衬线短标签、12/16 列网格、直角模块、1px 发丝线、黑白灰和一个 [IKB 蓝/柠檬黄/柠檬绿/安全橙] accent。图中文字使用[中文/英文],每个标签不超过 8 个字/词。不要渐变、阴影、圆角、3D、卡通、霓虹或 SaaS 模板感。输出比例为[21:9/16:10],主体居中但保留大留白。只保留核心信息图本身,不要页眉、页脚、标题、页码、角标、署名、装饰边框或 PPT 外壳。
+Generate a landscape Swiss Style infographic explaining: [concept/process/system relationship]. Use Helvetica/Inter-sensibility sans-serif short labels, 12/16 column grid, square modules, 1px hairlines, black/white/grey, and one [IKB blue/lemon yellow/lime green/safety orange] accent. Text in the image must be in [Chinese/English] — no more than 8 characters/words per label. No gradients, shadows, rounded corners, 3D, cartoons, neon, or SaaS template aesthetics. Output ratio is [21:9/16:10], subject centered but with generous whitespace. Keep only the core infographic itself — no headers, footers, titles, page numbers, corner labels, attributions, decorative borders, or PPT shell elements.
 ```
 
-### Swiss 类型 3:截图再设计 / UI 情景图
+### Swiss Type 3: Redesigned Screenshot / UI Scene Image
 
-用于把截图、工作区、代码、dashboard 重绘成统一 Swiss 风视觉。
+Used to redraw screenshots, workspaces, code, and dashboards as unified Swiss-style visuals.
 
 ```text
-生成一张横向 UI 情景图,把[截图/界面/工作区内容]再设计成 Swiss International Typographic Style。画面使用极简 dashboard / workspace 结构,直角面板、发丝线、12 列网格、少量 [IKB 蓝/柠檬黄/柠檬绿/安全橙] accent,无阴影无圆角。图中文字使用[中文/英文],短而清晰,不要真实品牌 logo。输出必须是16:10横向构图,视觉密度中等,适合放进 `.frame-img.r-16x10.fit-contain`。只保留核心 UI 画面本身,不要页眉、页脚、标题、页码、角标、署名、装饰边框或 PPT 外壳。
+Generate a landscape UI scene image redesigning [screenshot/interface/workspace content] into Swiss International Typographic Style. Use a minimal dashboard/workspace structure — square panels, hairlines, 12-column grid, sparse [IKB blue/lemon yellow/lime green/safety orange] accent, no shadows, no rounded corners. Text in the image must be in [Chinese/English], short and clear — no real brand logos. Output must be a 16:10 landscape composition, medium visual density, suited for placement in `.frame-img.r-16x10.fit-contain`. Keep only the core UI canvas itself — no headers, footers, titles, page numbers, corner labels, attributions, decorative borders, or PPT shell elements.
 ```
 
-### Swiss 类型 4:多图网格单张素材
+### Swiss Type 4: Multi-Grid Single Asset
 
-用于 S15/S16 图片格改造,一组 2-6 张图片并列时逐张生成。
+Used for S15/S16 image grid adaptation — generate one image at a time when a group of 2–6 images will be placed side by side.
 
 ```text
-生成一张横向证据图,主题是:[证据 A/B/C]。这是一组 Swiss Style 图片中的一张,请保持直角模块、黑白灰、单一 [IKB 蓝/柠檬黄/柠檬绿/安全橙] accent、相同边距、相同线条粗细、相同视觉缩放。图中文字使用[中文/英文],短标签即可。输出必须是[21:9/16:10]横向构图,适合放入 S15/S16 统一图片格。只保留核心图像本身,不要页眉、页脚、标题、页码、角标、署名、装饰边框或 PPT 外壳。
+Generate a landscape evidence image, subject: [Evidence A/B/C]. This is one image in a Swiss Style group — maintain square modules, black/white/grey, single [IKB blue/lemon yellow/lime green/safety orange] accent, consistent margins, consistent line weight, consistent visual scale. Text in the image must be in [Chinese/English] — brief labels only. Output must be a [21:9/16:10] landscape composition suited for placement in a S15/S16 uniform image slot. Keep only the core image itself — no headers, footers, titles, page numbers, corner labels, attributions, decorative borders, or PPT shell elements.
 ```
 
-### Swiss 类型 5:极简图表 / 数据块
+### Swiss Type 5: Minimal Chart / Data Block
 
-用于 S21 或 S15/S16 图片格中的小型数据解释图。
+Used for small data explanation images within S21 or S15/S16 image slots.
 
 ```text
-生成一张横向 Swiss Style 数据图,核心数据是:[数字/对比/排名],含义是:[说明]。使用极大无衬线数字、1px 发丝线、直角色块、黑白灰和一个 [IKB 蓝/柠檬黄/柠檬绿/安全橙] accent,像瑞士海报里的数据版式。图中文字使用[中文/英文],只保留必要标签。不要渐变、阴影、圆角、3D 或装饰边框。比例:[16:9/16:10]。只保留核心数据图本身,不要页眉、页脚、标题、页码、角标、署名或 PPT 外壳。
+Generate a landscape Swiss Style data chart, core data: [number/comparison/ranking], meaning: [description]. Use oversized sans-serif numbers, 1px hairlines, square color blocks, black/white/grey, and one [IKB blue/lemon yellow/lime green/safety orange] accent — like a data layout in a Swiss poster. Text in the image must be in [Chinese/English] — only necessary labels. No gradients, shadows, rounded corners, 3D, or decorative borders. Ratio: [16:9/16:10]. Keep only the core data chart itself — no headers, footers, titles, page numbers, corner labels, attributions, or PPT shell elements.
 ```

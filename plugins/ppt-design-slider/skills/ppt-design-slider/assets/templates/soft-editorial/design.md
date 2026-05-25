@@ -528,69 +528,6 @@ Navigation is handled by the `deck-stage.js` script (an external dependency, not
 
 There is no embedded print stylesheet. Static export depends on the deck-stage component's print/export behavior; for PDF generation, the deck-stage should render each slide as a single page at the 1920×1080 canvas size.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin face (default) | Chinese face | Weight | Notes |
-|---|---|---|---|---|
-| Display / Headline | Cormorant Garamond 500 | 霞鹜文楷 LXGW WenKai (LXGW WenKai TC) | 400 | LXGW WenKai is a hand-written-feel kaiti that mirrors Cormorant's literary register. The single regular weight matches Cormorant's gentle medium. |
-| Italic emphasis (`<em>`) | Cormorant Garamond italic 400 | 霞鹜文楷 LXGW WenKai | 400 | LXGW WenKai has no true italic — emphasis instead drops to `{colors.ink-soft}` or a faint underline. Do not synthesize italic. |
-| Body | Work Sans 400 | 思源宋体 / Noto Serif SC | 400 | The system body switches from sans to serif in CJK to preserve the literary register; Work Sans loses its editorial calm beside a kaiti headline. |
-| Body — alt sans (optional) | Work Sans 400 | Noto Sans SC | 400 | Only use if the deck has very dense data; default to Noto Serif SC. |
-| Kicker / marker / page numeral | Cormorant Garamond italic 400 | 霞鹜文楷 LXGW WenKai 400 | 400 | Italic ornament becomes upright kaiti; rely on `{colors.ink-soft}` color shift instead of italic for the same "soft ornament" feel. |
-
-### Mixed-Content Strategy
-
-This template uses **Strategy C (literary)**: keep the Latin face for English glyphs and let the CJK fallback in only when a Chinese character appears, via a stacked `font-family`. Cormorant Garamond is part of Soft Editorial's brand identity — replacing it with a kaiti for every headline strips the system of its old-style serif personality. Letting Latin stay in Cormorant while Chinese drops into LXGW WenKai preserves both registers.
-
-```css
-font-family: 'Cormorant Garamond', 'LXGW WenKai TC', 'Noto Serif SC', serif;  /* headlines */
-font-family: 'Work Sans', 'Noto Serif SC', sans-serif;                          /* body */
-```
-
-**Warning — baseline mismatch at display sizes.** Cormorant Garamond's x-height sits noticeably lower than LXGW WenKai's optical center. At 96px+ headlines, a phrase like `Soft Editorial 软编辑` will show the Chinese characters floating slightly above the Latin baseline. Mitigations:
-- Add `font-feature-settings: "palt"` on the Chinese segment to tighten metrics.
-- Wrap CJK in a `<span lang="zh">` with a small `vertical-align: -0.04em` adjustment on display tokens (display, title, closer, numeral-hero, panel-headline).
-- For pure-CJK headlines (no Latin), the issue disappears — the mismatch only surfaces in mixed-script lines.
-
-### Loading
-
-Add to `<head>` (Google Fonts hosts LXGW WenKai TC and Noto Serif SC):
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Work+Sans:wght@400;500&family=LXGW+WenKai+TC&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
-```
-
-LXGW WenKai TC is the Traditional Chinese cut on Google Fonts; it includes the full CJK Unified Ideographs range and renders Simplified Chinese cleanly. Noto Serif SC carries body text in Simplified Chinese with proper hinting.
-
-### Universal CJK Adjustments
-
-Apply on any element rendering Chinese content (typically scope via `:lang(zh)` or `<span lang="zh">`):
-
-- **Line-height**: body 1.75–1.85 (Soft Editorial's 1.5 sans-default needs more air for CJK strokes); display 1.15–1.25 (tighter than Latin 0.92–1 because CJK glyphs already include intrinsic spacing).
-- **Letter-spacing**: 0 on CJK. The system's negative tracking (-0.01 to -0.02em) on display Latin is wrong for Chinese — CJK glyphs are pre-spaced; negative tracking causes overlap.
-- **Text-transform**: no uppercase on CJK. Chinese has no case, and CSS `text-transform: uppercase` is a no-op on Han characters anyway, but make sure no parent rule attempts it.
-- **Full-width punctuation**: use `，。：；！？` (full-width) not `,.:;!?` (half-width). The full-width forms include their own surrounding whitespace and align to the CJK em-box.
-- **No period on display headlines**: Chinese headlines drop the terminal `。` — the headline's visual closure is enough. (Latin headlines in this system already drop periods; the rule extends to CJK.)
-- **Pangu spacing (盘古之白)**: insert a thin space between CJK and adjacent Latin/numerals. Write `使用 Apple` not `使用Apple`; `2024 年` not `2024年`. This is editorial convention in good Chinese typography and matches Soft Editorial's literary care.
-- **One font per sentence**: don't mix LXGW WenKai and Noto Serif SC inside a single line. Use one or the other for the entire run; switching mid-sentence creates a metric jolt.
-
-### Aesthetic Notes for This System
-
-LXGW WenKai is exceptionally well-matched to Soft Editorial's register. The kaiti's slight hand-written warmth picks up where Cormorant Garamond's old-style italic leaves off — both faces read as personal, considered, slightly intimate against the cream paper field. On a pastel card (pink, lemon, blush, sage, lilac), LXGW WenKai at headline scale reads as a calligraphic moment, which strengthens rather than weakens the editorial calm. The drop cap treatment (132px Cormorant Garamond medium) does not translate to CJK — kaiti drop caps look severed rather than ornamental; for Chinese opener paragraphs, drop the drop cap entirely and rely on the italic kicker above the paragraph for the "essay opening" cue.
-
-The serif body switch (Work Sans → Noto Serif SC) is the most consequential change. Work Sans's humanist grotesque feels paired with Cormorant in Latin, but a sans body beside a kaiti headline reads as a cheap textbook in Chinese. Noto Serif SC's Song-style strokes resonate with both the cream field and the literary headline face, preserving the small-press literary quarterly mood across languages. Keep eyebrows (28px) in Noto Sans SC if you want a small register shift from the body, mirroring the Latin sans-vs-serif distinction.
-
-### Known CJK Gap
-
-- LXGW WenKai has only a single weight (regular). The system's signature "weight drop" inside headlines (Cormorant 500 → italic 400) cannot be reproduced in CJK. Substitute with a color shift to `{colors.ink-soft}` for emphasis, or accept that Chinese headlines read as one consistent weight.
-- LXGW WenKai TC's Traditional-cut glyphs may render a small number of characters with Traditional forms (e.g., 設 instead of 设). For pure Simplified Chinese decks, prefer `font-family: 'Noto Serif SC'` as the primary CJK face and reserve LXGW WenKai for accent moments (cover title, chapter titles).
-- The italic ornament moments (kickers, page numerals, footers, sign-offs) lose their italic in CJK because no CJK face carries true italic. Compensate by using `{colors.ink-soft}` and slightly smaller sizes to keep the "ornamental whisper" register.
-- Baseline mismatch at display sizes (see Mixed-Content Strategy) requires per-deck tuning if covers carry mixed-script headlines.
-
 ## Iteration Guide
 
 1. Any new headline uses Cormorant Garamond at weight 500, with italic `<em>` phrases dropping to weight 400. The weight drop is the editorial signal.

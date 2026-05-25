@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[必填] 替换为 PPT 标题 · Deck Title</title>
+<title>[Required] Replace with deck title · Deck Title</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* ============ 主题色(默认:🖋 墨水经典) ============
-       切换主题:从 references/themes.md 复制对应的 :root 块
-       整体替换这几行(--ink / --ink-rgb / --paper / --paper-rgb)
-       其他地方散落的 rgba() 都走 var(--ink-rgb) / var(--paper-rgb),无需逐处改 */
+    /* ============ Theme colors (default: Ink Classic) ============
+       To switch theme: copy the matching :root block from references/themes.md
+       Replace these lines (--ink / --ink-rgb / --paper / --paper-rgb)
+       All scattered rgba() calls use var(--ink-rgb) / var(--paper-rgb) — no need to edit individually */
     --ink:#0a0a0b;
     --ink-rgb:10,10,11;
     --paper:#f1efea;
@@ -20,7 +20,7 @@
     --paper-tint:#e8e5de;
     --ink-tint:#18181a;
 
-    /* ============ 字体(跨主题固定) ============ */
+    /* ============ Fonts (fixed across all themes) ============ */
     --mono:"IBM Plex Mono",ui-monospace,monospace;
     --serif-en:"Playfair Display","Source Serif 4",Georgia,serif;
     --serif-body-en:"Source Serif 4",Georgia,serif;
@@ -30,7 +30,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 
-  /* ============ WebGL 双背景 ============ */
+  /* ============ WebGL dual background ============ */
   canvas.bg{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block;transition:opacity 1.2s ease}
   canvas#bg-light{opacity:0}
   canvas#bg-dark{opacity:1}
@@ -38,26 +38,26 @@
   body.light-bg canvas#bg-dark{opacity:0}
   body.low-power canvas.bg{display:none!important}
 
-  /* ============ Deck 容器 + 翻页 ============ */
-  /* width: NSLIDES * 100vw，会在 JS 里动态矫正 */
+  /* ============ Deck container + pagination ============ */
+  /* width: NSLIDES * 100vw — corrected dynamically in JS */
   #deck{position:fixed;inset:0;width:10000vw;height:100vh;display:flex;flex-wrap:nowrap;transition:transform .9s cubic-bezier(.77,0,.175,1);z-index:10;will-change:transform}
   .slide{width:100vw;height:100vh;flex:0 0 100vw;position:relative;padding:6vh 6vw 10vh 6vw;display:flex;flex-direction:column;overflow:hidden}
   .slide.light{color:var(--ink);background:var(--paper)}
   .slide.dark{color:var(--paper);background:var(--ink)}
 
-  /* 默认页：遮罩较厚，保证文字可读 */
+  /* Default slide: heavier overlay for readable text */
   .slide::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;transition:background .7s ease}
   .slide.light::before{background:rgba(var(--paper-rgb),.78);backdrop-filter:blur(3px)}
   .slide.dark::before{background:rgba(var(--ink-rgb),.78);backdrop-filter:blur(3px)}
-  /* Hero 页：遮罩大幅降低，让 WebGL 背景明显透出 */
+  /* Hero slide: overlay greatly reduced to let the WebGL background show through */
   .slide.hero.light::before{background:rgba(var(--paper-rgb),.16);backdrop-filter:none}
   .slide.hero.dark::before{background:rgba(var(--ink-rgb),.12);backdrop-filter:none}
-  /* Hero 页顶底微弱渐隐，保证 chrome/foot 区域可读 */
+  /* Hero slide: subtle top/bottom fade to keep chrome/foot readable */
   .slide.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none}
   .slide.hero.light::after{background:linear-gradient(180deg,rgba(var(--paper-rgb),.28) 0%,rgba(var(--paper-rgb),0) 14%,rgba(var(--paper-rgb),0) 86%,rgba(var(--paper-rgb),.28) 100%)}
   .slide.hero.dark::after{background:linear-gradient(180deg,rgba(var(--ink-rgb),.32) 0%,rgba(var(--ink-rgb),0) 14%,rgba(var(--ink-rgb),0) 86%,rgba(var(--ink-rgb),.32) 100%)}
 
-  /* ============ Magazine chrome：顶部 meta + 底部 foot ============ */
+  /* ============ Magazine chrome: top meta bar + bottom foot ============ */
   .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.7}
   .chrome .left,.chrome .right{display:flex;gap:2.4em;align-items:center}
   .chrome .sep{width:40px;height:1px;background:currentColor;opacity:.4}
@@ -68,10 +68,10 @@
   .rule{width:100%;height:1px;background:currentColor;opacity:.25;margin:3vh 0}
   .rule.v{width:1px;height:100%;margin:0}
 
-  /* ============ 字体规则 ============
-     · 衬线（Noto Serif SC / Playfair）：大标题、重点金句、数字
-     · 非衬线（Noto Sans SC）：正文描述、body、补充说明
-     · 等宽（IBM Plex Mono）：kicker、meta 小标签、foot 右侧
+  /* ============ Type rules ============
+     · Serif (Noto Serif SC / Playfair): large headings, key quotes, numbers
+     · Sans-serif (Noto Sans SC): body copy, descriptions, supporting text
+     · Monospace (IBM Plex Mono): kicker, meta labels, foot right
   */
   .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;opacity:.6;margin-bottom:2.6vh}
   .display{font-family:var(--serif-en);font-weight:700;font-size:11vw;line-height:.92;letter-spacing:-.025em}
@@ -89,7 +89,7 @@
   em{font-style:italic;font-family:var(--serif-en)}
   .en{font-family:var(--serif-en);font-style:italic;font-weight:500}
 
-  /* ============ 布局工具 ============ */
+  /* ============ Layout utilities ============ */
   .col{display:flex;flex-direction:column;gap:2.4vh}
   .row{display:flex;align-items:center;gap:3vw}
   .grid-6{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:4vw 6vw;flex:1;align-content:center;padding:2vh 0}
@@ -104,34 +104,34 @@
   .bottom-right{position:absolute;right:6vw;bottom:9vh;max-width:50vw;text-align:right}
   .top-right{position:absolute;right:6vw;top:6vh;text-align:right}
 
-  /* ============ Stat（数字矩阵） ============ */
+  /* ============ Stat (number matrix) ============ */
   .stat{display:flex;flex-direction:column;gap:1vh;align-items:flex-start}
   .stat .n{font-family:var(--serif-en);font-weight:800;font-size:8vw;line-height:.88;letter-spacing:-.03em;font-feature-settings:"tnum"}
   .stat .l{font-family:var(--sans-zh);font-size:max(13px,1.05vw);opacity:.7;margin-top:1vh;font-weight:400;line-height:1.5}
   .stat .m{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.5;margin-bottom:.2vh}
 
-  /* ============ Callout（引用框） ============ */
+  /* ============ Callout (quote box) ============ */
   .callout{padding:3vh 2.4vw;border-left:3px solid currentColor;position:relative;font-family:var(--serif-zh);font-size:max(15px,1.2vw);line-height:1.55;opacity:.92}
   .slide.light .callout{background:rgba(var(--ink-rgb),.05)}
   .slide.dark .callout{background:rgba(var(--paper-rgb),.06)}
   .callout .cite{display:block;margin-top:1.6vh;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.6}
   .callout .q-big{font-family:var(--serif-zh);font-weight:600;font-size:max(17px,1.6vw);line-height:1.42}
 
-  /* ============ Platform（平台卡） ============ */
+  /* ============ Platform (platform card) ============ */
   .plat{display:flex;flex-direction:column;justify-content:flex-end;padding:2vh 0;border-top:1px solid currentColor;border-color:rgba(127,127,127,.35)}
   .plat .name{font-family:var(--serif-zh);font-weight:700;font-size:1.8vw;margin-bottom:.6vh}
   .plat .nb{font-family:var(--serif-en);font-weight:700;font-size:3.2vw;letter-spacing:-.02em;line-height:1;font-feature-settings:"tnum"}
   .plat .sub{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;opacity:.55;margin-top:.6vh}
   .plat .fill{font-family:var(--sans-zh);font-weight:300;font-size:2.4vw;opacity:.28;letter-spacing:-.01em;line-height:1}
 
-  /* ============ Rowline（表格行） ============ */
+  /* ============ Rowline (table row) ============ */
   .rowline{display:grid;grid-template-columns:1fr 2fr 1fr;gap:2vw;padding:2.2vh 0;border-top:1px solid currentColor;align-items:center;border-color:rgba(127,127,127,.25)}
   .rowline:last-child{border-bottom:1px solid currentColor;border-color:rgba(127,127,127,.25)}
   .rowline .k{font-family:var(--serif-zh);font-weight:700;font-size:1.7vw}
   .rowline .v{font-family:var(--sans-zh);font-weight:400;font-size:max(14px,1.2vw);opacity:.85;line-height:1.55}
   .rowline .m{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;justify-self:end}
 
-  /* ============ Pillar（支柱卡片） ============ */
+  /* ============ Pillar (pillar card) ============ */
   .pillar{display:flex;flex-direction:column;gap:1.8vh}
   .pillar .ic{font-family:var(--serif-en);font-style:italic;font-size:2.6vw;opacity:.45;font-weight:400}
   .pillar .ic svg{width:2.8vw;height:2.8vw;stroke-width:1.2;opacity:.7}
@@ -144,14 +144,14 @@
   .slide.dark .hi::after{content:"";position:absolute;left:-.1em;right:-.1em;bottom:-.05em;height:.28em;background:rgba(var(--paper-rgb),.15);z-index:-1}
   .slide.light .hi::after{content:"";position:absolute;left:-.1em;right:-.1em;bottom:-.05em;height:.28em;background:rgba(var(--ink-rgb),.08);z-index:-1}
 
-  /* ============ Icons（Lucide via CDN） ============ */
+  /* ============ Icons (Lucide via CDN) ============ */
   .ico{width:1em;height:1em;display:inline-block;vertical-align:-.12em;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
   .ico-lg,.ico-md,.ico-sm{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
   .ico-lg{width:2.6vw;height:2.6vw;stroke-width:1.2;display:inline-block}
   .ico-md{width:1.8vw;height:1.8vw;stroke-width:1.3;display:inline-block;vertical-align:-.4em}
   .ico-sm{width:1.1vw;height:1.1vw;stroke-width:1.4;display:inline-block;vertical-align:-.15em;opacity:.7}
 
-  /* ============ 图片占位（虚线框，提示设计师位置） ============ */
+  /* ============ Image placeholder (dashed border, shows designer where to place image) ============ */
   .img-slot{border:1.5px dashed rgba(127,127,127,.4);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1vh;padding:2vh 2vw;font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;opacity:.55;position:relative;aspect-ratio:16/9;width:100%;max-height:56vh;margin-inline:auto;box-sizing:border-box}
   .img-slot::before{content:"";position:absolute;inset:8px;border:1px solid currentColor;opacity:.2}
   .img-slot .plus{font-size:2vw;font-weight:300;opacity:.5;letter-spacing:0}
@@ -160,9 +160,9 @@
   .img-slot.r-3x2{aspect-ratio:3/2}
   .img-slot.r-1x1{aspect-ratio:1/1}
 
-  /* ============ 图片实填框（关键：固定高度 + 只裁底部） ============
-     重要约束：高度用内联 height:Nvh 精确控制，不要用 aspect-ratio（会撑破布局）
-     object-position:top center 保证严禁裁剪顶部和左右，只裁剪底部
+  /* ============ Image fill frame (key: fixed height + crop bottom only) ============
+     Important constraint: use inline height:Nvh for precise control, avoid aspect-ratio (breaks layout)
+     object-position:top center ensures top and sides are never cropped — only the bottom
   */
   .frame-img{overflow:hidden;position:relative;background:rgba(0,0,0,.04);box-sizing:border-box;width:100%;border-radius:4px}
   .slide.dark .frame-img{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}
@@ -186,7 +186,7 @@
   figure.tile{display:flex;flex-direction:column;margin:0;min-width:0}
   figure.tile > .frame-img{flex:0 0 auto}
 
-  /* ============ 导航 ============ */
+  /* ============ Navigation ============ */
   #nav{position:fixed;left:50%;bottom:2.6vh;transform:translateX(-50%);z-index:30;display:flex;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(0,0,0,.18);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
   #nav .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s ease;border:0;padding:0}
   #nav .dot:hover{background:rgba(255,255,255,.5);transform:scale(1.15)}
@@ -199,21 +199,21 @@
   body.light-bg.low-power #hint{color:var(--ink)}
 
   /* ============================================================
-     ============ LAYOUTS API · 面向 agent 的类（v2）============
-     所有 layouts.md 中的骨架都基于下面这套命名。
-     如果你在 layouts.md 里看到某个类，它必须在下面有定义。
+     ============ LAYOUTS API · agent-facing classes (v2) ============
+     All skeletons in layouts.md are based on the naming below.
+     If you see a class in layouts.md, it must be defined here.
      ============================================================ */
 
-  /* ---------- .frame：每页主内容容器 ---------- */
+  /* ---------- .frame: main content container per slide ---------- */
   .frame{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden}
-  /* 当 .frame 同时加了 grid 类时，grid 的 display:grid 覆盖 flex */
+  /* When .frame also has a grid class, display:grid overrides flex */
   .frame.grid-2-7-5,
   .frame.grid-2-6-6,
   .frame.grid-2-8-4,
   .frame.grid-3-3,
   .frame.grid-6{display:grid}
 
-  /* ---------- 标题层级（API 名称，衬线为主） ---------- */
+  /* ---------- Heading scale (API names, serif-first) ---------- */
   .h-hero{
     font-family:var(--serif-zh);
     font-weight:900;
@@ -242,10 +242,10 @@
     font-size:2.3vw;
     line-height:1.3;
   }
-  /* 英文标题专用（Playfair 衬线） */
+  /* English heading variant (Playfair serif) */
   .h-hero-en,.h-xl-en{font-family:var(--serif-en);letter-spacing:-.025em}
 
-  /* ---------- lead 引语 ---------- */
+  /* ---------- lead intro text ---------- */
   .lead{
     font-family:var(--serif-zh);
     font-weight:400;
@@ -254,7 +254,7 @@
     opacity:.86;
   }
 
-  /* ---------- meta-row 底部元数据 ---------- */
+  /* ---------- meta-row bottom metadata ---------- */
   .meta-row{
     display:flex;
     gap:1.2em;
@@ -267,7 +267,7 @@
     opacity:.6;
   }
 
-  /* ---------- stat-card（数据大字报用） ---------- */
+  /* ---------- stat-card (for large data callouts) ---------- */
   .stat-card{
     display:flex;
     flex-direction:column;
@@ -309,12 +309,12 @@
     opacity:.72;
     margin-top:.6vh;
   }
-  /* 当 stat-card 用于 grid-4（2x2），数字适度放大；若页面有标题+引文在上方，可内联 style 覆盖为更小值 */
+  /* When stat-card is used in grid-4 (2x2), numbers scale up slightly; override inline if a heading+lead is above */
   .grid-4 .stat-card .stat-nb{font-size:5vw}
-  /* 当只有 3 个，字也可以稍大 */
+  /* When there are only 3, numbers can go a bit larger */
   .grid-3 .stat-card .stat-nb{font-size:6.8vw}
 
-  /* ---------- pipeline（流水线） ---------- */
+  /* ---------- pipeline (step-by-step flow) ---------- */
   .pipeline-section{
     margin-top:4.4vh;
     padding-top:2.8vh;
@@ -371,8 +371,8 @@
     opacity:.72;
   }
 
-  /* ---------- 网格（layouts.md 所用） ---------- */
-  /* 这些类独立挂到任何容器上都能生效，不依赖 .frame 复合选择器 */
+  /* ---------- Grids (used by layouts.md) ---------- */
+  /* These classes work standalone on any container — no dependency on .frame */
   .grid-2-7-5{display:grid;grid-template-columns:7fr 5fr;gap:3vw 4vh;align-items:start}
   .grid-2-6-6{display:grid;grid-template-columns:1fr 1fr;gap:3vw 4vh;align-items:start}
   .grid-2-8-4{display:grid;grid-template-columns:8fr 4fr;gap:3vw 4vh;align-items:start}
@@ -382,10 +382,10 @@
     grid-auto-rows:minmax(0,1fr);
     gap:2.4vh 2vw;
   }
-  /* grid-6 已在旧样式里定义为 3x2，这里仅补 align */
+  /* grid-6 already defined as 3x2 above — just adding align here */
 
-  /* ---------- 图片 frame-img（layouts.md 主命名） ---------- */
-  /* 在旧样式里已定义，这里补 img-cap 命名别名与增强 */
+  /* ---------- Image frame-img (primary name in layouts.md) ---------- */
+  /* Already defined above — adding img-cap alias and enhancements here */
   figure.frame-img{margin:0;display:flex;flex-direction:column;min-width:0}
   .img-cap{
     display:block;
@@ -396,7 +396,7 @@
     text-transform:uppercase;
     opacity:.6;
   }
-  /* callout src 命名别名 */
+  /* callout src naming alias */
   .callout-src{
     display:block;
     margin-top:1.6vh;
@@ -407,18 +407,18 @@
     opacity:.6;
   }
 
-  /* ---------- chrome & foot 补位（layouts.md 简单写法） ---------- */
+  /* ---------- chrome & foot supplement (simple layouts.md shorthand) ---------- */
   .chrome{font-family:var(--mono);font-size:max(11px,.78vw);letter-spacing:.2em;text-transform:uppercase;opacity:.62}
   .foot{font-family:var(--mono);font-size:max(11px,.78vw);letter-spacing:.18em;text-transform:uppercase;opacity:.5}
 
-  /* ============ 动效系统(Motion One 驱动) ============
-     所有 [data-anim] 元素默认隐藏,进入页面时由 JS 逐个揭示。
-     - cascade(默认):按 DOM 顺序 stagger 120ms 淡入 + y:16→0
-     - hero(hero 页自动):慢一点的 stagger 180ms
-     - quote(含 [data-anim="line"]):逐行 600ms 淡入
-     - directional(含 [data-anim="left|right"]):左→分隔线→右
-     - pipeline(data-animate="pipeline"):Space/→ 手动推进
-     Motion One 没加载成功时(CDN 断 + 本地丢),所有 [data-anim] 会兜底显示。
+  /* ============ Animation system (powered by Motion One) ============
+     All [data-anim] elements are hidden by default and revealed one by one as slides appear.
+     - cascade (default): stagger 120ms fade-in + y:16→0 in DOM order
+     - hero (auto on hero slides): slower stagger 180ms
+     - quote (with [data-anim="line"]): line-by-line 600ms fade-in
+     - directional (with [data-anim="left|right"]): left→divider→right
+     - pipeline (data-animate="pipeline"): manually advance with Space/→
+     If Motion One fails to load (CDN down + local missing), all [data-anim] fall back to visible.
   */
   [data-anim]{opacity:1}
   body.motion-ready [data-anim]{opacity:0}
@@ -433,7 +433,7 @@
   body.low-power.motion-ready [data-anim],
   body.low-power [data-anim]{opacity:1!important;transform:none!important}
 
-  /* ---------- 响应式降级 ---------- */
+  /* ---------- Responsive fallback ---------- */
   @media (max-width:900px){
     .display{font-size:16vw}
     .display-zh{font-size:12vw}
@@ -454,7 +454,7 @@
     window.__lowPowerMode = stored === '1' || (stored === null && reduced);
     function updateHint(){
       const hint = document.getElementById('hint');
-      if(hint) hint.textContent = `← → 翻页 · B ${window.__lowPowerMode ? '动态' : '静态'} · ESC 索引`;
+      if(hint) hint.textContent = `← → Navigate · B ${window.__lowPowerMode ? 'Animated' : 'Static'} · ESC Index`;
     }
     window.__setLowPowerMode = function(on, opts={}){
       window.__lowPowerMode = !!on;
@@ -474,27 +474,61 @@
 
 <canvas id="bg-dark" class="bg"></canvas>
 <canvas id="bg-light" class="bg"></canvas>
-<div id="hint">← → 翻页 · B 静态 · ESC 索引</div>
+<div id="hint">← → Navigate · B Static · ESC Index</div>
 
 <div id="deck">
 
 <!-- ============================================================
-     SLIDES 插入区 · 在此处填充所有 <section class="slide ..."> 页面
-     每页模板参考 references/page-patterns.md
-     页面组件参考 references/components.md
+     SLIDES — insert all <section class="slide ..."> pages here
+     For page templates see references/page-patterns.md
+     For page components see references/components.md
      ============================================================ -->
 
 <!-- SLIDES_HERE -->
+
+<section class="slide light hero" data-layout="cover" data-animate="hero">
+  <div class="chrome">
+    <div class="left"><span>Magazine</span><span class="sep"></span><span>Issue 01</span></div>
+    <div class="right"><span>01 / 02</span></div>
+  </div>
+  <div class="fill" style="display:flex;flex-direction:column;justify-content:flex-end;gap:2.4vh;padding-bottom:4vh">
+    <div class="kicker" data-anim>Editorial demo</div>
+    <h1 class="display" data-anim style="font-size:9vw">A Magazine-Style Deck<br>for the Modern Founder</h1>
+    <p class="lead" data-anim>Layered serif headlines, fluid ink backdrop, and ten paste-ready layouts —<br>built for industry observation and considered storytelling.</p>
+    <div class="meta" data-anim style="margin-top:1vh">2026 Demo Edition · Issue 01</div>
+  </div>
+  <div class="foot">
+    <span class="title">Demo Deck</span>
+    <span>Cover</span>
+  </div>
+</section>
+
+<section class="slide light" data-layout="chapter" data-animate="cascade">
+  <div class="chrome">
+    <div class="left"><span>Magazine</span><span class="sep"></span><span>Chapter 01</span></div>
+    <div class="right"><span>02 / 02</span></div>
+  </div>
+  <div class="fill" style="display:flex;flex-direction:column;justify-content:center;gap:2.8vh">
+    <div class="rule" data-anim></div>
+    <div class="kicker" data-anim>Chapter 01</div>
+    <h2 class="h-xl" data-anim>The Story Begins<br>Where the Numbers End</h2>
+    <div class="rule" data-anim></div>
+  </div>
+  <div class="foot">
+    <span class="title">Demo Deck</span>
+    <span>Chapter Break</span>
+  </div>
+</section>
 
 </div>
 
 <div id="nav"></div>
 
 <script>
-/* =============== WebGL 双背景 ===============
-   深色页：Holographic Dispersion（全息色散 · 钛金暗流）—— 彩虹微扰、鼠标径向涟漪
-   浅色页：Spiral Vortex（旋转涡流 · 银色珍珠）—— domain-warp 流动、无中心
-   修改风格请参考 references/webgl-backgrounds.md
+/* =============== WebGL dual background ===============
+   Dark slides: Holographic Dispersion (titanium dark flow) — rainbow perturbation, mouse radial ripple
+   Light slides: Spiral Vortex (silver pearl) — domain-warp flow, no fixed center
+   To change the style see references/webgl-backgrounds.md
 */
 const VS = `attribute vec2 position;void main(){gl_Position=vec4(position,0.0,1.0);}`;
 
@@ -619,13 +653,13 @@ function stopGL(){
 startGL();
 addEventListener('ppt-low-power-change', e=>{e.detail.on ? stopGL() : startGL();});
 
-// =============== 导航（翻页 / 圆点 / 键盘 / 滚轮 / 触屏） ===============
+// =============== Navigation (pagination / dots / keyboard / wheel / touch) ===============
 const deck=document.getElementById('deck');
 const slides=deck.querySelectorAll('.slide');
 const nav=document.getElementById('nav');
 let idx=0,total=slides.length,lock=false;
 
-// 关键：矫正 deck 宽度为 total * 100vw，否则翻页会错位
+// Key: correct deck width to total * 100vw, otherwise pagination will misalign
 deck.style.width=(total*100)+'vw';
 
 slides.forEach((s,i)=>{
@@ -641,16 +675,16 @@ function go(n){
   window.__currentSlideIndex = idx;
   deck.style.transform=`translateX(${-idx*100}vw)`;
   nav.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
-  /* 主题切换：优先读 data-theme，其次从 class（light/dark）推断 */
+  /* Theme switch: prefer data-theme attribute, otherwise infer from class (light/dark) */
   const el=slides[idx];
   const th=el.dataset.theme || (el.classList.contains('light')?'light':(el.classList.contains('dark')?'dark':'dark'));
   document.body.classList.toggle('light-bg',th==='light');
-  /* 动效：翻页过渡中段触发当前页的入场动画（由 motion-boot 注册） */
+  /* Animation: fire entrance animation mid-transition (registered by motion-boot) */
   if(window.__playSlide) setTimeout(()=>window.__playSlide(idx), 450);
   lock=true;setTimeout(()=>lock=false,700);
 }
 
-/* =============== ESC 索引视图 =============== */
+/* =============== ESC overview / index view =============== */
 let overviewOn=false;
 const ov=document.createElement('div');
 ov.id='overview';
@@ -735,11 +769,11 @@ go(0);
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>lucide.createIcons();</script>
 
-<!-- ============ Motion One 动效引擎（本地优先,CDN 兜底） ============
-     加载策略:先 ./assets/motion.min.js(本地,离线可用),失败 fallback 到 jsDelivr CDN
-     加载完成后挂 window.__playSlide / window.__pipeAdvance,
-     导航脚本会在翻页中段调用 __playSlide(idx),键盘/滚轮/触屏会在翻页前调用 __pipeAdvance()
-     双双失败时会兜底把所有 [data-anim] 设为可见,不让动效破坏阅读
+<!-- ============ Motion One animation engine (local first, CDN fallback) ============
+     Load strategy: try ./assets/motion.min.js (local, works offline), fall back to jsDelivr CDN
+     On success, attaches window.__playSlide / window.__pipeAdvance,
+     Navigation calls __playSlide(idx) mid-transition; keyboard/wheel/touch calls __pipeAdvance() before moving
+     If both fail, all [data-anim] are made visible so animations never break readability
 -->
 <script type="module">
 let motion;
@@ -850,7 +884,7 @@ if(motion){
   window.__playSlide = playSlide;
   window.__pipeAdvance = pipeAdvance;
 
-  // 首屏:go(0) 已跑过(同步),没来得及触发动效 → 这里补一下
+  // First screen: go(0) already ran synchronously before motion was ready — catch up here
   playSlide(0);
 }
 </script>

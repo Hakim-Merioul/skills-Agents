@@ -418,57 +418,6 @@ This is a viewport-fluid 1920×1080 presentation system that uses `vw`/`vh` unit
 ### Print / Export
 Not explicitly handled by the source. Each slide is a `100vw × 100vh` block; export workflows should target 1920×1080 PNG/PDF per slide.
 
-## CJK & International Content
-
-When using this template for Chinese (or other CJK) content, swap the Latin typeface stack for an equivalent Chinese pairing and apply universal CJK adjustments. All recommended Chinese fonts load via CDN — no install required.
-
-### Recommended Chinese Pairing
-
-| Role | Latin (default) | Chinese counterpart |
-|---|---|---|
-| Display / h1 / h2 / h3 / stat-value / quote / fadelist | Barlow 700–900 (lowercase, negative tracking) | 思源宋体 Noto Serif SC 900 |
-| Lead / body / caption | Barlow 400 | 霞鹜文楷 LXGW WenKai 400 |
-| Label / kicker / tag / slide number / bullet marker | IBM Plex Mono 500 (uppercase, 0.14em tracking) | 思源黑体 Noto Sans SC 500 (no transform, no tracking) |
-
-### Mixed-Content Strategy
-
-**Strategy A** — single CJK family per role with Latin glyph coverage built in. Use **思源宋体 Noto Serif SC** weight 900 for every display and heading role; use **霞鹜文楷 LXGW WenKai** weight 400 for body and lead text; use **思源黑体 Noto Sans SC** weight 500 for chrome (kickers, labels, slide numbers, bullet markers). All three faces ship Latin glyphs that pair cleanly with Chinese characters. The serif/handwritten/sans contrast loosely echoes Broadside's display/body/mono distinction even though the source uses Barlow throughout.
-
-### Loading
-
-Add to the template's `<head>`:
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
-```
-
-### Universal CJK Adjustments
-
-- **Line-height**: increase by ~15–25% from the Latin spec. Body 1.75–1.85 (up from 1.6), display 1.15–1.25 (up from the very tight 0.88–0.9 used on Barlow display). The Latin template compresses display to 0.6 on the quote-mark token; at that compression CJK characters overlap entirely. Open display to 1.0 minimum.
-- **Letter-spacing**: set to 0 on every CJK run. The template's −0.02 to −0.04em negative tracking on Barlow display overlaps CJK strokes; the +0.14em positive tracking on IBM Plex Mono chrome reads as gappy on square glyphs.
-- **Text transform**: don't apply `uppercase` to Chinese text — CJK has no case. Every IBM Plex Mono label, kicker, tag, slide number, and bullet marker uses `text-transform: uppercase` in the Latin original; remove for CJK runs.
-- **Punctuation**: use full-width Chinese punctuation （，。：；！？「」（））.
-- **No period on display headlines**: Chinese typography convention omits trailing 。 on display-scale headlines. Especially important for Broadside's massive display moments — a trailing 。 at 13vw is visually disruptive.
-- **Space between CJK and Latin (盘古之白)**: insert an ASCII space between every Chinese character and adjacent Latin character or digit. Write `2024 大字海报` not `2024大字海报`.
-- **One font per sentence**: 思源宋体 covers both CJK and Latin glyphs in a unified serif style for display; 霞鹜文楷 covers both for body. Don't let the browser fall back to Barlow mid-word for ASCII characters in a Chinese sentence.
-
-### Aesthetic Notes for This System
-
-Broadside's most distinctive single decision is **lowercase Barlow at weight 900 at 13vw display sizes**. The lowercase-display choice is what separates this system from generic brutalist decks. In CJK that signal disappears entirely — Chinese has no case. The system compensates because its identity is **80% structural + color**: the two-register surface system (dark / orange), the singular fire-orange accent, the flat plane, the 1px hairline dividers, the `/` mono bullet markers, the suppressed chrome on declarative slides, and the negative-space-as-composition philosophy all transfer cleanly.
-
-The closest Chinese face to Barlow's "monolithic heavy grotesque" register is **思源宋体 weight 900** — but a serif heavy display rather than a sans heavy display. This is a deliberate register shift: heavy Chinese serif at protest-poster scale reads as "broadside printed-poster" (the system's actual cultural reference) more credibly than heavy Chinese sans, which reads more "corporate signage." For the body face, **霞鹜文楷 LXGW WenKai** brings a handwritten/calligraphic warmth that pairs with the editorial-protest register; if a more institutional body is needed, swap to 思源宋体 400.
-
-Keep the chrome's "stamped metadata" voice by maintaining the small font size (0.72vw equivalent) and the orange color on kickers/labels. The IBM Plex Mono uppercase + tracked treatment loses both signals in CJK, but the orange color carries enough chrome-recognition on its own. The `/` bullet marker can stay as a Latin slash character even in Chinese contexts — it's a graphic mark, not a language element.
-
-### Known CJK Gap
-
-- **No CDN Chinese face matches Barlow's monolithic grotesque + lowercase identity.** Barlow's distinctive choice in this system is lowercase-display at heavy weights — and CJK has no equivalent expressive lever. The system's "protest-poster lowercase-shouting" character softens to "heavy-serif declarative." The two-register color system (dark / orange) and the singular fire-orange accent carry the protest-poster identity on their own.
-- **No CDN Chinese monospace face for the chrome voice.** IBM Plex Mono's role (kickers, labels, slide numbers, `/` bullet markers) depends on monospaced rhythm + uppercase + 0.14em tracking. 思源黑体 weight 500 at 0 tracking is the closest match but loses the "catalogue mark" signal. Keep the orange color and the small font size; the color and scale do the chrome-recognition work.
-- **霞鹜文楷 may not load on restricted networks.** The Google Fonts CDN serves the Traditional Chinese variant (LXGW WenKai TC) reliably; the Simplified variant is also available via cn-fontsource. Always include `'Noto Serif SC', serif` in the body stack as fallback.
-- **The quote-mark glyph at 10vw with line-height 0.6 is a Latin-quote convention.** Chinese typography uses 「」 or 『』 framing rather than oversized opening-quote glyphs. For Chinese pull-quotes, consider replacing the oversized fire-orange quote-mark with a full-width 「 character at 8vw, or dropping the decorative quote glyph entirely and relying on the orange color + larger size to signal "this is a quoted passage."
-
 ## Iteration Guide
 
 1. Every new content slide opens with a `kicker` in mono uppercase fire orange, followed by `{typography.h2}` headline in Barlow lowercase. Don't skip the kicker — it is the system's content-slide chrome signal.

@@ -36,7 +36,7 @@ paste-ready blocks. Do NOT invent new layouts (e.g. P23/P24) without explicit us
 5. Card fill types are exclusive: `card-ink` / `card-accent` / `card-fill` / `card-outlined`.
    Don't mix on the same slide.
 6. Helvetica/Inter must fall back to `"Microsoft YaHei UI", "Noto Sans SC"` for Chinese
-   on Windows (where 苹方 is absent).
+   on Windows (where the PingFang SC font is absent).
 7. Body min font sizes for projection: 18px body / 16px captions / 14px meta. Don't
    compress smaller to fit content — split the slide instead.
 

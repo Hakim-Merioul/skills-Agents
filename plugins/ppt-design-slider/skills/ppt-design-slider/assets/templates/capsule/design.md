@@ -487,53 +487,6 @@ Capsule is a viewport-fluid 1920×1080 presentation system using `clamp()` and v
 ### Print / Export
 Not explicitly handled; opacity-toggling means a naïve print captures only the active slide. Export workflows should snapshot each slide individually at 1920×1080.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin font | Recommended Chinese pairing | Source |
-|---|---|---|---|
-| Display / Headline (Bodoni Moda 700–800) | Bodoni Moda | 站酷小薇体 ZCOOL XiaoWei | Google Fonts |
-| Body / Pill text (Space Grotesk 400–600) | Space Grotesk | 悠哉字体 Yozai | cn-fontsource CDN |
-
-### Mixed-Content Strategy
-
-Use **Strategy A — single-font-stack with fallback**: declare the CJK font *after* the Latin font in the same `font-family` stack so Latin glyphs render in Bodoni Moda / Space Grotesk and CJK glyphs fall through to the Chinese face automatically. One CSS rule per role, no manual class switching.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Space+Grotesk:wght@300..700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-yozai-regular/font.css" rel="stylesheet">
-```
-
-```css
-:root {
-  --font-display: "Bodoni Moda", "ZCOOL XiaoWei", serif;
-  --font-body: "Space Grotesk", "Yozai", sans-serif;
-}
-```
-
-### Universal CJK Adjustments
-
-- **Line-height**: bump CJK body line-height to ~1.7 (from 1.6) — Hanzi need more vertical breathing than Latin lowercase.
-- **Letter-spacing**: zero out `letter-spacing` on Hanzi runs (negative tracking that flatters Bodoni capitals jams Hanzi strokes together). Keep tight tracking only on Latin spans.
-- **Text-transform**: drop `text-transform: uppercase` on any pill/label/subtitle when content is Hanzi — Chinese has no case; forcing uppercase does nothing for Hanzi but breaks the rendering of any mixed Latin acronyms inside.
-- **Punctuation**: use Chinese full-width punctuation (，。：；「」) for Chinese sentences, half-width (`,.:;""`) for Latin. Never mix half-width punctuation into a Chinese sentence.
-- **No period on headlines**: Chinese headline convention omits the terminal 。 — strip it from display strings.
-- **Pangu spacing**: insert a thin space (or a regular space) between adjacent Hanzi and Latin/digit runs (e.g. `2026 年`, `AI 产品`). Improves readability of mixed runs.
-- **One font per sentence**: don't switch CJK families mid-sentence. Pick ZCOOL XiaoWei *or* Yozai for a given text run based on its role, never both inside one phrase.
-
-### Aesthetic Notes
-
-ZCOOL XiaoWei is a high-contrast literary serif-leaning Hanzi face whose thin-thick stroke modulation echoes Bodoni Moda's didone register — it gives display headlines the same editorial-glamour weight as the Latin original. Yozai is a friendly rounded Hanzi sans whose open counters and modest stroke contrast mirror Space Grotesk's geometric grotesque, so pill text, labels, and body paragraphs retain the "clean modern sans" feel rather than reverting to a stiff system Hanzi. Both pair cleanly with the candy palette: ZCOOL XiaoWei in `{colors.ink}` keeps the rule "Bodoni headlines are never colored" intact, and Yozai sits inside coral / lime / yellow pills without losing legibility against the 2px ink outline. The decorative floating pill wallpaper still works in Chinese — substitute single-character or two-character atmospheric words (愿景, 未来, 下一步) for the English uppercase confetti.
-
-### Known CJK Gap
-
-ZCOOL XiaoWei is a display face with limited weight axis (single weight) and a smaller glyph set than Noto family — exotic or technical Hanzi (rare surnames, classical characters, simplified-only variants outside GB2312) may fall back to system font. For Traditional Chinese decks, swap Yozai for `LXGW WenKai TC` (Google Fonts) which has fuller TC coverage and a similar friendly humanist register. The ZCOOL XiaoWei italic / heavy moments that Bodoni achieves via the opsz axis have no equivalent in the Chinese face — use scale and color to compensate when Latin would have leaned on italic Bodoni.
-
 ## Iteration Guide
 
 1. Any new container that holds text uses the pill geometry — 9999px radius for small, 2rem radius for cards. Don't introduce a sharp-cornered text container.

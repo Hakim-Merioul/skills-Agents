@@ -405,54 +405,6 @@ A `@media print` rule sets all slides to `display: flex` with `page-break-after:
 ### Hover States
 The system uniquely has interactive hover states baked into the design — list items and table rows highlight to `{colors.green}` on hover via a 0.15s transition. This is unusual for a presentation system; it reflects Raw Grid's hybrid identity as both presentation and product mockup.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin | Chinese | Weight mapping |
-|---|---|---|---|
-| Display / Headline / Title / Subtitle | Segoe UI / system-ui (900) | **思源黑体 Noto Sans SC** | 900 |
-| Body / Caption / Label | Segoe UI / system-ui (500–800) | **思源黑体 Noto Sans SC** | 500 (body), 700–800 (caption / label) |
-
-### Mixed-Content Strategy
-
-**Strategy A — single CJK family across the entire system.** Raw Grid is intentionally a one-family system: every weight (900 / 800 / 700 / 500) comes from the same Latin stack. Mirroring that with a single CJK family — Noto Sans SC — preserves the system's most defining property: typographic uniformity. Because the Latin stack is `system-ui` (Segoe UI on Windows, San Francisco on macOS), pairing with a single high-quality CJK web font keeps the rendering as close to "system-native" as the digital-native aesthetic demands. Using two CJK families would fracture the neobrutalist monoculture.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@500;700;800;900&display=swap" rel="stylesheet">
-```
-
-Then append `'Noto Sans SC'` after the Latin stack in every font-family token:
-```css
-font-family: 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, 'Noto Sans SC', sans-serif;
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation
-- No period on display headlines
-- Pangu spacing (盘古之白): `使用 Apple` not `使用Apple`
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-- **The negative tracking that defines the Latin display voice does not transfer.** Set `letter-spacing: 0` on every CJK display element. Noto Sans SC at weight 900 already reads as dense and brutalist; negative tracking will jam glyphs together and read as a rendering bug, not as a design choice.
-- **Uppercase is the entire Latin display voice — and it does not exist in Chinese.** Compensate by leaning harder on the weight contrast (900 display vs. 500 body) and on the label pill's white-on-black inversion. The brutalist density comes from the weight ladder, not from case.
-- **The black label pill (`{components.label}`) survives the translation beautifully.** A 2–4 character Chinese label (品牌, 信号源, 第四季度) in Noto Sans SC 800 reads as more compact and arguably more striking than the English equivalent.
-- **Decorative oversized numerals at 0.15–0.35 opacity should stay Latin** (Arabic numerals look correct in this system; full-width Chinese numerals 零一二三 do not carry the same wallpaper-numeral signal).
-- **The arrow-prefix (`→`) renders identically in CJK contexts** and is the right interactivity signal for both languages.
-
-### Known CJK Gap
-
-Raw Grid's whole aesthetic argument is "this is the user's actual system font, not a downloaded display face." Loading Noto Sans SC technically violates that purity — but there is no acceptable substitute. macOS ships PingFang SC and Windows ships Microsoft YaHei, but the two render at noticeably different weights at "900," and the digital-native aesthetic depends on weight 900 reading consistently. Noto Sans SC is the smallest acceptable concession to web fonts; treat it as the one exception to the no-web-fonts rule, only for CJK content.
-
 ## Iteration Guide
 
 1. Any new structural region uses a 3px solid black border to separate from its neighbor. Never use a gap or a margin between regions — borders are the separators.

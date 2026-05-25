@@ -491,57 +491,6 @@ The system has no `@media print` rule. The crossfade transition is screen-only. 
 ### Mobile Behavior
 The `min(vw, vh)` pattern in display clamps means narrow portrait viewports automatically shrink display type to fit. The strand and ledger rows use fixed-px first columns (56px, 92px) that may feel tight on narrow widths — the system is designed for landscape presentation contexts and is functional but not optimized for sub-768px portrait usage.
 
-## CJK & International Content
-
-When using this template for Chinese (or other CJK) content, swap the Latin typeface stack for an equivalent Chinese pairing and apply universal CJK adjustments. All recommended Chinese fonts load via CDN — no install required.
-
-### Recommended Chinese Pairing
-
-| Role | Latin (default) | Chinese counterpart |
-|---|---|---|
-| Display / numerals / headlines / date rail | Instrument Serif 400 | 得意黑 Smiley Sans (oblique) — display moments; 思源宋体 Noto Serif SC 400 as fallback for long-form serif headlines |
-| Body / lede / micro-label | Archivo 400–600 | 思源宋体 Noto Serif SC 400 for body; 思源黑体 Noto Sans SC 600 for micro-labels |
-| Mono data / dates / page numbers | JetBrains Mono 400 | 思源黑体 Noto Sans SC 500 with tabular-feeling alignment — see Known CJK Gap below |
-
-### Mixed-Content Strategy
-
-**Strategy A** — single CJK family per role, with Latin glyphs handled by the same CJK family. Both 思源宋体 and 思源黑体 ship Latin glyphs that read cleanly alongside Chinese characters, so a mixed sentence renders in a consistent face. 得意黑 is used surgically — only on the biggest display moments where its slight oblique slant matches the Italian-poster register Instrument Serif provides in the Latin original. For everything else (body, micro-label, mono), Noto Serif SC / Noto Sans SC carries both scripts.
-
-### Loading
-
-Add to the template's `<head>`:
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cn-fontsource-smiley-sans-oblique/font.min.css">
-```
-
-After loading, reference 得意黑 as `font-family: 'Smiley Sans Oblique', 'Noto Serif SC', serif` on the display tokens that should carry the strongest poster register.
-
-### Universal CJK Adjustments
-
-- **Line-height**: increase by ~15–25% from the Latin spec. Body 1.75–1.85 (up from 1.5–1.55), display 1.05–1.15 (up from the very tight 0.84–0.96 used on Instrument Serif). The Latin display tokens here use line-height as low as 0.84 — at that compression, CJK characters collide vertically. Open display to a minimum of 1.0 for Chinese, and 1.15+ on multi-line headlines.
-- **Letter-spacing**: set to 0 on every CJK run. The Latin display tokens use negative tracking from −0.005em down to −0.04em; on square CJK glyphs this overlaps strokes and reads as broken. Micro-labels at 0.16–0.32em wide tracking also drop to 0.
-- **Text transform**: don't apply `uppercase` to Chinese text — CJK has no case. Every micro-label and rail-label in this system uses `text-transform: uppercase`; remove it for CJK runs.
-- **Punctuation**: use full-width Chinese punctuation （，。：；！？「」（））. Replace the en-dash separator in date ranges with a Chinese 至 or full-width 「—」 hyphen.
-- **No period on display headlines**: Chinese typography convention omits trailing 。 on display-scale headlines.
-- **Space between CJK and Latin (盘古之白)**: insert an ASCII space between every Chinese character and adjacent Latin character or digit. Write `2024 春季双年展` not `2024春季双年展`.
-- **One font per sentence**: 思源宋体 covers both CJK and Latin glyphs in a unified serif style — let it handle mixed editorial sentences. Don't let the browser font-switch to Archivo mid-paragraph.
-
-### Aesthetic Notes for This System
-
-The system's editorial identity rests on Instrument Serif's high-contrast, tall-ascender personality — a face that signals "art biennale catalogue" and "slow literary quarterly". The closest Chinese equivalent for register is **思源宋体 Noto Serif SC** for body and editorial display, with **得意黑 Smiley Sans Oblique** reserved for the poster-scale display moments where Instrument Serif at 120–240px does the heaviest identity work in the Latin original. 得意黑's slight italic tilt and slab character matches the Italian-exhibition-poster register; pure Noto Serif SC at jumbo numerals reads as restrained academic Chinese rather than biennale-loud.
-
-The "single text color, single accent" discipline of this system transfers cleanly to CJK — ink-on-paper, sun-bloom atmosphere, hairline rules, no shadows. The micro-label treatment (Archivo weight 600, uppercase, 0.16–0.32em tracking) is the system's most fragile element when translated: CJK micro-labels lose both the uppercase signal and the wide tracking. Compensate by setting Chinese micro-labels in 思源黑体 weight 600 at 0 tracking with the **slightly heavier weight contrast** (drop body to weight 400 of 思源宋体, keep labels at 600 of 思源黑体) and by **always pairing the label with a hairline-soft rule beneath** — the rule does the chrome-recognition work the wide-tracked uppercase did in Latin.
-
-### Known CJK Gap
-
-- **No CDN-loadable Chinese monospace face for tabular data.** JetBrains Mono's role here (calendar ledger dates, chart year/value labels, page numbers) depends on monospaced figure rhythm that CJK doesn't provide. 思源黑体 at weight 500 with `font-feature-settings: "tnum"` gives tabular Latin digits but Chinese characters remain proportional. For ledger rows where alignment is structural, keep the date and value columns in Latin digits (Arabic numerals + Latin date abbreviations) and use 思源黑体 only for the title/venue cells.
-- **Instrument Serif italic has no direct Chinese counterpart.** The italic display token (manifesto-scale quote body) loses its slow-reading personality entirely in CJK. Use 思源宋体 400 with looser line-height (1.4) and slightly larger size to compensate; consider 「」 quotation framing to signal "this is a quoted passage".
-- **得意黑 may not load on restricted networks.** The cn-fontsource CDN is reliable in mainland China but less proven internationally. Always include `'Noto Serif SC', serif` in the stack as fallback so display headlines remain editorial even when 得意黑 fails.
-
 ## Iteration Guide
 
 1. Any new surface starts on `{colors.paper}`, places at least one `{components.sun-bloom}` for atmosphere, and pins the persistent `{components.pagenum}` to bottom-right.

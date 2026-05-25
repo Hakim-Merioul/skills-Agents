@@ -484,60 +484,6 @@ The system targets `100vw × 100vh` and uses `clamp()` throughout for fluid scal
 ### Print Behavior
 A `@media print` rule sets `page-break-after: always` on each slide with `min-height: 100vh`. Printing produces a sequential page-per-slide output.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin | Chinese | Weight mapping |
-|---|---|---|---|
-| Display / Headline / Statement / Title / Stat-value / Feature-icon glyph | Shrikhand (400) | **站酷快乐体 ZCOOL KuaiLe** | regular (single weight) |
-| Body / List-item / Caption-subtitle | Zilla Slab (400) | **悠哉字体 Yozai** | regular |
-| Hand-script (Caveat) — Latin only | Caveat (400 / 500 / 600) | *(no CJK substitute)* | n/a |
-
-### Mixed-Content Strategy
-
-**Strategy A — display CJK + body CJK, each with its own personality.** Scatterbrain's whole register is playful-tactile-warmth, and the Chinese pairing should land in the same emotional register. **ZCOOL KuaiLe (站酷快乐体)** is a chunky decorative display face with rounded curves and a hand-drawn marker-pen feel — it is the closest CJK match for Shrikhand's chunky decorative serif voice. Both faces share the "loud and friendly" personality that defines the workshop-board aesthetic. **Yozai (悠哉字体)** is a warm rounded body face derived from M+ Rounded — it carries the same friendly humanist quality as Zilla Slab's slab serif, with soft terminals that feel like written notes rather than typeset text. Together the two CJK faces preserve the playful-chunky-display + warm-friendly-body rhythm that makes Scatterbrain's voice work.
-
-### Loading
-
-```html
-<link href="https://chinese-fonts-cdn.deno.dev/packages/zcool-kuaile/dist/ZCOOLKuaiLe-Regular/result.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-yozai-regular/font.css" rel="stylesheet">
-```
-
-Then append the CJK families to the appropriate font stacks:
-```css
-/* Display roles */
-font-family: 'Shrikhand', 'ZCOOL KuaiLe', cursive;
-/* Body roles */
-font-family: 'Zilla Slab', 'Yozai', serif;
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation
-- No period on display headlines
-- Pangu spacing (盘古之白): `使用 Apple` not `使用Apple`
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-- **The 0.02em positive tracking on Shrikhand display must drop to 0** on ZCOOL KuaiLe. Tracked Chinese display characters look broken.
-- **Display line-height should open from 1.1 to 1.2–1.3** for ZCOOL KuaiLe — the rounded chunky strokes need more vertical breathing.
-- **Feature-icon round borders work beautifully with a single Chinese character** (新, 巧, 趣) inside the 60px circle at ZCOOL KuaiLe. The chunky display weight makes the single character read as a stamped category mark.
-- **Versus circles work with short Chinese words** (对比, 与) at smaller display weight; the cream-on-ink contrast carries through.
-- **The label-script Caveat eyebrow (uppercase tracked 0.15em) becomes the trickiest translation.** Options: (1) keep eyebrows in Latin (`CHAPTER ONE`, `THE SETUP`) for the hand-script signature; (2) replace with a Yozai eyebrow at 0.9rem, no tracking, no uppercase — which loses the categorical-label affordance. Option (1) preserves the system's most distinctive small voice and works well when the Latin eyebrow sits above a Chinese headline (the deck reads as a Chinese article with an English kicker, which is a common editorial convention).
-- **Personal notes / decorative quips in Caveat (`Jot it down before you forget!`, `:)`) should stay Latin** — the casual ballpoint script has no acceptable Chinese substitute. On Chinese-primary slides, treat hand-script moments as Latin margin notes; this can actually deepen the workshop voice (the deck reads as a Chinese brainstorm with English asides, which is plausible for any modern Chinese creative team).
-- **Post-it pins, tape, drop shadows, rotations, custom cursor, doodle SVGs, background textures** are all glyph-agnostic — they carry the playful-tactile system equally well behind Chinese content.
-- **Stat-row label-and-value pattern** works cleanly with Chinese labels (用户数量, 转化率) in Yozai and Latin numerical values in ZCOOL KuaiLe.
-
-### Known CJK Gap
-
-Caveat — the system's most distinctive voice (the casual ballpoint hand-script that anchors every personal note) — has no CJK equivalent. There are handwritten-style Chinese web fonts (悠果手写体, 站酷庆科黄油体), but the cultural register of casual cursive handwriting differs sharply between Latin and CJK traditions, and no Chinese face will read as "the same voice as Caveat." The recommended workaround is to retain Caveat for Latin margin annotations even on otherwise-Chinese slides — the Chinese-body-with-English-handwriting pattern is common in modern Chinese editorial design and lands as authentic rather than as a translation gap.
-
 ## Iteration Guide
 
 1. Every new slide picks one of three background variants (`{components.bg-cork}`, `{components.bg-paper}`, `{components.bg-warm}`). Vary across slides for tactile variety.

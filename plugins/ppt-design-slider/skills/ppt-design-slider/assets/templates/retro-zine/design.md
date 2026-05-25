@@ -480,59 +480,6 @@ The system targets `100vw × 100vh` and uses `clamp()` throughout for fluid scal
 ### Print Behavior
 No `@media print` rule is defined. The deck is web/viewport-first.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin | Chinese | Weight mapping |
-|---|---|---|---|
-| Display / Headline / Statement / Title / Number / Drop-cap / Label-eyebrow | Bebas Neue (400) | **思源宋体 Noto Serif SC** | 900 |
-| Body / Body-md / Label-spaced | Space Grotesk (400 / 600) | **思源宋体 Noto Serif SC** | 400 (body), 600 (label) |
-| Hand-script (Caveat) — Latin only | Caveat (400 / 600) | *(no CJK substitute)* | n/a |
-
-### Mixed-Content Strategy
-
-**Strategy A — single CJK family (思源宋体 Noto Serif SC) carries every typeset role.** Bebas Neue's condensed-industrial-uppercase voice has no Chinese sans equivalent that preserves the heavy poster weight without reading as a clichéd kanji-style display. Noto Serif SC at weight 900, however, carries genuine print-press weight that maps to the zine register: the deep serif strokes echo letterpress and woodblock printing, which is *closer* to the system's mid-century-activist-poster aesthetic than any Chinese sans would be. Pairing Latin Bebas + Chinese Noto Serif SC reads as "translated edition of the same zine," not as two competing systems. For body, the same family at weight 400 sits comfortably at small sizes (13–16px) and preserves the magazine column density.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
-```
-
-Then append `'Noto Serif SC'` to the appropriate font stacks:
-```css
-/* Display roles */
-font-family: 'Bebas Neue', 'Noto Serif SC', sans-serif;
-/* Body roles */
-font-family: 'Space Grotesk', 'Noto Serif SC', sans-serif;
-```
-
-### Universal CJK Adjustments
-
-- Line-height: body 1.75–1.85, display 1.15–1.25
-- Letter-spacing: 0 on CJK
-- Text-transform: no uppercase on CJK
-- Full-width punctuation
-- No period on display headlines
-- Pangu spacing (盘古之白): `使用 Apple` not `使用Apple`
-- One font per sentence
-
-### Aesthetic Notes for This System
-
-- **The 0.02–0.04em positive tracking that defines Bebas display must drop to 0** on CJK. Tracked Chinese characters look broken — the spacing visually divides each character into a separate word. The compression-and-tracking signature of Bebas does not transfer; lean on weight 900 alone to carry the display voice.
-- **Display line-height must open from 0.85–0.95 to 1.15–1.25.** Bebas's tight line-height is a Latin-display convention; CJK characters fully occupy their em-box and need vertical breathing room.
-- **Drop caps need re-thinking.** A Bebas drop cap floats left of body text; a Noto Serif SC drop cap at the same size (`clamp(48px, 6vw, 80px)`) in `{colors.green}` works visually but lacks the editorial-tradition resonance — Chinese typography has historically not used drop caps. Either retain the treatment as a Western-editorial nod, or replace with a green vertical sidebar (3px wide, green fill) running alongside the opening paragraph.
-- **Inline highlights, ribbon bars, and stamp marks all translate cleanly** — they are color-block treatments, not glyph-dependent.
-- **Hand-script Caveat is the system's "human voice" — and has no Chinese equivalent that preserves the ballpoint-cursive personality.** Treat Caveat moments as Latin-only: attributions in Latin, side notes in Latin even on otherwise-Chinese slides, RSVP form fills in Latin. The contrast between Chinese typeset body and Latin handwritten margin notes can actually deepen the zine voice (it reads as "translator's annotation," which fits the small-press register).
-- **Editorial body sizes (13–16px) still apply** — Noto Serif SC at this size reads as dense magazine column text, which is correct for the zine register.
-
-### Known CJK Gap
-
-The system's three-face contrast (Bebas display + Space Grotesk body + Caveat hand-script) is a Latin-typographic argument; collapsing it to a single CJK serif loses one rhythm and gains another. The decision to use a serif (Noto Serif SC) rather than a sans (Noto Sans SC) is deliberate — the zine's mid-century printed-press lineage maps better to Chinese serif tradition than to Chinese geometric sans. A deck that mixes Chinese and English will need to accept that the English Bebas voice and the Chinese Serif voice are different registers; this is unavoidable in any heavy-poster CJK adaptation.
-
 ## Iteration Guide
 
 1. Every new slide carries the SVG grain overlay at 0.07 opacity. Removing the grain breaks the zine voice immediately.

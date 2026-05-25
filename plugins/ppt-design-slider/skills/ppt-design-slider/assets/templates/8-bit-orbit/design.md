@@ -489,53 +489,6 @@ Chart bars and stat counters animate in on slide entry with `setTimeout` stagger
 ### Print Behavior
 The system has no `@media print` rule. The deck is screen-first; printing produces only the active slide. For static export, screenshots of each slide preserve all atmospheric overlays (scanlines and grain are CSS-rendered, not assets).
 
-## CJK & International Content
-
-When using this template for Chinese (or other CJK) content, swap the Latin typeface stack for an equivalent Chinese pairing and apply universal CJK adjustments. All recommended Chinese fonts load via CDN — no install required.
-
-### Recommended Chinese Pairing
-
-| Role | Latin (default) | Chinese counterpart |
-|---|---|---|
-| Display / hero / stat numerals | Tektur 700–900 | 思源黑体 Noto Sans SC 900 |
-| Body / hero tagline / quote body | Chakra Petch 400–500 | 思源黑体 Noto Sans SC 400 |
-| HUD labels / badges / chart values / counter | Space Mono 400–700 (uppercase + wide tracking) | 思源黑体 Noto Sans SC 500 (no transform, no tracking) — see Known CJK Gap below |
-
-### Mixed-Content Strategy
-
-**Strategy A** — single CJK family with built-in Latin glyph coverage. Set every text element to `font-family: 'Noto Sans SC', sans-serif`. 思源黑体 ships Latin glyphs that read cleanly alongside Chinese characters, so a sentence like `使用 Tektur 字体` renders in one consistent face rather than font-switching mid-word. This system normally runs three faces (display / body / HUD); collapsing to one CJK face is the right tradeoff because none of the three Latin faces have credible Chinese counterparts, and visual hierarchy still works through weight (900 / 700 / 500 / 400) plus the system's signature shadow stacks.
-
-### Loading
-
-Add to the template's `<head>`:
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
-```
-
-### Universal CJK Adjustments
-
-- **Line-height**: increase by ~15–25% from the Latin spec. Body 1.75–1.85 (up from 1.7–1.8), display 1.15–1.25 (up from 1.05–1.15). CJK characters are square and visually full — they crowd vertically more than Latin.
-- **Letter-spacing**: set to 0 on every CJK run. The template's positive tracking on Tektur display (+0.04em) and 0.1–0.3em mono tracking on Space Mono labels looks broken on square CJK glyphs — they're already evenly spaced by design.
-- **Text transform**: don't apply `uppercase` to Chinese text — CJK has no case. Every Space Mono label in this system uses `text-transform: uppercase`; remove it for CJK runs.
-- **Punctuation**: use full-width Chinese punctuation （，。：；！？「」（））.
-- **No period on display headlines**: Chinese typography convention omits trailing 。 on display-scale headlines.
-- **Space between CJK and Latin (盘古之白)**: insert an ASCII space between every Chinese character and adjacent Latin character or digit. Write `8 位赛博 / 1989 模式` not `8位赛博/1989模式`.
-- **One font per sentence**: 思源黑体 covers both CJK and Latin glyphs in a unified style — let it handle mixed sentences. Don't let the browser fall back to Tektur or Space Mono mid-sentence for ASCII characters.
-
-### Aesthetic Notes for This System
-
-The system's identity rests on three voices — Tektur (chunky arcade display), Chakra Petch (humanist body), Space Mono (HUD readouts) — and a CJK build cannot preserve that three-face contrast. Compensate by leaning harder on the **non-typographic** signature elements: the stacked text-shadow (yellow at +4/+4, navy at +8/+8) still works on 思源黑体 900 headlines and is what carries the arcade voice when the face itself is generic. Keep all atmospheric overlays (scanlines, grain, CRT vignette, starfields, grid wallpaper) — they do more identity work in a CJK build than in the Latin original.
-
-The system's Space Mono label-pill (navy fill, neon-yellow text, 0.2em tracking, uppercase) is the most recognizable small chrome and translates poorly: CJK characters won't accept the wide tracking or uppercase transform. Render Chinese label-pills with 思源黑体 weight 500 at 0 tracking, no transform, and a slightly tighter fontSize (10–11px instead of 12px) to preserve the chip's compact silhouette. The colored pill background and corner-bracket framing carry the recognition load.
-
-### Known CJK Gap
-
-- **No CDN-loadable Chinese pixel font.** The system's arcade aesthetic depends on Tektur's semi-pixel grotesque character — there is no equivalent Chinese face on Google Fonts or major CDNs that reads as "pixel-art" while remaining legible. 思源黑体 at weight 900 gives heft but loses the pixel-grid signal entirely. The atmospheric overlays (scanlines, grain, vignette, starfields) and pixel-bevel shadow stacks must carry the arcade voice on their own.
-- **No CDN Chinese monospace face for HUD labels.** Space Mono's "system readout" voice depends on monospaced rhythm + uppercase + 0.1–0.3em tracking — none of which transfer to CJK. The label-pill loses its mono character; lean on the navy fill + neon text + corner-bracket framing to keep chrome recognizable.
-
 ## Iteration Guide
 
 1. Any new slide gets the full atmospheric overlay trio (scanlines + grain + crt-glow on dark surfaces, scanlines + grain on colored surfaces) and a 40px etched grid surface. Don't skip the overlays.

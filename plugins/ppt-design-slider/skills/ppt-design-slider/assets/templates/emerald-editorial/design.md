@@ -515,67 +515,6 @@ Fixed-pixel measurements inside a 1920×1080 canvas export cleanly to PDF at 16:
 ### Ornament Variant Switch
 The `:root[data-ornament]` attribute controls a global ornament style: `"double"` (default, two stacked rules), `"single"` (one rule centered), or `"none"` (no rule, word floats alone). This is a presentation-level decision per deck, not per slide.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Chinese Face | Weight | Why |
-|---|---|---|---|
-| Display headline (92–460px) | 霞鹜文楷 LXGW WenKai (with Noto Serif SC fallback at 900) | 400 / 900 | LXGW WenKai's hand-lettered warmth is the closest Chinese analog to Bodoni Moda's theatrical-playbill voice; Noto Serif SC at weight 900 carries the structural mass at jumbo sizes |
-| Stat / KPI figure (144px+) | 思源宋体 Noto Serif SC | 900 | Mincho weight 900 provides the printed-ink mass Bodoni Moda achieves at 900 |
-| Body paragraph (24–28px) | 思源宋体 Noto Serif SC | 400 | Mincho body voice for warm magazine-spread reading |
-| Eyebrow / label / tag (24–28px) | 思源黑体 Noto Sans SC | 700–800 | Replaces Manrope for chrome-layer Chinese; geometric humanist quality |
-| Tile mark / pill / caption | 思源黑体 Noto Sans SC | 700 | Maintains the uppercase-tracked chrome feel for inverse pills and tags |
-
-### Mixed-Content Strategy
-
-Use **Strategy C** — keep Bodoni Moda as the Latin display face and let CJK glyphs fall through to LXGW WenKai (display) or Noto Serif SC (body). The Bodoni Moda commitment at weight 900 is the entire brand identity of Emerald Editorial; replacing it with a CJK family would break the fashion-magazine / 19th-century playbill register that defines the deck. Stack:
-
-```css
-/* Bodoni Moda roles (every display moment) */
-font-family: 'Bodoni Moda', 'LXGW WenKai TC', 'Noto Serif SC', Georgia, serif;
-/* Manrope roles (every chrome / body moment) */
-font-family: 'Manrope', 'Noto Sans SC', system-ui, sans-serif;
-```
-
-The per-glyph fallback strategy lets Latin words render in Bodoni 900 (with the theatrical compression that gives the system its voice) and Chinese characters render in LXGW WenKai or Noto Serif SC. Baseline mismatch at jumbo sizes (200–460px) is the biggest watchpoint — Bodoni Moda at -0.03em tracking sits visually denser than LXGW WenKai, so a mixed-script numeral panel like `第 3 期` may show wobble. For section-opener panels with jumbo numerals, prefer all-numeric (Bodoni) or all-Chinese (LXGW WenKai) lines.
-
-### Loading
-
-Add to the existing Google Fonts `<link>` (or as a second link tag):
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@500;700;800&display=swap" rel="stylesheet">
-```
-
-LXGW WenKai TC is the version on Google Fonts (ships both traditional and simplified glyphs).
-
-### Universal CJK Adjustments
-
-These adjustments apply to **every CJK block** in this system, regardless of size or role:
-
-- **Loosen line-height by 0.05–0.08.** CJK glyphs are full-width squares with more visual weight than Latin letterforms; line-heights tuned for Latin (0.9–0.95 on display, 1.45–1.5 on body) read as cramped in Chinese. Bump display to 1.0–1.1 and body to 1.55–1.65.
-- **Remove negative letter-spacing on CJK headlines.** Bodoni Moda display uses -0.01em to -0.03em tracking, which collides Chinese glyphs into each other. For CJK runs, set `letter-spacing: 0` — or a tiny positive `0.02em` if the headline feels visually packed.
-- **Never `text-transform: uppercase` on CJK text.** Chinese has no case; the CSS property does nothing on Han glyphs but will silently break any mixed-script line where the Manrope portion was meant to be capitalized. (This matters here — every Manrope label, eyebrow, tag, caption uses `text-transform: uppercase`.)
-- **Use Chinese full-width punctuation** (`，。：；！？「」『』（）`) inside Chinese sentences, not the Latin equivalents (`,.:;!?""''()`). Mixing punctuation systems within one sentence reads as a typesetting error.
-- **No period (。) at the end of CJK headlines.** Chinese headlines follow the same rule as Latin — title-style lines drop terminal punctuation. Body paragraphs keep their 。
-- **Apply Pangu spacing (盘古之白) at the boundary between CJK and Latin runs.** A space (or 0.25em margin) belongs between a Chinese character and an adjacent Latin word or digit, e.g. `2026 年 5 月` not `2026年5月`. Either type the spaces manually or use a `pangu.js`-style auto-spacer.
-- **One font per sentence.** Don't switch between LXGW WenKai and Noto Serif SC inside the same sentence — pick the face that matches the size tier (display = LXGW WenKai, body = Noto Serif SC) and commit to it for the whole run.
-
-### Aesthetic Notes for This System
-
-Emerald Editorial's whole voice is "fashion masthead / 19th-century theatrical playbill" — Bodoni Moda weight 900 at extreme scale with the double-rule ornament bracketing centered words. The Chinese equivalent of that theatrical heaviness is **LXGW WenKai at large display sizes** (its brush-warmth replicates Bodoni's hand-set character) with **Noto Serif SC at weight 900 for jumbo numerals** (where pure mass matters more than warmth). Avoid Noto Sans SC for display — the geometric grotesque flattens the playbill voice into "modern corporate."
-
-The double-rule ornament works in Chinese — bracket a single Chinese word (e.g., 「春」) between the 4px stacked rules and let LXGW WenKai's warmth carry the theatrical bracket. For the "The X of Y" cover convention, Chinese reads naturally as `「X」之「Y」` or `X 与 Y`, with the connector preposition (之 / 与 / 的) replacing the Latin "of" inside the small-prep slot. The connector word should use LXGW WenKai at weight 400 (matching the ornament-word-sm role in Latin).
-
-Manrope's role as the chrome layer (uppercase + 0.08em–0.18em tracking) translates to **思源黑体 Noto Sans SC weight 700–800 with 0.05em positive tracking** for Chinese. Don't try to fake uppercase — drop the `text-transform: uppercase` rule on CJK runs and let the geometric humanist quality of Noto Sans SC carry the chrome feel through weight and tracking alone.
-
-### Known CJK Gap
-
-The system's commitment to Bodoni Moda weight 900 at 460px (jumbo numerals on inverse navy panels) is the hardest to translate — there is no Chinese face on the Google Fonts CDN that delivers Bodoni 900's optical heaviness at that scale. Noto Serif SC at weight 900 is the closest, but the contrast profile of Han glyphs at 460px reads visually heavier than Bodoni numerals, which can overwhelm the navy panel. For jumbo-numeral section openers in Chinese, consider: (1) using a Chinese numeral character (一二三四五六七八九十) which sits visually lighter than Western digits, or (2) keeping the numeral in Bodoni (Latin) and letting the panel label below it carry the Chinese context. The pure-Chinese jumbo numeral on this system is the riskiest moment and benefits from per-slide manual review.
-
 ## Iteration Guide
 
 1. Any new display headline is Bodoni Moda at weight 900 with negative letter-spacing and tight leading. Pick the size from the display ladder (92 / 104 / 120 / 128 / 130 / 184 / 200) — do not invent a new size.

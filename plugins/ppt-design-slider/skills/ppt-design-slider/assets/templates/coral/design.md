@@ -530,53 +530,6 @@ Charts are rendered with Chart.js (loaded via CDN). Primary series uses `{colors
 ### Print / Export
 Not explicitly handled. Each slide is a 100vw × 100vh block; export workflows should snapshot each slide at 1920×1080. The 45° hatch overlays should render correctly in PDF capture.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin font | Recommended Chinese pairing | Source |
-|---|---|---|---|
-| Display / Headline (Bebas Neue uppercase 400) | Bebas Neue | 站酷小薇体 ZCOOL XiaoWei | Google Fonts |
-| Body / Label (Inter 300–700) | Inter | 悠哉字体 Yozai | cn-fontsource CDN |
-
-### Mixed-Content Strategy
-
-Use **Strategy A — single-font-stack with fallback**: declare ZCOOL XiaoWei *after* Bebas Neue and Yozai *after* Inter in the same `font-family` stack so Latin glyphs render in Bebas / Inter and CJK glyphs fall through to the Chinese face automatically. One CSS rule per role, no manual class switching.
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300..700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-yozai-regular/font.css" rel="stylesheet">
-```
-
-```css
-:root {
-  --font-display: "Bebas Neue", "ZCOOL XiaoWei", sans-serif;
-  --font-body: "Inter", "Yozai", sans-serif;
-}
-```
-
-### Universal CJK Adjustments
-
-- **Line-height**: bump CJK body line-height to ~1.8 (from 1.7) — Hanzi need more vertical breathing than Latin lowercase, and Coral's body already favors generous leading.
-- **Letter-spacing**: zero out `letter-spacing` on Hanzi runs (the 1–12px Bebas tracking and 1–4px Inter tracking shatter Hanzi cadence). Keep heavy tracking only on Latin spans.
-- **Text-transform**: drop `text-transform: uppercase` on any label/eyebrow/meta when content is Hanzi — Chinese has no case; forcing uppercase does nothing for Hanzi but breaks the rendering of any mixed Latin acronyms inside.
-- **Punctuation**: use Chinese full-width punctuation (，。：；「」) for Chinese sentences, half-width (`,.:;""`) for Latin. Never mix half-width punctuation into a Chinese sentence.
-- **No period on headlines**: Chinese headline convention omits the terminal 。 — strip it from display strings.
-- **Pangu spacing**: insert a thin space (or a regular space) between adjacent Hanzi and Latin/digit runs (e.g. `2026 年`, `AI 产品`). Improves readability of mixed runs.
-- **One font per sentence**: don't switch CJK families mid-sentence. Pick ZCOOL XiaoWei *or* Yozai for a given text run based on its role, never both inside one phrase.
-
-### Aesthetic Notes
-
-ZCOOL XiaoWei carries the magazine-poster voice that Bebas Neue provides for Latin — its tall narrow Hanzi forms have a similar architectural-display register, and at the 80–200px sizes Coral uses for jumbo features, ZCOOL XiaoWei holds shape without crumbling the way a system Hanzi face would. Critically, Bebas Neue's "uppercase only with heavy tracking" rule is meaningless for Hanzi (no case, no tracking), so the system's most foundational typographic rule simply doesn't apply to CJK — drop the tracking, drop the uppercase, and let ZCOOL XiaoWei stand on size alone. Yozai pairs with Inter for body and labels: its rounded humanist forms match Inter's warmth and stay legible inside coral / cream / ink surfaces. The three-surface region splits, 45° diagonal hatch, decorative oversized numerals (which can stay Latin — 01, 02, 03 work perfectly as wallpaper behind a Chinese column title), and 5px coral top borders are all content-agnostic and work identically in any language.
-
-### Known CJK Gap
-
-ZCOOL XiaoWei is a single-weight display face with limited glyph coverage compared to Noto family — exotic or technical Hanzi (rare surnames, classical characters, simplified-only variants outside GB2312) may fall back to system font. For Traditional Chinese decks, swap Yozai for `LXGW WenKai TC` (Google Fonts) which has fuller TC coverage. Bebas Neue's narrow condensed proportion has no exact Chinese equivalent — ZCOOL XiaoWei is medium-condensed at best, so Chinese hero titles will occupy ~20% more horizontal space than Latin equivalents. Adjust line-breaks (typically a 2-line Chinese title fills the same area as a 3-line English hero-title) and consider increasing the hero-title `min()` cap when a Chinese title runs long.
-
 ## Iteration Guide
 
 1. Every new slide is a composition of one to three surface regions (coral, ink, cream) meeting at hard edges. Choose the surface split based on content emphasis.

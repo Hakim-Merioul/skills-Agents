@@ -580,68 +580,6 @@ Navigation is handled by the external `deck-stage.js` script. Each slide carries
 
 There is no embedded print stylesheet. Static export depends on the deck-stage component; for PDF generation, each slide renders as a single 1920×1080 page.
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin face (default) | Chinese face | Weight | Notes |
-|---|---|---|---|---|
-| Display / Cover hero / Section divider | Stardos Stencil 700 uppercase | 思源宋体 / Noto Serif SC | 900 | Stardos Stencil's industrial signage register translates best to Noto Serif SC at the heaviest weight (900) — Song-style strokes carry equivalent visual mass at 120–540px scale. |
-| Numerals (tablet, stat, mega) | Stardos Stencil 700 | 思源宋体 / Noto Serif SC | 900 | Chinese numerals (一二三四五 or 〇一二三四) rendered in NSC 900 hold their weight against accent fills. Latin/Arabic digits inside Chinese decks should stay in Stardos for the stencil break. |
-| Chrome / metadata / pill | Barlow Condensed 800 uppercase | 思源黑体 / Noto Sans SC | 700–900 | Barlow Condensed has no condensed CJK equivalent on CDN — fall back to Noto Sans SC heavy. Use tighter `font-stretch` is not available; rely on shorter labels. |
-| Body | Inter 400 | 思源宋体 / Noto Serif SC | 400 | NSC body matches the loud/quiet contrast; the serif body softens the industrial register slightly but stays legible. |
-
-### Mixed-Content Strategy
-
-This template uses **Strategy A**: replace the Latin display face entirely with the CJK display face for any element rendering Chinese characters. Stardos Stencil's ink-break gaps are physically tied to the Latin alphabet's stroke topology — there is no Chinese stencil face on CDN that reproduces the effect, and forcing Stardos to display CJK either fails (no glyph coverage) or renders an ugly fallback. Replace the entire `font-family` with Noto Serif SC 900 for any Chinese-content element.
-
-```css
-font-family: 'Noto Serif SC', 'Stardos Stencil', serif;  /* display / headlines — CJK first */
-font-family: 'Noto Sans SC', 'Barlow Condensed', sans-serif;  /* chrome / pills — heavy weights only */
-font-family: 'Noto Serif SC', 'Inter', sans-serif;  /* body */
-```
-
-Putting NSC first in the stack means Chinese characters render in NSC and any Latin/numeric content mixed inside the same element also gets NSC, which loses the stencil register for mixed lines. **Recommendation**: for cover slides with mixed-script headlines (e.g., `STUDIO 工作室`), split into two `<span>` elements — one in Stardos for the Latin word, one in NSC 900 for the Chinese phrase, sized so the visual weight matches (NSC 900 at the same px renders slightly heavier than Stardos 700).
-
-### Loading
-
-Add to `<head>` (Google Fonts hosts Noto Serif SC and Noto Sans SC; both ship with weight 900):
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Bowlby+One&family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
-```
-
-Noto Serif SC 900 is critical — it's the only weight that holds visual parity with Stardos Stencil at large scale. Lighter weights (700 or below) render Chinese headlines as "thin" beside Stencil Latin.
-
-### Universal CJK Adjustments
-
-Apply on any element rendering Chinese content (typically scope via `:lang(zh)` or `<span lang="zh">`):
-
-- **Line-height**: body 1.75–1.85 (Stencil & Tablet's 1.4 Inter-default is too tight for CJK strokes); display 1.15–1.25 (looser than Latin 0.8–0.92 because CJK glyphs at 220–540px need vertical breathing room or strokes collide).
-- **Letter-spacing**: 0 on CJK. Stencil & Tablet's negative tracking on Latin display (-0.005 to -0.02em) and positive tracking on Barlow chrome (0.04–0.14em) are both wrong for Chinese — CJK glyphs are pre-spaced; tracking creates either overlap or unnatural gaps.
-- **Text-transform**: no uppercase on CJK. Stencil & Tablet uppercases nearly everything in Latin; on Chinese this is a no-op but ensure no parent rule attempts it (some browsers may render unpredictably).
-- **Full-width punctuation**: use `，。：；！？` (full-width) not `,.:;!?` (half-width). The full-width forms include their own surrounding whitespace and align to the CJK em-box.
-- **No period on display headlines**: Chinese headlines drop the terminal `。` — the headline's visual closure is enough.
-- **Pangu spacing (盘古之白)**: insert a thin space between CJK and adjacent Latin/numerals. Write `使用 Apple` not `使用Apple`; `2024 年` not `2024年`. Especially important in this system since Stardos numerals frequently sit beside Chinese labels.
-- **One font per sentence**: don't mix NSC and Noto Sans SC inside a single line. The serif/sans switch should happen at element boundaries, not mid-phrase.
-
-### Aesthetic Notes for This System
-
-Noto Serif SC 900 against a saturated accent fill (magenta, orange, teal) reproduces the poster-loud register of the system well — the heavy Song strokes have similar visual mass to Stardos Stencil's chunky stencil glyphs. The system's identity (industrial signage / municipal stencil) shifts slightly toward "Chinese newspaper headline" in CJK, which is a related but distinct register; for projects where the industrial stencil feel is essential, lean on Stardos for Latin words and accept that pure-Chinese headlines will read as authoritative newspaper-poster type rather than skate-deck stencil.
-
-The matrix pill convention (teal=yes, mustard=partial, magenta=no) translates directly — replace the uppercase Barlow text inside pills with NSC 700 sentence-case Chinese labels (`是` / `部分` / `否`). Pill width may grow to accommodate Chinese (single-character labels are tightest); keep the 999px radius and accept slightly wider pills.
-
-The 540px section-divider numeral pattern is one of the system's strongest moments and works beautifully with Chinese — `一` `二` `三` rendered at 540px NSC 900 against the black field carries equal visual authority to Stardos at the same size. For two-digit numerals, NSC 900 will be narrower than Stardos at the same px, so consider bumping to 600–620px to maintain the "numeral fills the canvas" register.
-
-### Known CJK Gap
-
-- Barlow Condensed has no condensed CJK equivalent. The system's uppercase-heavy-condensed-tracked chrome aesthetic cannot be reproduced; Noto Sans SC 900 is the closest fallback but lacks the condensed proportion. Accept that Chinese chrome will feel slightly wider than Latin chrome.
-- Bowlby One is Latin-only and lives in a single place (the 320px quote-mark inside quote panels). For Chinese quote panels, replace with `「` (full-width left corner bracket) or `『` rendered in NSC 900 at 320px in the original `{colors.magenta}` or `{colors.teal}` — this is the conventional Chinese quote-opening glyph and reads correctly without the Bowlby weight.
-- Stardos Stencil is a single weight (700). NSC ships with 400, 500, 700, 900; the system specifies weight 700 for everything in Stardos, but for CJK you should use NSC 900 to match visual mass — the spec's "weight 700" is a Latin convention that doesn't apply.
-- The pill convention's `letter-spacing: 0.04–0.14em` is meaningless on CJK and should be zeroed for any Chinese pill content.
-
 ## Iteration Guide
 
 1. Any new headline uses Stardos Stencil uppercase at weight 700. The stencil ink-break is the system's most recognizable trait.

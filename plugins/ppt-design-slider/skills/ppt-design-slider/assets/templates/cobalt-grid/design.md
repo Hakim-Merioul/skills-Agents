@@ -478,55 +478,6 @@ Cobalt Grid is a viewport-fluid 1920×1080 presentation system using `clamp()` a
 ### Print / Export
 Not explicitly handled. Each slide is a 100vw × 100vh block; export workflows should snapshot each slide at 1920×1080. The grid and hairline overlays should render correctly in PDF capture (no blend modes or filters).
 
-## CJK & International Content
-
-### Recommended Chinese Pairing
-
-| Role | Latin font | Recommended Chinese pairing | Source |
-|---|---|---|---|
-| Display / Headline (Newsreader 400) | Newsreader | 思源宋体 Noto Serif SC 700 | Google Fonts |
-| Body / Label (Hanken Grotesk 400–600) | Hanken Grotesk | 思源宋体 Noto Serif SC 400 | Google Fonts |
-| Chrome / Mono (DM Mono) | DM Mono | DM Mono (Latin/digit only — keep mono chrome in Latin) | Google Fonts |
-
-### Mixed-Content Strategy
-
-Use **Strategy A — single-font-stack with fallback**: declare Noto Serif SC *after* the Latin font in the same `font-family` stack so Latin glyphs render in Newsreader / Hanken Grotesk and CJK glyphs fall through to NSC automatically. Mono chrome stays Latin/digit-only — page numbers, ticks, and vertical-stack tags do not need a CJK fallback (and DM Mono has no CJK glyphs by design).
-
-### Loading
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..500;1,6..72,400..500&family=Hanken+Grotesk:wght@400..700&family=DM+Mono:wght@400..500&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-```
-
-```css
-:root {
-  --font-display: "Newsreader", "Noto Serif SC", Georgia, serif;
-  --font-body: "Hanken Grotesk", "Noto Serif SC", sans-serif;
-  --font-mono: "DM Mono", ui-monospace, monospace;
-}
-/* Headlines use Noto Serif SC 700; body uses Noto Serif SC 400. */
-```
-
-### Universal CJK Adjustments
-
-- **Line-height**: bump CJK body line-height to ~1.7 (from 1.5) — Hanzi need more vertical breathing than Latin lowercase.
-- **Letter-spacing**: zero out `letter-spacing` on Hanzi runs (the 0.16em+ Hanken caps tracking shatters Hanzi cadence). Keep tight tracking only on Latin spans.
-- **Text-transform**: drop `text-transform: uppercase` on any micro/label/kicker when content is Hanzi — Chinese has no case; forcing uppercase does nothing for Hanzi but breaks the rendering of any mixed Latin acronyms inside.
-- **Punctuation**: use Chinese full-width punctuation (，。：；「」) for Chinese sentences, half-width (`,.:;""`) for Latin. Never mix half-width punctuation into a Chinese sentence.
-- **No period on headlines**: Chinese headline convention omits the terminal 。 — strip it from display strings.
-- **Pangu spacing**: insert a thin space (or a regular space) between adjacent Hanzi and Latin/digit runs (e.g. `2026 年`, `AI 产品`). Improves readability of mixed runs.
-- **One font per sentence**: don't switch CJK families mid-sentence. Pick a single weight of Noto Serif SC for a given text run, never two inside one phrase.
-
-### Aesthetic Notes
-
-Noto Serif SC (思源宋体) is the natural Hanzi partner for Newsreader — both are quiet literary serifs with thin-thick modulation that holds at very large display sizes (up to 18vh / 240px on the vbig-numeral). The cobalt-on-cream two-color rule absorbs Chinese without negotiation because there's only one ink color to assign. NSC 700 carries display moments where Newsreader 400 would have at 100–200px; NSC 400 carries body and labels. The DM Mono chrome layer (page numbers, vertical-stack tags, ticks) intentionally stays Latin/digit-only — `编号 001` is rendered as Latin "001" in DM Mono with the Hanzi prefix in Hanken/NSC, preserving the mono catalogue chrome's "technical spec" voice. The graph-paper grid, pixel-glitch column, and QR-block decoration are content-agnostic and read identically in any language. Vertical-stack labels written with `writing-mode: vertical-rl` work for Hanzi too — Chinese is the original vertical script — but mixing Latin and Hanzi in the same vertical run will rotate the Hanzi to upright while keeping Latin rotated 90°; isolate runs by language.
-
-### Known CJK Gap
-
-Noto Serif SC has no italic axis (Chinese type historically has no italic), so the manifesto layout's italic-Newsreader-with-`.roman`-flip emphasis pattern collapses when content is Hanzi. Substitute a weight contrast (NSC 700 vs NSC 400) or a faint-cobalt tone (`{colors.ink-faint}`) to recover the emphasis register. Newsreader's optical-size axis (6..72) has no NSC equivalent — the literary "this is a small caption" optical refinement is unavailable for Hanzi, but at NSC's quality this is rarely noticeable.
-
 ## Iteration Guide
 
 1. Every new slide inherits the permanent graph-paper grid, the top and bottom 1.5px cobalt hairlines, the page number bottom-right, and the nav hint bottom-left. Don't author these per-slide — they live on `.stage` and `.hairlines`.
