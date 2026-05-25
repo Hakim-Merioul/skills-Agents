@@ -1,0 +1,22 @@
+{
+  "name": "gaya",
+  "version": "1.0.0",
+  "description": "Distill a heavyweight reference model's output quality (Opus 4.7) into a cheap small model by iteratively searching over the prompt and every OpenRouter API parameter, scored by an LLM-as-judge. Outputs a markdown report with the final prompt ready to paste.",
+  "author": {
+    "name": "Hakim Merioul",
+    "url": "https://github.com/Hakim-Merioul"
+  },
+  "homepage": "https://github.com/Hakim-Merioul/skills-Agents",
+  "repository": "https://github.com/Hakim-Merioul/skills-Agents",
+  "license": "MIT",
+  "keywords": [
+    "prompt-optimization",
+    "opro",
+    "distillation",
+    "openrouter",
+    "llm-judge",
+    "autoresearch",
+    "prompt-tuning",
+    "small-model"
+  ]
+}
