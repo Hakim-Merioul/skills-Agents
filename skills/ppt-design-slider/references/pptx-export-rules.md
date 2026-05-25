@@ -53,4 +53,4 @@ After Task 6 (this), do a one-time human audit of the 34 beautiful templates:
 
 Expected outcome: ~3-6 of the 34 templates qualify (mostly Monochrome, Cartesian, Blue Professional, Long Table, and similarly-restrained designs). The other ~28 stay on image-based export.
 
-Magazine and Swiss (guizang) are `pptx_editable: false` permanently — their WebGL backgrounds and shader canvases cannot be PPTX-native.
+Magazine and Swiss are `pptx_editable: false` permanently — their WebGL backgrounds and shader canvases cannot be PPTX-native.
