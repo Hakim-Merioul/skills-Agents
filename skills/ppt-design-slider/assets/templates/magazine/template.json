@@ -1,0 +1,19 @@
+{
+  "slug": "magazine",
+  "name": "Magazine",
+  "tagline": "Editorial magazine aesthetic with fluid WebGL background, serif headlines, and 5 ink-toned palettes.",
+  "mood": ["editorial", "warm", "humanist", "literary"],
+  "occasion": ["industry talk", "founder pitch", "thought leadership", "private salon", "magazine-style essay deck"],
+  "tone": ["confident", "considered", "literary"],
+  "formality": "medium-high",
+  "density": "medium",
+  "scheme": "light",
+  "best_for": "Magazine-feel decks: industry observations, humanities content, thoughtful product launches. Reads like a print magazine spread with the precision of code.",
+  "avoid_for": "Data-heavy reports, dense slide tables, or anything that needs a sterile/technical feel.",
+  "slide_count": 10,
+  "tier": "flagship",
+  "pptx_editable": false,
+  "needs_references": true,
+  "design_doc": "design.md",
+  "layouts_doc": "references/layouts.md"
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "swiss",
+  "name": "Swiss",
+  "tagline": "Swiss-style deck: sans-serif, 12-col grid, single accent (IKB blue / lemon yellow / lime / safety orange), 22 locked layouts.",
+  "mood": ["minimal", "structured", "data-driven", "technical"],
+  "occasion": ["tech product launch", "data report", "engineering talk", "annual review", "design conference"],
+  "tone": ["clinical", "rigorous", "geometric"],
+  "formality": "high",
+  "density": "high",
+  "scheme": "mixed",
+  "best_for": "International Typographic-style decks: product launches, KPI reports, engineering shares. Strict grid + single accent + extra-light display weights.",
+  "avoid_for": "Decks that need warmth, story, or hand-drawn humanity — this style is deliberately cool and systematic.",
+  "slide_count": 22,
+  "tier": "flagship",
+  "pptx_editable": false,
+  "needs_references": true,
+  "design_doc": "design.md",
+  "layouts_doc": "references/layouts-swiss.md",
+  "locked_layouts": ["S01","S02","S03","S04","S05","S06","S07","S08","S09","S10","S11","S12","S13","S14","S15","S16","S17","S18","S19","S20","S21","S22"]
+}
