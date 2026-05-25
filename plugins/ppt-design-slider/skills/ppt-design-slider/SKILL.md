@@ -16,9 +16,11 @@ This skill ships with deterministic **harness scripts** that do the orchestratio
 |---|---|---|
 | `assets/scripts/show-catalog.mjs` | List all 36 templates grouped by mood/style | Step 1 — always, before any questions |
 | `assets/scripts/init-deck.mjs` | Clone a picked template + scripts into the user's workspace | Step 3 — after user picks a slug |
-| `assets/scripts/export-pdf.mjs` | Render deck HTML to PDF | Step 7 — export |
-| `assets/scripts/export-pptx-image.mjs` | Render deck HTML to image-based PPTX | Step 7 — export |
-| `assets/scripts/export-pptx-editable.mjs` | Render to editable PPTX (only if template supports it) | Step 7 — conditional |
+| `assets/scripts/verify-deck.mjs` | Layout sanity: no overflow, no overlap, line-breaks preserved, declared CSS vars | Step 7 — before exporting |
+| `assets/scripts/export-pdf.mjs` | Render deck HTML to PDF | Step 8 — export |
+| `assets/scripts/export-pptx-image.mjs` | Render deck HTML to image-based PPTX | Step 8 — export |
+| `assets/scripts/export-pptx-editable.mjs` | Auto HTML→PPTX (only if `pptx_editable: true`) | Step 8 — conditional |
+| `assets/scripts/build-editable-pptx-skeleton.mjs` | Skeleton for native pptxgenjs builds — required when auto editable export isn't available | Step 8 — copy + customize per-deck |
 | `assets/scripts/validate-deck.mjs` | Lint a Swiss-template deck against the 22 locked layouts | Step 6 — QA, swiss only |
 | `assets/scripts/build-index.mjs` | Rebuild `index.json` from per-template `template.json` files | Dev-only |
 
@@ -36,7 +38,7 @@ This skill ships with deterministic **harness scripts** that do the orchestratio
 - Bulk auto-generated reports (decks here are hand-tuned, not template-filled in volume)
 - 100% pre-existing PowerPoint that just needs cleanup (edit the .pptx directly)
 
-## The seven-step workflow
+## The eight-step workflow
 
 ### Step 1 — ALWAYS surface the catalog FIRST
 
@@ -141,30 +143,61 @@ Open the deck in the browser (`open <project>/deck/index.html` on macOS, `start`
 
 QA against `references/checklist.md` — all P0 must pass, P1 should pass.
 
-### Step 7 — Export
+### Step 7 — Verify
+
+Run the layout verifier BEFORE exporting. This is non-negotiable.
+
+```bash
+node <project>/deck/scripts/verify-deck.mjs --html <project>/deck/index.html
+```
+
+The verifier checks (per slide): no text overflow, no overlapping text elements, headline line-breaks preserved, no undeclared CSS variables. If errors are reported, FIX the HTML before exporting — don't ship a deck with verifier errors.
+
+### Step 8 — Export THREE outputs (always)
+
+Every deck ships with three files: **PDF**, **image-based PPTX**, **editable PPTX**.
 
 ```bash
 cd <project>/deck/scripts && npm install && npx playwright install chromium && cd ..
 ```
 
-Then export:
-
 ```bash
-# PDF — recommended default (always works, vector text)
+# 1. PDF — lossless vector default
 node scripts/export-pdf.mjs --slides index.html --out deck.pdf
 
-# PPTX (image-based — universal fallback, works with every template)
+# 2. Image-based PPTX — universal, works with every template
 node scripts/export-pptx-image.mjs --slides index.html --out deck.pptx
+```
 
-# PPTX (editable text) — ONLY if template.json has "pptx_editable": true
+For the **editable PPTX**, route based on `template.json`:
+
+**(a) If `pptx_editable: true`** — use the auto HTML→PPTX converter:
+
+```bash
 node scripts/export-pptx-editable.mjs --slides index.html --out deck-editable.pptx
 ```
+
+**(b) If `pptx_editable: false`** — build a native editable PPTX from scratch using pptxgenjs. This is MANDATORY, not optional. Read `references/editable-fallback.md` for the full policy, then:
+
+1. Copy `<SKILL_ROOT>/assets/scripts/build-editable-pptx-skeleton.mjs` to `<project>/deck/scripts/build-editable-pptx.mjs`
+2. Customize it per the deck's content (one slide block per actual slide; pull colors/fonts from `<template-folder>/design.md`)
+3. Run it:
+
+```bash
+node scripts/build-editable-pptx.mjs   # writes ../deck-editable.pptx
+```
+
+**Never tell the user that editable PPTX is unavailable.** `pptx_editable: false` means "the auto HTML→PPTX converter can't handle this template's CSS", NOT "an editable PPTX is impossible". The native fallback always works.
 
 The `--slides` argument accepts either:
 - A single HTML file (most templates ship this way — one file with multiple `<section class="slide">`)
 - A directory of per-slide HTML files
 
-After export, open each output (`open deck.pdf`) and verify it visually matches the HTML. Send the user the file paths.
+After export, open each output (`open deck.pdf`) and verify it visually matches the HTML. Send the user all three file paths and a one-line note explaining:
+
+> `deck-editable.pptx` has the same content as the others but every text element is
+> double-click-editable inside PowerPoint. `deck.pptx` is design-faithful but text
+> is fixed pixels. `deck.pdf` is the lossless default.
 
 ## Cross-platform notes
 
@@ -198,9 +231,12 @@ ppt-design-slider/
 │   │   ├── swiss/            ← flagship
 │   │   └── … (34 editorial)
 │   └── scripts/              ← harness + export pipeline
-│       ├── show-catalog.mjs       ← Step 1
-│       ├── init-deck.mjs          ← Step 3
-│       ├── build-index.mjs        ← dev-only, regenerates index.json
+│       ├── show-catalog.mjs                   ← Step 1
+│       ├── init-deck.mjs                      ← Step 3
+│       ├── verify-deck.mjs                    ← Step 7 (mandatory before export)
+│       ├── build-editable-pptx-skeleton.mjs   ← Step 8 (copy + customize per-deck)
+│       ├── build-index.mjs                    ← dev-only
+│       ├── capture-previews.mjs               ← dev-only
 │       ├── html2pptx.js
 │       ├── export-pptx-editable.mjs
 │       ├── export-pptx-image.mjs
@@ -212,6 +248,7 @@ ppt-design-slider/
     ├── content-splitting.md
     ├── brand-protocol.md
     ├── pptx-export-rules.md
+    ├── editable-fallback.md     ← MANDATORY policy for editable PPTX
     ├── extending-templates.md
     ├── custom-style.md
     ├── catalog.md
@@ -227,4 +264,5 @@ ppt-design-slider/
 5. **Brand assets > brand spec.** A real logo + product photo identifies a brand far more strongly than a hex value list.
 6. **One idea per slide.** Hero rhythm every 3-4 slides.
 7. **Honest placeholders > clever fakes.** If the image isn't there, leave a labeled color block.
-8. **PDF is the lossless format.** Always ship PDF; PPTX is for downstream editing/presentation.
+8. **Always ship three outputs.** PDF + image-based PPTX + editable PPTX. The editable variant is never optional — if the auto HTML→PPTX converter can't handle the template, build a native pptxgenjs script from the skeleton. `pptx_editable: false` only changes the build path, never the deliverable.
+9. **Always verify before exporting.** Run `verify-deck.mjs` to catch overflow / overlap / lost line-breaks. Don't ship a deck with verifier errors.
