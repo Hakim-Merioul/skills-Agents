@@ -6,44 +6,46 @@ A growing collection of [Agent Skills](https://agentskills.io) following the ope
 specification. Each plugin is a self-contained skill — install one, all, or any
 subset. Hackable, cloneable, no vendor lock-in.
 
-## Install — one-command, per agent runtime
+## Install — one command, any agent
 
-This repo is published as both an Agent Skills marketplace (for `/plugin install`)
-and a set of spec-compliant `SKILL.md` directories (for `degit` / manual copy).
+Use [`npx skills`](https://github.com/vercel-labs/skills) — the universal Agent Skills
+installer. It works with 55+ agents (Codex, Cursor, Copilot, OpenCode, Continue,
+desktop agents, etc.) and writes each skill to the right directory automatically.
 
-### Codex CLI
-
-Codex CLI reads skills from `~/.agents/skills/` (user-global) or
-`<repo>/.agents/skills/` (project-local) — see the
-[official Codex skills docs](https://developers.openai.com/codex/skills).
+### Install all 3 skills globally (recommended)
 
 ```bash
-# User-global install (available in every Codex session)
-npx degit Hakim-Merioul/skills-Agents/plugins/ppt-design-slider/skills/ppt-design-slider \
-  ~/.agents/skills/ppt-design-slider
-
-npx degit Hakim-Merioul/skills-Agents/plugins/gaya/skills/gaya \
-  ~/.agents/skills/gaya
-
-npx degit Hakim-Merioul/skills-Agents/plugins/transposition/skills/transposition \
-  ~/.agents/skills/transposition
+npx skills add Hakim-Merioul/skills-Agents --all -g
 ```
 
-For **project-local** install (only inside one repo):
+That single command installs `ppt-design-slider`, `gaya`, and `transposition` into
+every agent installed on your machine. Restart your agent and they're available.
+
+### Install one skill for a specific agent
+
+Pick the agent flag (`-a codex`, `-a cursor`, `-a claude-code`, etc.) and the skill:
 
 ```bash
-mkdir -p .agents/skills
-npx degit Hakim-Merioul/skills-Agents/plugins/ppt-design-slider/skills/ppt-design-slider \
-  .agents/skills/ppt-design-slider
+# ppt-design-slider for Codex CLI, global
+npx skills add https://github.com/Hakim-Merioul/skills-Agents/tree/main/plugins/ppt-design-slider/skills/ppt-design-slider -a codex -g
+
+# transposition for Cursor, project-local
+npx skills add https://github.com/Hakim-Merioul/skills-Agents/tree/main/plugins/transposition/skills/transposition -a cursor
+
+# gaya for every agent on the machine
+npx skills add https://github.com/Hakim-Merioul/skills-Agents/tree/main/plugins/gaya/skills/gaya --all -g
 ```
 
-Inside Codex, invoke skills with `/skills` (explicit) or by typing `$` to
-mention a skill by name. Codex also auto-triggers a skill when your task
-matches its `description` field.
+The tool resolves install paths per agent automatically:
+- Codex global: `~/.codex/skills/`
+- Codex project: `./.agents/skills/`
+- Cursor: `./.cursor/rules/skills/`
+- Other agents: see [vercel-labs/skills](https://github.com/vercel-labs/skills)
 
-### Plugin marketplace (Anthropic agent runtime)
+### Plugin marketplace (alternative install path)
 
-Add the marketplace once, then install plugins by name:
+If you prefer the plugin marketplace pattern (slash-command install with auto-update
+support):
 
 ```bash
 /plugin marketplace add Hakim-Merioul/skills-Agents
@@ -53,18 +55,6 @@ Add the marketplace once, then install plugins by name:
 ```
 
 To manage later: `/plugin list`, `/plugin uninstall <name>`, `/plugin update`.
-
-### Manual copy (any agent runtime, desktop apps)
-
-Clone the repo and copy any single skill into your runtime's skills directory
-(e.g. `~/.claude/skills/`, `~/.agents/skills/`, or wherever your agent looks):
-
-```bash
-git clone https://github.com/Hakim-Merioul/skills-Agents.git
-cp -r skills-Agents/plugins/transposition/skills/transposition ~/.agents/skills/
-```
-
-Or copy a single `SKILL.md` file manually if you prefer.
 
 ## Plugins
 
