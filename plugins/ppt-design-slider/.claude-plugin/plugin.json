@@ -1,0 +1,26 @@
+{
+  "name": "ppt-design-slider",
+  "version": "1.0.0",
+  "description": "Turn raw slide content into a designed PowerPoint deck. Picks from 36 embedded HTML templates (magazine + swiss + 34 editorial styles), splits user content into slides, exports an editable or image-based .pptx plus PDF. Cross-platform (Claude Code, Codex, Claude Desktop).",
+  "author": {
+    "name": "Hakim Merioul",
+    "url": "https://github.com/Hakim-Merioul"
+  },
+  "homepage": "https://github.com/Hakim-Merioul/skills-Agents",
+  "repository": "https://github.com/Hakim-Merioul/skills-Agents",
+  "license": "MIT",
+  "keywords": [
+    "powerpoint",
+    "pptx",
+    "slides",
+    "presentation",
+    "deck",
+    "design",
+    "templates",
+    "pdf-export",
+    "html-to-pptx",
+    "playwright",
+    "magazine",
+    "swiss-design"
+  ]
+}
